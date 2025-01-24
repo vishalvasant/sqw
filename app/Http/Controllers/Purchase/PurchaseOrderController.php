@@ -14,41 +14,59 @@ class PurchaseOrderController extends Controller
     public function index()
     {
         $purchaseOrders = PurchaseOrder::with('purchaseRequest')->get();
-        return view('purchase.orders.index', compact('purchaseOrders'));
+        $suppliers = Supplier::all();
+        return view('purchase.orders.index', compact('purchaseOrders','suppliers'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $suppliers = Supplier::all();
-        $products = Product::all();
-        $purchaseRequests = PurchaseRequest::all();
-        
-        return view('purchase.orders.create', compact('suppliers', 'products', 'purchaseRequests'));
+        $purchaseRequests = PurchaseRequest::with('items.product')->get();
+
+        $selectedRequestId = $request->get('request_id');
+        $selectedRequest = $selectedRequestId ? PurchaseRequest::with('items.product')->find($selectedRequestId) : null;
+
+        return view('purchase.orders.create', compact('suppliers', 'purchaseRequests', 'selectedRequest'));
     }
+
 
     public function store(Request $request)
     {
-        $request->validate([
-            'purchase_request_id' => 'nullable|exists:purchase_requests,id',
+        $validated = $request->validate([
             'supplier_id' => 'required|exists:suppliers,id',
             'products' => 'required|array',
             'products.*.product_id' => 'required|exists:products,id',
             'products.*.quantity' => 'required|integer|min:1',
+            'products.*.price' => 'required|numeric|min:0',
         ]);
 
-        // Create the purchase order
-        $purchaseOrder = PurchaseOrder::create([
-            'supplier_id' => $request->supplier_id,
-            'purchase_request_id' => $request->purchase_request_id,
-        ]);
+        try {
+            $purchaseOrder = PurchaseOrder::create([
+                'order_number' => $this->generateOrderNumber(),
+                'supplier_id' => $validated['supplier_id'],
+                'purchase_request_id' => $request['request_id'],
+                'billed' => 0,
+                'status' => 'pending',
+            ]);
 
-        // Add products to the purchase order
-        foreach ($request->products as $productData) {
-            $purchaseOrder->products()->attach($productData['product_id'], ['quantity' => $productData['quantity']]);
+            foreach ($validated['products'] as $product) {
+                $purchaseOrder->items()->create([
+                    'product_id' => $product['product_id'],
+                    'quantity' => $product['quantity'],
+                    'price' => $product['price'],
+                ]);
+            }
+            return redirect()->route('purchase.orders.index')->with('success', 'Purchase Order created successfully.');
+        } catch (\Exception $e) {
+            dd($e);
+            return redirect()->back()->withErrors('Error creating Purchase Order: ' . $e->getMessage());
         }
-
-        return redirect()->route('purchase.orders.index')->with('success', 'Purchase Order created successfully.');
     }
+
+
+
+
+
 
     public function show($id)
     {
@@ -63,19 +81,21 @@ class PurchaseOrderController extends Controller
         return view('purchase.orders.edit', compact('purchaseOrder', 'approvedRequests'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, PurchaseOrder $purchaseOrder)
     {
-        $request->validate([
-            'purchase_request_id' => 'required|exists:purchase_requests,id',
+        $validatedData = $request->validate([
+            'supplier_id' => 'required|exists:suppliers,id',
+            'status' => 'required|in:pending,completed,cancelled',
+            'billed' => 'nullable|boolean',
         ]);
 
-        $purchaseOrder = PurchaseOrder::findOrFail($id);
-        $purchaseOrder->update([
-            'purchase_request_id' => $request->purchase_request_id,
-        ]);
+        $validatedData['billed'] = $request->has('billed') ? true : false;
 
-        return redirect()->route('purchase.orders.index')->with('success', 'Purchase order updated successfully.');
+        $purchaseOrder->update($validatedData);
+
+        return redirect()->route('purchase.orders.index')->with('success', 'Purchase Order updated successfully.');
     }
+
 
     public function destroy($id)
     {
@@ -84,4 +104,59 @@ class PurchaseOrderController extends Controller
 
         return redirect()->route('purchase.orders.index')->with('success', 'Purchase order deleted successfully.');
     }
+
+    public function markAsBilled($id)
+    {
+        $purchaseOrder = PurchaseOrder::findOrFail($id);
+
+        if ($purchaseOrder->status === 'billed') {
+            return redirect()->back()->with('info', 'This purchase order is already billed.');
+        }
+
+        $purchaseOrder->update(['status' => 'billed']);
+        return redirect()->route('purchase.orders.index')->with('success', 'Purchase Order marked as billed.');
+    }
+
+    private function generateOrderNumber()
+    {
+        return 'PO-' . strtoupper(uniqid());
+    }
+
+    public function receiveDocket($id)
+    {
+        $purchaseOrder = PurchaseOrder::findOrFail($id);
+        $purchaseOrder->status = 'completed';
+        $purchaseOrder->save();
+
+        return redirect()->route('purchase.orders.index')->with('success', 'Docket received and status updated to Completed.');
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,completed,cancelled',
+        ]);
+
+        $purchaseOrder = PurchaseOrder::findOrFail($id);
+        $purchaseOrder->status = $request->status;
+        $purchaseOrder->save();
+
+        return redirect()->route('purchase.orders.index')->with('success', 'Status updated successfully.');
+    }
+
+
+    public function updateBilled(Request $request, $id)
+    {
+        $request->validate([
+            'billed' => 'required|boolean',
+        ]);
+
+        $purchaseOrder = PurchaseOrder::findOrFail($id);
+        $purchaseOrder->billed = $request->billed;
+        $purchaseOrder->save();
+
+        return redirect()->route('purchase.orders.index')->with('success', 'Billed status updated successfully.');
+    }
+
+
 }

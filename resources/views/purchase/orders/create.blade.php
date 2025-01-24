@@ -3,101 +3,83 @@
 @section('page-title', 'Create Purchase Order')
 
 @section('content')
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Create New Purchase Order</h3>
-    </div>
-    <div class="card-body">
-        <form action="{{ route('purchase.orders.store') }}" method="POST">
-            @csrf
-            
-            <!-- Purchase Request Selection -->
-            <div class="form-group">
-                <label for="purchase_request_id">Select Purchase Request (Optional)</label>
-                <select name="purchase_request_id" id="purchase_request_id" class="form-control">
-                    <option value="">-- Select Purchase Request --</option>
-                    @foreach($purchaseRequests as $request)
-                        <option value="{{ $request->id }}">{{ $request->id }} - {{ $request->status }}</option>
-                    @endforeach
-                </select>
-            </div>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h3>Create Purchase Order</h3>
+        </div>
+        <div class="card-body">
+            <form action="{{ route('purchase.orders.store') }}" method="POST">
+                @csrf
 
-            <!-- If no Purchase Request, show the product addition section -->
-            <div id="product-section" class="form-group">
-                <h5>Or Add Products Manually</h5>
-                <table id="product-table" class="table table-bordered">
+                <!-- Select Supplier -->
+                <div class="form-group">
+                    <label for="supplier_id">Supplier</label>
+                    <select name="supplier_id" id="supplier_id" class="form-control" required>
+                        <option value="">Select Supplier</option>
+                        @foreach ($suppliers as $supplier)
+                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="billed">Is Billed?</label>
+                    <input type="checkbox" name="billed" id="billed" value="1" {{ old('billed') ? 'checked' : '' }}>
+                </div>
+
+                <!-- Select Purchase Request -->
+                <div class="form-group">
+                    <label for="request_id">Purchase Request</label>
+                    <select name="request_id" id="request_id" class="form-control" onchange="location.href='?request_id=' + this.value;">
+                        <option value="">Select Purchase Request</option>
+                        @foreach ($purchaseRequests as $pr)
+                        <option value="{{ $pr->id }}" {{ request('request_id') == $pr->id ? 'selected' : '' }}>
+                            {{ $pr->request_number }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Products from Purchase Request -->
+                @if ($selectedRequest)
+                <h5>Products</h5>
+                <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Product</th>
+                            <th>Product Name</th>
+                            <th>Requested Quantity</th>
                             <th>Quantity</th>
-                            <th>Actions</th>
+                            <th>Price</th>
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach ($selectedRequest->items as $item)
                         <tr>
                             <td>
-                                <select name="products[0][product_id]" class="form-control">
-                                    <option value="">-- Select Product --</option>
-                                    @foreach($products as $product)
-                                        <option value="{{ $product->id }}">{{ $product->name }}</option>
-                                    @endforeach
-                                </select>
+                                <input type="hidden" name="products[{{ $loop->index }}][product_id]" value="{{ $item->product_id }}">
+                                {{ $item->product->name }}
                             </td>
-                            <td><input type="number" name="products[0][quantity]" class="form-control" min="1" required></td>
-                            <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                            <td>{{ $item->quantity }}</td>
+                            <td>
+                                <input type="number" name="products[{{ $loop->index }}][quantity]" class="form-control" value="{{ $item->quantity }}" required>
+                            </td>
+                            <td>
+                                <input type="number" step="0.01" name="products[{{ $loop->index }}][price]" value="{{ $item->price }}"  class="form-control" required>
+                            </td>
                         </tr>
+                        @endforeach
                     </tbody>
                 </table>
-                <button type="button" class="btn btn-success" id="add-product">Add Product</button>
-            </div>
+                @endif
 
-            <div class="form-group">
-                <label for="supplier_id">Select Supplier</label>
-                <select name="supplier_id" id="supplier_id" class="form-control" required>
-                    <option value="">-- Select Supplier --</option>
-                    @foreach($suppliers as $supplier)
-                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Create Purchase Order</button>
-            <a href="{{ route('purchase.orders.index') }}" class="btn btn-secondary">Cancel</a>
-        </form>
+                <!-- Submit Button -->
+                <div class="form-group text-right mt-4">
+                    <button type="submit" class="btn btn-success">Create Purchase Order</button>
+                    <a href="{{ route('purchase.orders.index') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-
-@endsection
-
-@section('scripts')
-<script>
-    $(document).ready(function() {
-        var productIndex = 1;
-
-        // Add a new product row
-        $('#add-product').click(function() {
-            var newRow = `
-                <tr>
-                    <td>
-                        <select name="products[${productIndex}][product_id]" class="form-control">
-                            <option value="">-- Select Product --</option>
-                            @foreach($products as $product)
-                                <option value="{{ $product->id }}">{{ $product->name }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td><input type="number" name="products[${productIndex}][quantity]" class="form-control" min="1" required></td>
-                    <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
-                </tr>
-            `;
-            $('#product-table tbody').append(newRow);
-            productIndex++;
-        });
-
-        // Remove a product row
-        $(document).on('click', '.remove-row', function() {
-            $(this).closest('tr').remove();
-        });
-    });
-</script>
 @endsection

@@ -9,10 +9,25 @@ class PurchaseOrder extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['order_number', 'purchase_request_id', 'status'];
-
+    protected $fillable = [
+        'order_number',
+        'supplier_id',
+        'purchase_request_id',
+        'status',
+        'billed',
+    ];
     public function purchaseRequest()
     {
         return $this->belongsTo(PurchaseRequest::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(PurchaseOrderItem::class);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id');
     }
 }
