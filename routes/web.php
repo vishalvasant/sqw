@@ -12,6 +12,9 @@ use App\Http\Controllers\Purchase\PurchaseRequestController;
 use App\Http\Controllers\Purchase\PurchaseOrderController;
 use App\Http\Controllers\Purchase\SupplierController;
 use App\Http\Controllers\Fleet\FleetController;
+use App\Http\Controllers\Fleet\DriverController;
+use App\Http\Controllers\Fleet\FuelLogController;
+use App\Http\Controllers\Fleet\TripLogController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\PartController;
 
@@ -45,6 +48,20 @@ Route::middleware(['auth'])->group(function () {
             Route::get('drivers', [FleetController::class, 'showDrivers'])->name('drivers');
             Route::get('drivers.create', [FleetController::class, 'createDriver'])->name('drivers.create');
             Route::get('reports', [FleetController::class, 'generateReport'])->name('reports');
+            Route::post('drivers.store', [FleetController::class, 'storeDriver'])->name('drivers.store');
+
+            // Fleet Routes
+            // Route::resource('fleets', FleetController::class);
+
+            // // Driver Routes
+            // Route::resource('drivers', DriverController::class);
+
+            // // Fuel Log Routes
+            // Route::resource('fuel_logs', FuelLogController::class);
+
+            // // Trip Log Routes
+            // Route::resource('trip_logs', TripLogController::class);
+
         });
         
         Route::resource('assets', AssetController::class);

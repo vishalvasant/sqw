@@ -82,7 +82,7 @@ class FleetController extends Controller
         ]);
 
         Driver::create($request->all());
-        return redirect()->route('fleet.drivers.index')->with('success', 'Driver added successfully');
+        return redirect()->route('fleet.drivers')->with('success', 'Driver added successfully');
     }
 
     public function assignDriverToVehicle(Request $request, $vehicleId)

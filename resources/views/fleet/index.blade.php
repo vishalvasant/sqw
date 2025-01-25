@@ -25,12 +25,6 @@
                         <td>{{ $vehicle->vehicle_type }}</td>
                         <td>{{ $vehicle->fixed_cost_per_hour }}</td>
                         <td>
-                            <a href="{{ route('fleet.edit', $vehicle->id) }}" class="btn btn-warning">Edit</a>
-                            <form action="{{ route('fleet.destroy', $vehicle->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
                         </td>
                     </tr>
                 @endforeach
