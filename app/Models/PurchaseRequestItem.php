@@ -20,5 +20,10 @@ class PurchaseRequestItem extends Model
     {
         return $this->belongsTo(Product::class);
     }
+    
+    public function getRemainingQuantityAttribute()
+    {
+        return $this->quantity - $this->fulfilled_quantity;
+    }
 }
 

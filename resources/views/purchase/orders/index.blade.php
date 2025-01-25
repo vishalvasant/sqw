@@ -58,10 +58,6 @@
                             </td>
                             <td>
                                 <a href="{{ route('purchase.orders.show', $order->id) }}" class="btn btn-info btn-sm">View</a>
-                                <form action="{{ route('purchase.orders.receiveDocket', $order->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <button type="submit" class="btn btn-success btn-sm">Receive Docket</button>
-                                </form>
                                 <form action="{{ route('purchase.orders.destroy', $order->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')

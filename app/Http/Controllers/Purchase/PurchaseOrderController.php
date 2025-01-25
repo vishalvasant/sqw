@@ -70,8 +70,8 @@ class PurchaseOrderController extends Controller
 
     public function show($id)
     {
-        $purchaseOrder = PurchaseOrder::with('purchaseRequest.items.product')->findOrFail($id);
-        return view('purchase.orders.show', compact('purchaseOrder'));
+        $order = PurchaseOrder::with('items', 'supplier')->findOrFail($id);
+        return view('purchase.orders.show', compact('order'));
     }
 
     public function edit($id)
