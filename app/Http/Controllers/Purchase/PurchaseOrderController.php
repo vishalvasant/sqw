@@ -6,6 +6,9 @@ use App\Models\Supplier;
 use App\Models\Product;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseRequest;
+use App\Models\PurchaseOrderItem;
+use App\Models\PurchaseRequestItem;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -21,7 +24,11 @@ class PurchaseOrderController extends Controller
     public function create(Request $request)
     {
         $suppliers = Supplier::all();
-        $purchaseRequests = PurchaseRequest::with('items.product')->get();
+        $purchaseRequests = PurchaseRequest::with(['items' => function ($query) {
+            $query->where('quantity', '>', 0); // Exclude items with 0 quantity
+        }])->whereHas('items', function ($query) {
+            $query->where('quantity', '>', 0);
+        })->get();
 
         $selectedRequestId = $request->get('request_id');
         $selectedRequest = $selectedRequestId ? PurchaseRequest::with('items.product')->find($selectedRequestId) : null;
@@ -32,36 +39,48 @@ class PurchaseOrderController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'supplier_id' => 'required|exists:suppliers,id',
-            'products' => 'required|array',
-            'products.*.product_id' => 'required|exists:products,id',
-            'products.*.quantity' => 'required|integer|min:1',
-            'products.*.price' => 'required|numeric|min:0',
-        ]);
-
         try {
-            $purchaseOrder = PurchaseOrder::create([
-                'order_number' => $this->generateOrderNumber(),
-                'supplier_id' => $validated['supplier_id'],
-                'purchase_request_id' => $request['request_id'],
-                'billed' => 0,
-                'status' => 'pending',
-            ]);
+            // Create Purchase Order
+            $purchaseOrder = new PurchaseOrder();
+            $purchaseOrder->order_number = $this->generateOrderNumber();
+            $purchaseOrder->supplier_id = $request->supplier_id;
+            $purchaseOrder->status = 'pending';
+            $purchaseOrder->billed = 0; // Default
+            $purchaseOrder->purchase_request_id = $request->request_id; // Default
+            $purchaseOrder->save();
 
-            foreach ($validated['products'] as $product) {
-                $purchaseOrder->items()->create([
-                    'product_id' => $product['product_id'],
-                    'quantity' => $product['quantity'],
-                    'price' => $product['price'],
-                ]);
+            foreach ($request->products as $product) {
+                $purchaseOrderItem = new PurchaseOrderItem();
+                $purchaseOrderItem->purchase_order_id = $purchaseOrder->id;
+                $purchaseOrderItem->product_id = $product['product_id'];
+                $purchaseOrderItem->quantity = $product['quantity'];
+                $purchaseOrderItem->price = $product['price'];
+                $purchaseOrderItem->save();
+
+                // Update Product Stock
+                $productModel = Product::find($product['product_id']);
+                $productModel->stock += $product['quantity'];
+                $productModel->save();
+
+                // Update Purchase Request Quantity
+                $purchaseRequestItem = PurchaseRequestItem::find($product['purchase_request_item_id']);
+                if ($purchaseRequestItem) {
+                    $purchaseRequestItem->quantity -= $product['quantity'];
+                    $purchaseRequestItem->save();
+
+                    // Check if quantity is 0 and mark as inactive (optional)
+                    if ($purchaseRequestItem->quantity <= 0) {
+                        $purchaseRequestItem->delete(); // or $purchaseRequestItem->update(['status' => 'inactive']);
+                    }
+                }
             }
             return redirect()->route('purchase.orders.index')->with('success', 'Purchase Order created successfully.');
         } catch (\Exception $e) {
             dd($e);
-            return redirect()->back()->withErrors('Error creating Purchase Order: ' . $e->getMessage());
+            return back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
 
 
 

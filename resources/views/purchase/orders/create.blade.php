@@ -54,21 +54,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($selectedRequest->items as $item)
-                        <tr>
-                            <td>
-                                <input type="hidden" name="products[{{ $loop->index }}][product_id]" value="{{ $item->product_id }}">
-                                {{ $item->product->name }}
-                            </td>
-                            <td>{{ $item->quantity }}</td>
-                            <td>
-                                <input type="number" name="products[{{ $loop->index }}][quantity]" class="form-control" value="{{ $item->quantity }}" required>
-                            </td>
-                            <td>
-                                <input type="number" step="0.01" name="products[{{ $loop->index }}][price]" value="{{ $item->price }}"  class="form-control" required>
-                            </td>
-                        </tr>
+                    @foreach ($purchaseRequests as $pr)
+                        @foreach ($pr->items as $item)
+                            <tr>
+                                <td>{{ $item->product->name }}</td>
+                                <td>{{ $item->quantity }}</td>
+                                <td>
+                                    <input type="number" name="products[{{ $loop->index }}][quantity]" class="form-control" value="{{ $item->quantity }}" required>
+                                    <input type="hidden" name="products[{{ $loop->index }}][purchase_request_item_id]" value="{{ $item->id }}">
+                                    <input type="hidden" name="products[{{ $loop->index }}][product_id]" value="{{ $item->product_id }}">
+                                </td>
+                                <td>
+                                    <input type="number" name="products[{{ $loop->index }}][price]"  value="{{ $item->price }}"  class="form-control" required>
+                                </td>
+                            </tr>
                         @endforeach
+                    @endforeach
                     </tbody>
                 </table>
                 @endif
