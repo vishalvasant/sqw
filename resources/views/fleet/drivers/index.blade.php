@@ -9,7 +9,7 @@
         <a href="{{ route('fleet.drivers.create') }}" class="btn btn-primary float-right">Add New Driver</a>
     </div>
     <div class="card-body">
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="example2">
             <thead>
                 <tr>
                     <th>Driver Name</th>

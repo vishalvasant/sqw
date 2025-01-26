@@ -24,4 +24,9 @@ class Product extends Model
     {
         return $this->belongsTo(Unit::class);
     }
+
+    public function assets()
+    {
+        return $this->belongsToMany(Asset::class, 'asset_part')->withPivot('quantity')->withTimestamps();
+    }
 }

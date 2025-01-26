@@ -7,7 +7,7 @@
         <!-- Page Heading -->
         <div class="row">
             <div class="col-12">
-                <h3 class="text-center">Allocate New Part to Asset: {{ $asset->name }}</h3>
+                <h3 class="text-center">Allocate New Part to Asset: {{ $asset->asset_name }}</h3>
 
                 <!-- Part Allocation Form -->
                 <div class="card">
@@ -15,7 +15,7 @@
                         <h5>Add New Part</h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('assets.parts.store', $asset->id) }}" method="POST">
+                        <form action="{{ route('assets.parts.allocate', $asset->id) }}" method="POST">
                             @csrf
                             <div class="form-group">
                                 <label for="part_id">Part Name</label>

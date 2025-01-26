@@ -9,8 +9,15 @@ class FuelUsage extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['vehicle_id', 'fuel_amount', 'cost_per_liter', 'date'];
+    protected $fillable = [
+        'vehicle_id',
+        'fuel_amount',
+        'cost_per_liter',
+        'date',
+        'total_cost'
+    ];
 
+    // Define relationship with Vehicle
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class);

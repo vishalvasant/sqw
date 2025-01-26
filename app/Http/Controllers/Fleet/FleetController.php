@@ -101,4 +101,55 @@ class FleetController extends Controller
         $fuelUsageReport = FuelUsage::all();
         return view('fleet.reports.index', compact('fuelUsageReport'));
     }
+
+    public function indexMachines()
+    {
+        $machines = Machine::all(); // Fetch all machines
+        return view('fleet.machines.index', compact('machines'));
+    }
+
+    public function createMachine()
+    {
+        return view('fleet.machines.create');
+    }
+
+    public function storeMachine(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'per_hour_cost' => 'required|numeric',
+        ]);
+
+        Machine::create($validated);
+
+        return redirect()->route('machines.index')->with('success', 'Machine added successfully!');
+    }
+
+    public function editMachine($id)
+    {
+        $machine = Machine::findOrFail($id);
+        return view('fleet.machines.edit', compact('machine'));
+    }
+
+    public function updateMachine(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'per_hour_cost' => 'required|numeric',
+        ]);
+
+        $machine = Machine::findOrFail($id);
+        $machine->update($validated);
+
+        return redirect()->route('machines.index')->with('success', 'Machine updated successfully!');
+    }
+
+    public function destroyMachine($id)
+    {
+        $machine = Machine::findOrFail($id);
+        $machine->delete();
+
+        return redirect()->route('machines.index')->with('success', 'Machine deleted successfully!');
+    }
+
 }

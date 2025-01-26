@@ -9,7 +9,7 @@
         <a href="{{ route('purchase.requests.create') }}" class="btn btn-primary float-right">Create New Request</a>
     </div>
     <div class="card-body">
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="example1">
             <thead>
                 <tr>
                     <th>#</th>

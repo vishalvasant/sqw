@@ -11,25 +11,8 @@
         <div class="card-body">
             <form action="{{ route('purchase.orders.store') }}" method="POST">
                 @csrf
-
-                <!-- Select Supplier -->
-                <div class="form-group">
-                    <label for="supplier_id">Supplier</label>
-                    <select name="supplier_id" id="supplier_id" class="form-control" required>
-                        <option value="">Select Supplier</option>
-                        @foreach ($suppliers as $supplier)
-                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="billed">Is Billed?</label>
-                    <input type="checkbox" name="billed" id="billed" value="1" {{ old('billed') ? 'checked' : '' }}>
-                </div>
-
-                <!-- Select Purchase Request -->
-                <div class="form-group">
+                 <!-- Select Purchase Request -->
+                 <div class="form-group">
                     <label for="request_id">Purchase Request</label>
                     <select name="request_id" id="request_id" class="form-control" onchange="location.href='?request_id=' + this.value;">
                         <option value="">Select Purchase Request</option>
@@ -40,9 +23,23 @@
                         @endforeach
                     </select>
                 </div>
-
+                
+                
+                
                 <!-- Products from Purchase Request -->
                 @if ($selectedRequest)
+                <!-- Select Supplier -->
+                <div class="form-group">
+                    <label for="supplier_id">Supplier</label>
+                    <input type="text" name="supplier" id="supplier" class="form-control" value="{{$suppliers->name}}" readonly>
+                    <input type="hidden" name="supplier_id" id="supplier_id" class="form-control" value="{{$suppliers->id}}" readonly>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="billed">Is Billed?</label>
+                    <input type="checkbox" name="billed" id="billed" value="1" {{ old('billed') ? 'checked' : '' }}>
+                </div>
                 <h5>Products</h5>
                 <table class="table table-bordered">
                     <thead>

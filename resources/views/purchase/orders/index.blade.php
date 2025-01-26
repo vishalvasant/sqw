@@ -10,7 +10,7 @@
             <a href="{{ route('purchase.orders.create') }}" class="btn btn-primary">Create Purchase Order</a>
         </div>
         <div class="card-body">
-            <table class="table table-bordered">
+            <table class="table table-bordered" id="example1">
                 <thead>
                     <tr>
                         <th>#</th>

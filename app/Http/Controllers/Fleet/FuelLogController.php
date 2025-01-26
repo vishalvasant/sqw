@@ -2,38 +2,45 @@
 
 namespace App\Http\Controllers\Fleet;
 
-use App\Models\FuelLog;
+use App\Models\FuelUsage;
 use App\Models\Product;
-use App\Models\Fleet;
+use App\Models\Vehicle;
 use Illuminate\Http\Request;
 
 class FuelLogController extends Controller
 {
     public function index()
     {
-        $fuelLogs = FuelLog::all();
-        return view('fuel_logs.index', compact('fuelLogs'));
+        $fuelLogs = FuelUsage::with('vehicle')->get();
+        return view('fleet.fuel_usages.index', compact('fuelLogs'));
     }
 
     public function create()
     {
-        $fleets = Fleet::all();
-        $products = Product::all(); // Assuming you have an inventory of products (fuel)
-        return view('fuel_logs.create', compact('fleets', 'products'));
+        $vehicles = Vehicle::all();
+        return view('fleet.fuel_usages.create', compact('vehicles'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'fleet_id' => 'required|exists:fleets,id',
-            'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|numeric',
-            'cost' => 'required|numeric',
-            'refueled_at' => 'required|date',
+        $validated = $request->validate([
+            'vehicle_id' => 'required|exists:vehicles,id',
+            'fuel_amount' => 'required|numeric',
+            'cost_per_liter' => 'required|numeric',
+            'date' => 'required|date',
         ]);
 
-        FuelLog::create($request->all());
+        $validated['total_cost'] = $validated['fuel_amount'] * $validated['cost_per_liter'];
 
-        return redirect()->route('fuel_logs.index')->with('success', 'Fuel log created successfully!');
+        FuelUsage::create($validated);
+
+        // Update inventory stock for fuel
+        $fuelProduct = Product::where('type', 'fuel')->first();
+        if ($fuelProduct) {
+            $fuelProduct->decrement('stock', $validated['fuel_amount']);
+        }
+
+        return redirect()->route('fuel_usages.index')->with('success', 'Fuel usage recorded successfully!');
     }
+
 }

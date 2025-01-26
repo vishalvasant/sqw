@@ -106,6 +106,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ route('fleet.fuel_usages.index') }}" class="nav-link {{ request()->routeIs('fuel_usages.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-gas-pump"></i>
+                                <p>Fuel Usages</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
                             <a href="{{ route('fleet.reports') }}" class="nav-link">
                                 <i class="nav-icon fas fa-chart-line"></i>
                                 <p>Reports</p>
@@ -128,12 +135,6 @@
                             <a href="{{ route('assets.index') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Assets</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('assets.parts.index') }}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Parts</p>
                             </a>
                         </li>
                     </ul>

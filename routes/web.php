@@ -17,6 +17,8 @@ use App\Http\Controllers\Fleet\FuelLogController;
 use App\Http\Controllers\Fleet\TripLogController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\PartController;
+use App\Http\Controllers\FuelUsageController;
+
 
 Route::get('/', function () {
     return view('landing');
@@ -51,6 +53,8 @@ Route::middleware(['auth'])->group(function () {
             Route::post('drivers.store', [FleetController::class, 'storeDriver'])->name('drivers.store');
 
             // Fleet Routes
+            Route::resource('fuel_usages', FuelUsageController::class);
+
             // Route::resource('fleets', FleetController::class);
 
             // // Driver Routes
@@ -65,8 +69,11 @@ Route::middleware(['auth'])->group(function () {
         });
         
         Route::resource('assets', AssetController::class);
+        Route::get('assets/{asset}', [AssetController::class, 'show'])->name('assets.show');
+        Route::post('assets/{asset}/allocate', [AssetController::class, 'allocateParts'])->name('assets.parts.allocate');
+
         Route::resource('assets.parts', PartController::class)->except(['show']);
-        Route::get('assets/parts', [PartController::class, 'index'])->name('assets.parts.index');
+        Route::get('assets.parts.index', [AssetController::class, 'show'])->name('assets.parts.index');
 
         
 

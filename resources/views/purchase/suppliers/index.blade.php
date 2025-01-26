@@ -9,7 +9,7 @@
         <a href="{{ route('purchase.suppliers.create') }}" class="btn btn-primary float-right">Add Supplier</a>
     </div>
     <div class="card-body">
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="example1">
             <thead>
                 <tr>
                     <th>#</th>

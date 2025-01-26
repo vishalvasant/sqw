@@ -9,7 +9,7 @@
     </div>
     <div class="card-body">
         <a href="{{ route('assets.create') }}" class="btn btn-primary mb-3">Add New Asset</a>
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="example1">
             <thead>
                 <tr>
                     <th>Asset Name</th>
@@ -27,7 +27,7 @@
                         <td>{{ $asset->value }}</td>
                         <td>{{ $asset->status }}</td>
                         <td>
-                            <a href="{{ route('assets.show', $asset->id) }}" class="btn btn-info">View</a>
+                            <a href="{{ route('assets.show', $asset->id) }}" class="btn btn-info">Allocate Part</a>
                         </td>
                     </tr>
                 @endforeach

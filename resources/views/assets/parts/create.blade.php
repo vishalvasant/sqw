@@ -1,41 +1,90 @@
 @extends('layouts.admin')
 
-@section('page-title', 'Add Asset')
+@section('page-title', 'Allocate Parts to Asset')
 
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Add New Asset</h3>
+        <h3 class="card-title">Allocate Parts to Asset</h3>
     </div>
     <div class="card-body">
-        <form action="{{ route('assets.store') }}" method="POST">
+        <form action="{{ route('assets.allocate', $asset->id) }}" method="POST">
             @csrf
+            @method('PUT')
+            
+            <!-- Asset Selection -->
             <div class="form-group">
-                <label for="asset_name">Asset Name</label>
-                <input type="text" class="form-control" name="asset_name" required>
-            </div>
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea class="form-control" name="description"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="value">Value</label>
-                <input type="number" class="form-control" name="value" required>
-            </div>
-            <div class="form-group">
-                <label for="purchase_date">Purchase Date</label>
-                <input type="date" class="form-control" name="purchase_date" required>
-            </div>
-            <div class="form-group">
-                <label for="status">Status</label>
-                <select class="form-control" name="status">
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                    <option value="maintenance">Under Maintenance</option>
+                <label for="asset">Asset</label>
+                <select class="form-control" name="asset_id" required>
+                    <option value="{{ $asset->id }}" selected>{{ $asset->name }}</option>
+                    <!-- You can add more asset options if needed -->
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary">Save Asset</button>
+
+            <!-- Product Selection with Quantity -->
+            <div class="form-group">
+                <label for="products">Select Products and Quantity</label>
+                <div id="product-fields">
+                    <div class="row product-row">
+                        <div class="col-md-6">
+                            <select class="form-control" name="products[0][product_id]" required>
+                                <option value="">Select Product</option>
+                                @foreach ($products as $product)
+                                    <option value="{{ $product->id }}">{{ $product->name }} (Stock: {{ $product->stock }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="number" class="form-control" name="products[0][quantity]" placeholder="Quantity" min="1" required>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-danger remove-product-row" style="margin-top: 10px;">Remove</button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-info" id="add-product-row" style="margin-top: 10px;">Add Another Product</button>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Allocate Parts</button>
         </form>
     </div>
 </div>
+
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add new product row for allocation
+        document.getElementById('add-product-row').addEventListener('click', function() {
+            var productRowCount = document.querySelectorAll('.product-row').length;
+            var newProductRow = `
+                <div class="row product-row">
+                    <div class="col-md-6">
+                        <select class="form-control" name="products[${productRowCount}][product_id]" required>
+                            <option value="">Select Product</option>
+                            @foreach ($products as $product)
+                                <option value="{{ $product->id }}">{{ $product->name }} (Stock: {{ $product->stock }})</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="number" class="form-control" name="products[${productRowCount}][quantity]" placeholder="Quantity" min="1" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-danger remove-product-row" style="margin-top: 10px;">Remove</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('product-fields').insertAdjacentHTML('beforeend', newProductRow);
+        });
+
+        // Remove product row
+        document.getElementById('product-fields').addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('remove-product-row')) {
+                e.target.closest('.product-row').remove();
+            }
+        });
+    });
+</script>
 @endsection
