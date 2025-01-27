@@ -29,7 +29,7 @@
                     <td>{{ ucfirst($request->status) }}</td>
                     <td>{{ $request->user->name }}</td>
                     <td>
-                        <a href="{{ route('purchase.requests.show', $request->id) }}" class="btn btn-sm btn-info">View</a>
+                        <!-- <a href="{{ route('purchase.requests.show', $request->id) }}" class="btn btn-sm btn-info">View</a> -->
                         <a href="{{ route('purchase.requests.edit', $request->id) }}" class="btn btn-sm btn-warning">Edit</a>
                         <form action="{{ route('purchase.requests.destroy', $request->id) }}" method="POST" class="d-inline-block">
                             @csrf

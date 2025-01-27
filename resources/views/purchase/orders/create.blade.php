@@ -25,7 +25,7 @@
                 </div>
                 
                 
-                
+
                 <!-- Products from Purchase Request -->
                 @if ($selectedRequest)
                 <!-- Select Supplier -->
@@ -51,8 +51,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach ($purchaseRequests as $pr)
-                        @foreach ($pr->items as $item)
+                        
+                        @foreach ($selectedRequest->items as $item)
                             <tr>
                                 <td>{{ $item->product->name }}</td>
                                 <td>{{ $item->quantity }}</td>
@@ -66,7 +66,7 @@
                                 </td>
                             </tr>
                         @endforeach
-                    @endforeach
+
                     </tbody>
                 </table>
                 @endif

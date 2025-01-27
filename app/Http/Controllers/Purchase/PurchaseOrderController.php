@@ -23,15 +23,14 @@ class PurchaseOrderController extends Controller
 
     public function create(Request $request)
     {
-        
+        $selectedRequestId = $request->get('request_id');
+        $selectedRequest = $selectedRequestId ? PurchaseRequest::with('items.product')->find($selectedRequestId) : null;
         $purchaseRequests = PurchaseRequest::with(['items' => function ($query) {
             $query->where('quantity', '>', 0); // Exclude items with 0 quantity
         }])->whereHas('items', function ($query) {
             $query->where('quantity', '>', 0);
         })->get();
-
-        $selectedRequestId = $request->get('request_id');
-        $selectedRequest = $selectedRequestId ? PurchaseRequest::with('items.product')->find($selectedRequestId) : null;
+        
         if($selectedRequest!=null){
             $suppliers = Supplier::findOrFail($selectedRequest->supplier_id);
         }else{
