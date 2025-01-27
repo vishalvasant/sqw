@@ -71,7 +71,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('assets', AssetController::class);
         Route::get('assets/{asset}', [AssetController::class, 'show'])->name('assets.show');
         Route::post('assets/{asset}/allocate', [AssetController::class, 'allocateParts'])->name('assets.parts.allocate');
-
+        Route::get('assets/{id}/parts-report', [AssetController::class, 'partsReport'])->name('assets.parts.report');
         Route::resource('assets.parts', PartController::class)->except(['show']);
         Route::get('assets.parts.index', [AssetController::class, 'show'])->name('assets.parts.index');
 
@@ -104,6 +104,8 @@ Route::middleware(['auth'])->group(function () {
             // Supplier
             Route::resource('suppliers', SupplierController::class);
         });
+        Route::get('/products/utilization/{id}', [ProductController::class, 'productUtilization'])->name('products.utilization.report');
+
         Route::patch('purchase-orders/{id}/mark-as-billed', [PurchaseOrderController::class, 'markAsBilled'])->name('purchase.orders.markAsBilled');
         Route::patch('purchase-orders/{id}/update-status', [PurchaseOrderController::class, 'updateStatus'])->name('purchase.orders.updateStatus');
         Route::patch('purchase-orders/{id}/update-billed', [PurchaseOrderController::class, 'updateBilled'])->name('purchase.orders.updateBilled');

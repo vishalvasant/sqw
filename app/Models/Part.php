@@ -15,4 +15,14 @@ class Part extends Model
     {
         return $this->belongsTo(Asset::class);
     }
+
+    public function parts()
+    {
+        return $this->hasMany(Part::class);
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'asset_part')->withPivot('quantity')->withTimestamps();
+    }
 }

@@ -11,14 +11,17 @@ class FuelUsageController extends Controller
 {
     public function index()
     {
-        $fuelUsages = FuelUsage::with('vehicle')->orderBy('date', 'desc')->get();
+        $fuelUsages = FuelUsage::with('vehicle','product')->orderBy('date', 'desc')->get();
         return view('fuel_usage.index', compact('fuelUsages'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $selectedRequestId = $request->get('request_id');
+        $selectedRequest = $selectedRequestId ? Vehicle::findOrFail($selectedRequestId) : null;
+        $products = Product::all(); // Fetch all products
         $vehicles = Vehicle::all(); // Fetch all vehicles
-        return view('fuel_usage.create', compact('vehicles'));
+        return view('fuel_usage.create', compact('vehicles','selectedRequest','products'));
     }
 
     public function store(Request $request)
@@ -30,13 +33,35 @@ class FuelUsageController extends Controller
             'date' => 'required|date',
         ]);
 
+        $product = Product::findOrFail($request->product_id);
+        if ($product->stock >= $request->fuel_amount) {
+            // Allocate the product to the asset and deduct stock
+            // $asset->products()->attach($product->id, ['quantity' => $request->quantity]);
+            $product->stock -= $request->fuel_amount;
+            $product->save();
+        } else {
+            return redirect()->back()->withErrors(['error' => 'Not enough stock for ' . $product->name]);
+        }
+
         $fuelUsage = new FuelUsage([
             'vehicle_id' => $request->vehicle_id,
+            'product_id' => $request->product_id,
             'fuel_amount' => $request->fuel_amount,
+            'purpose' => $request->vehicle_type,
+            'distance_covered' => $request->kmsrun ?? $request->trip ?? 0,
             'cost_per_liter' => $request->cost_per_liter,
             'total_cost' => $request->fuel_amount * $request->cost_per_liter,
+            'hours_used' => $request->hours_used ?? 0,
             'date' => $request->date,
         ]);
+
+        $vehicle = Vehicle::findOrFail($request->vehicle_id);
+        $vehicle->update([
+            'vehicle_id' => $request->vehicle_id,
+            'odometer' => $request->readings,
+        ]);
+
+        
 
         $fuelUsage->save();
 

@@ -7,6 +7,8 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Unit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class ProductController extends Controller
 {
@@ -67,6 +69,31 @@ class ProductController extends Controller
     {
         $product->delete();
         return redirect()->route('inventory.products.index')->with('success', 'Product deleted successfully');
+    }
+
+    public function productUtilization($id)
+    {
+        $product = Product::findOrFail($id);
+
+        // Fetch utilization data
+        $utilizationData = DB::table('purchase_order_items')
+            ->join('purchase_orders', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
+            ->join('suppliers', 'purchase_orders.supplier_id', '=', 'suppliers.id')
+            ->where('purchase_order_items.product_id', $id)
+            ->select(
+                'purchase_order_items.quantity',
+                'purchase_order_items.price',
+                'purchase_orders.order_number',
+                'suppliers.name',
+                'purchase_orders.created_at as received_date'
+            )
+            ->get();
+        // Calculate total quantity and average price
+        $totalQuantity = $utilizationData->sum('quantity');
+        $avgPrice = $utilizationData->avg('price');
+        $currentStock = $product->stock;
+        // Pass data to the view
+        return view('inventory.products.utilization_detail', compact('product', 'utilizationData', 'totalQuantity', 'avgPrice', 'currentStock'));
     }
 }
 

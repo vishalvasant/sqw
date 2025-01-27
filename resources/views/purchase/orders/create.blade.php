@@ -17,9 +17,11 @@
                     <select name="request_id" id="request_id" class="form-control" onchange="location.href='?request_id=' + this.value;">
                         <option value="">Select Purchase Request</option>
                         @foreach ($purchaseRequests as $pr)
+                        @if($pr->status == 'approved')
                         <option value="{{ $pr->id }}" {{ request('request_id') == $pr->id ? 'selected' : '' }}>
                             {{ $pr->request_number }}
                         </option>
+                        @endif
                         @endforeach
                     </select>
                 </div>

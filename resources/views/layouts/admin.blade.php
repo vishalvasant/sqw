@@ -88,5 +88,42 @@
         });
     });
     </script>
+
+<!-- Script to calculate avarage in difference of value of odometer -->
+    <script>
+        $().ready(function() {
+            var vt = $('#vehicle_type').val();
+            if(vt == 'KMS'){
+                $('#readings').on('input', function() {
+                    var readings = $(this).val();
+                    var odometer = $('#odometer').val();
+                    var diff = readings - odometer;
+                    $('#kmsrun').val(diff);
+                });
+    
+                $('#fuel_amount').on('input', function() {
+                    var readings = $(this).val();
+                    var km = $('#kmsrun').val();
+                    var diff =  km / readings;
+                    $('#cost_per_liter').val(diff);
+                });
+            }else if(vt == 'FIXED'){
+                $('#fuel_amount').on('input', function() {
+                    var fuel = $(this).val();
+                    var hr = $('#hours_used').val();
+                    var diff =  fuel/hr;
+                    $('#cost_per_liter').val(diff);
+                });
+            }else if(vt == 'TRIP'){
+                $('#fuel_amount').on('input', function() {
+                    var fuel = $(this).val();
+                    var tr = $('#trip').val();
+                    var diff =  fuel/tr;
+                    $('#cost_per_liter').val(diff);
+                });
+            }
+        });
+        
+    </script>
 </body>
 </html>

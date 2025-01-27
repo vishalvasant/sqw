@@ -9,7 +9,7 @@ class Vehicle extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['vehicle_number', 'vehicle_type', 'fixed_cost_per_hour'];
+    protected $fillable = ['vehicle_number', 'vehicle_type', 'fixed_cost_per_hour','odometer'];
 
     public function fuelUsages()
     {

@@ -6,13 +6,15 @@ use App\Models\Asset;
 use App\Models\Part;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class AssetController extends Controller
 {
     // Display a listing of the assets
     public function index()
     {
-        $assets = Asset::all();
+        $assets = Asset::with('parts')->get();
         return view('assets.index', compact('assets'));
     }
 
@@ -71,6 +73,36 @@ class AssetController extends Controller
         // }
 
         return redirect()->route('assets.index')->with('success', 'Parts allocated successfully.');
+    }
+
+    public function partsReport($id)
+    {
+        $asset = Asset::with(['parts' => function ($query) {
+            $query->with('product');
+        }])->findOrFail($id);
+        $reportData = DB::select("
+            SELECT 
+                assets.id AS asset_id,
+                assets.asset_name,
+                assets.description AS asset_description,
+                assets.value AS asset_value,
+                assets.status AS asset_status,
+                products.id AS product_id,
+                products.name AS product_name,
+                products.price AS product_price,
+                asset_part.quantity AS product_quantity
+            FROM 
+                assets
+            JOIN 
+                asset_part ON assets.id = asset_part.asset_id
+            JOIN 
+                products ON asset_part.product_id = products.id
+            WHERE 
+                assets.id = $id
+            ORDER BY 
+                assets.asset_name, products.name
+        ");
+        return view('assets.parts_report', compact('asset','reportData'));
     }
 
 }

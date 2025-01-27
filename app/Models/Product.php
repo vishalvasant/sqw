@@ -29,4 +29,14 @@ class Product extends Model
     {
         return $this->belongsToMany(Asset::class, 'asset_part')->withPivot('quantity')->withTimestamps();
     }
+
+    public function parts()
+    {
+        return $this->hasMany(Part::class);
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'asset_part')->withPivot('quantity')->withTimestamps();
+    }
 }

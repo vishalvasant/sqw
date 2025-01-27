@@ -28,6 +28,7 @@
                         <td>{{ $asset->status }}</td>
                         <td>
                             <a href="{{ route('assets.show', $asset->id) }}" class="btn btn-info">Allocate Part</a>
+                            <a href="{{ route('assets.parts.report', $asset->id) }}" class="btn btn-success">Utilization Report</a>
                         </td>
                     </tr>
                 @endforeach

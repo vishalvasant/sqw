@@ -18,6 +18,7 @@
                     <th>Unit</th>
                     <th>Price</th>
                     <th>Stock Quantity</th>
+                    <th>Total Received</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -31,12 +32,21 @@
                         <td>{{ $product->price }}</td>
                         <td>{{ $product->stock }}</td>
                         <td>
+                            @php
+                                $totalReceived = \DB::table('purchase_order_items')
+                                    ->where('product_id', $product->id)
+                                    ->sum('quantity');
+                            @endphp
+                            {{ $totalReceived }}
+                        </td>
+                        <td>
                             <a href="{{ route('inventory.products.edit', $product) }}" class="btn btn-warning">Edit</a>
                             <form action="{{ route('inventory.products.destroy', $product) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
+                            <a href="{{ route('products.utilization.report', $product->id) }}" class="btn btn-info">Utilization</a>
                         </td>
                     </tr>
                 @endforeach

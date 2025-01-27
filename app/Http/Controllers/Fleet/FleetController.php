@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Fleet;
 
+use App\Models\Asset;
 use App\Models\Driver;
 use App\Models\Vehicle;
 use App\Models\FuelUsage;
@@ -26,11 +27,21 @@ class FleetController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $v = $request->validate([
             'vehicle_number' => 'required|unique:vehicles',
             'vehicle_type' => 'required',
             'fixed_cost_per_hour' => 'required|numeric',
         ]);
+
+        $asset = Asset::create(
+            [
+                'asset_name' => $request->vehicle_number,
+                'value' => $request->value ?? 0,
+                'purchase_date' => $request->purchase_date ?? now(),
+                'description' => "Default Vehicle",
+                'status' => $request->status ?? 'active',
+            ]
+        );
 
         $vehicle = Vehicle::create($request->all());
         return redirect()->route('fleet.vehicles.index')->with('success', 'Vehicle created successfully');
