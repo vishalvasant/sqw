@@ -181,5 +181,32 @@ class FleetController extends Controller
         return view('fleet.utilization', compact('vehicle', 'fuelUsages', 'totalFuel', 'totalFuelCost', 'avgCostPerLiter'));
     }
 
+    public function generateUtilizationReport(Request $request)
+    {
+        $fromDate = $request->input('from_date');
+        $toDate = $request->input('to_date');
+
+        $fuelUsages = DB::table('fuel_usages')
+            ->join('vehicles', 'fuel_usages.vehicle_id', '=', 'vehicles.id')
+            ->whereBetween('fuel_usages.date', [$fromDate, $toDate])
+            ->select(
+                'vehicles.vehicle_number',
+                'vehicles.vehicle_type',
+                DB::raw('SUM(fuel_usages.fuel_amount) as total_fuel'),
+                DB::raw('SUM(fuel_usages.fuel_amount * fuel_usages.cost_per_liter) as total_cost'),
+                DB::raw('AVG(fuel_usages.cost_per_liter) as avg_cost_per_liter')
+            )
+            ->groupBy('vehicles.id', 'vehicles.vehicle_number', 'vehicles.vehicle_type')
+            ->get();
+
+        // Calculate summary totals
+        $totalFuel = $fuelUsages->sum('total_fuel');
+        $totalCost = $fuelUsages->sum('total_cost');
+        $avgCostPerLiter = ($totalFuel > 0) ? ($totalCost / $totalFuel) : 0;
+
+        return view('fleet.utilization_report', compact('fuelUsages', 'fromDate', 'toDate', 'totalFuel', 'totalCost', 'avgCostPerLiter'));
+    }
+
+
 
 }

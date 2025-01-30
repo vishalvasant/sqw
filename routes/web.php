@@ -111,6 +111,7 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('purchase-orders/{id}/update-billed', [PurchaseOrderController::class, 'updateBilled'])->name('purchase.orders.updateBilled');
         Route::post('purchase-orders/{id}/receive-docket', [PurchaseOrderController::class, 'receiveDocket'])->name('purchase.orders.receiveDocket');
         Route::get('fleet/vehicles/{id}/utilization', [FleetController::class, 'utilization'])->name('fleet.vehicles.utilization');
+        Route::get('fleet/utilization-report', [FleetController::class, 'generateUtilizationReport'])->name('fleet.utilization.report');
 
     
     });
