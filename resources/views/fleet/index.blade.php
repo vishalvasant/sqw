@@ -25,6 +25,9 @@
                         <td>{{ $vehicle->vehicle_type }}</td>
                         <td>{{ $vehicle->fixed_cost_per_hour }}</td>
                         <td>
+                            <a href="{{ route('fleet.vehicles.utilization', $vehicle->id) }}" class="btn btn-info">
+                                Fuel Utilization Report
+                            </a>
                         </td>
                     </tr>
                 @endforeach

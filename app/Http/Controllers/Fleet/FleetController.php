@@ -9,6 +9,7 @@ use App\Models\FuelUsage;
 use App\Models\FleetCost;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class FleetController extends Controller
 {
@@ -162,5 +163,23 @@ class FleetController extends Controller
 
         return redirect()->route('machines.index')->with('success', 'Machine deleted successfully!');
     }
+
+    public function utilization($id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+
+        $fuelUsages = DB::table('fuel_usages')
+            ->where('vehicle_id', $id)
+            ->select('fuel_amount', 'cost_per_liter', 'date', DB::raw('fuel_amount * cost_per_liter as total_cost'))
+            ->get();
+
+        // Calculate Total Fuel, Total Fuel Cost, and Average Cost Per Liter
+        $totalFuel = $fuelUsages->sum('fuel_amount');
+        $totalFuelCost = $fuelUsages->sum('total_cost');
+        $avgCostPerLiter = $totalFuel > 0 ? $totalFuelCost / $totalFuel : 0;
+
+        return view('fleet.utilization', compact('vehicle', 'fuelUsages', 'totalFuel', 'totalFuelCost', 'avgCostPerLiter'));
+    }
+
 
 }
