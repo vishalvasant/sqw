@@ -13,6 +13,8 @@
                 <tr>
                     <th>#</th>
                     <th>Asset Name</th>
+                    <th>Request By</th>
+                    <th>Recived By</th>
                     <th>Product Name</th>
                     <th>Quantity</th>
                     <th>Price</th>
@@ -24,6 +26,8 @@
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $row->asset_name }}</td>
+                        <td>{{ $row->req_by }}</td>
+                        <td>{{ $row->rec_by }}</td>
                         <td>{{ $row->product_name }}</td>
                         <td>{{ $row->product_quantity }}</td>
                         <td>{{ $row->product_price }}</td>

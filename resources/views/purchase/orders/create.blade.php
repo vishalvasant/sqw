@@ -12,19 +12,25 @@
             <form action="{{ route('purchase.orders.store') }}" method="POST">
                 @csrf
                  <!-- Select Purchase Request -->
-                 <div class="form-group">
-                    <label for="request_id">Purchase Request</label>
-                    <select name="request_id" id="request_id" class="form-control" onchange="location.href='?request_id=' + this.value;">
-                        <option value="">Select Purchase Request</option>
-                        @foreach ($purchaseRequests as $pr)
-                        @if($pr->status == 'approved')
-                        <option value="{{ $pr->id }}" {{ request('request_id') == $pr->id ? 'selected' : '' }}>
-                            {{ $pr->request_number }}
-                        </option>
-                        @endif
-                        @endforeach
-                    </select>
-                </div>
+                  <div class="row">
+                      <div class="col-md-4">
+                         <label for="gr_number">GR Number</label>
+                         <input type="text" name="gr_number" id="gr_number" class="form-control" value="" >
+                     </div>
+                      <div class="col-md-8">
+                         <label for="request_id">Purchase Request</label>
+                         <select name="request_id" id="request_id" class="form-control" onchange="location.href='?request_id=' + this.value;">
+                             <option value="">Select Purchase Request</option>
+                             @foreach ($purchaseRequests as $pr)
+                             @if($pr->status == 'approved')
+                             <option value="{{ $pr->id }}" {{ request('request_id') == $pr->id ? 'selected' : '' }}>
+                                 {{ $pr->request_number }}
+                             </option>
+                             @endif
+                             @endforeach
+                         </select>
+                     </div>
+                  </div>
                 
                 
 

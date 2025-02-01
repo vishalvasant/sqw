@@ -49,6 +49,7 @@ class PurchaseOrderController extends Controller
             $purchaseOrder->supplier_id = $request->supplier_id;
             $purchaseOrder->status = 'pending';
             $purchaseOrder->billed = 0; // Default
+            $purchaseOrder->gr_number = $request->gr_number ?? 0;
             $purchaseOrder->purchase_request_id = $request->request_id; // Default
             $purchaseOrder->save();
 
