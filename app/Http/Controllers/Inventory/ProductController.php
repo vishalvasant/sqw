@@ -84,6 +84,7 @@ class ProductController extends Controller
                 'purchase_order_items.quantity',
                 'purchase_order_items.price',
                 'purchase_orders.order_number',
+                'purchase_orders.gr_number',
                 'suppliers.name',
                 'purchase_orders.created_at as received_date'
             )

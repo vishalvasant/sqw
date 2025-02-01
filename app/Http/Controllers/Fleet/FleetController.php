@@ -193,6 +193,8 @@ class FleetController extends Controller
                 'vehicles.vehicle_number',
                 'vehicles.vehicle_type',
                 DB::raw('SUM(fuel_usages.fuel_amount) as total_fuel'),
+                DB::raw('SUM(fuel_usages.distance_covered) as total_distance'),
+                DB::raw('SUM(fuel_usages.hours_used) as total_hours'),
                 DB::raw('SUM(fuel_usages.fuel_amount * fuel_usages.cost_per_liter) as total_cost'),
                 DB::raw('AVG(fuel_usages.cost_per_liter) as avg_cost_per_liter')
             )

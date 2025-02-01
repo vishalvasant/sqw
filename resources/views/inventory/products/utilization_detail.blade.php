@@ -16,6 +16,7 @@
             <thead>
                 <tr>
                     <th>PO Number</th>
+                    <th>GRN Number</th>
                     <th>Supplier Name</th>
                     <th>Date Received</th>
                     <th>Quantity Received</th>
@@ -26,6 +27,7 @@
                 @forelse($utilizationData as $data)
                     <tr>
                         <td>{{ $data->order_number }}</td>
+                        <td>{{ $data->gr_number }}</td>
                         <td>{{ $data->name }}</td>
                         <td>{{ \Carbon\Carbon::parse($data->received_date)->format('d-m-Y') }}</td>
                         <td>{{ $data->quantity }}</td>

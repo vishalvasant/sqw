@@ -37,6 +37,7 @@
                     <th>Vehicle Number</th>
                     <th>Vehicle Type</th>
                     <th>Total Fuel Used (Liters)</th>
+                    <th>Utilization</th>
                     <th>Total Cost</th>
                     <th>Average Cost per Liter</th>
                 </tr>
@@ -47,6 +48,13 @@
                         <td>{{ $usage->vehicle_number }}</td>
                         <td>{{ $usage->vehicle_type }}</td>
                         <td>{{ number_format($usage->total_fuel, 2) }}</td>
+                        @if($usage->vehicle_type == 'FIXED')
+                        <td>{{ number_format($usage->total_hours, 2) }} Hrs</td>
+                        @elseif($usage->vehicle_type == 'TRIP')
+                        <td>{{ number_format($usage->total_distance, 2) }} Trips</td>
+                        @else
+                        <td>{{ number_format($usage->total_distance, 2) }} Kms</td>
+                        @endif
                         <td>₹{{ number_format($usage->total_cost, 2) }}</td>
                         <td>₹{{ number_format($usage->avg_cost_per_liter, 2) }}</td>
                     </tr>
