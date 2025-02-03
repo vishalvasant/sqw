@@ -3,3 +3,4 @@ vendor
 package-*.*
 composer.lock
 .env
+public
