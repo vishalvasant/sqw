@@ -5,6 +5,28 @@
 @section('content')
 <div class="card">
     <div class="card-header">
+        <h3 class="card-title">Product Utilization Report</h3>
+    </div>
+    <div class="card-body">
+        <form method="GET" action="{{ route('inventory.products.report') }}">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="from_date">From Date</label>
+                    <input type="date" name="from_date" class="form-control" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="to_date">To Date</label>
+                    <input type="date" name="to_date" class="form-control" required>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-success">Generate Report</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
         <h3 class="card-title">Products</h3>
         <a href="{{ route('inventory.products.create') }}" class="btn btn-primary float-right">Add New Product</a>
     </div>

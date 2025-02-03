@@ -1,35 +1,39 @@
 @extends('layouts.admin')
 
+@section('page-title', 'Create User')
+
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Add User</h3>
+        <h3 class="card-title">Create New User</h3>
     </div>
-    <div class="card-body">
-        <form action="{{ route('users.store') }}" method="POST">
-            @csrf
+    <form action="{{ route('users.store') }}" method="POST">
+        @csrf
+        <div class="card-body">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" name="name" id="name" class="form-control" required>
+                <input type="text" name="name" class="form-control" required>
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" name="email" id="email" class="form-control" required>
+                <input type="email" name="email" class="form-control" required>
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" class="form-control" required>
+                <input type="password" name="password" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="roles">Assign Roles</label>
-                <select name="roles[]" id="roles" class="form-control" multiple required>
-                    @foreach($roles as $role)
-                        <option value="{{ $role->name }}">{{ $role->name }}</option>
+                <label for="role">Assign Role</label>
+                <select name="role_id" class="form-control">
+                    @foreach ($roles as $role)
+                        <option value="{{ $role->id }}">{{ $role->name }}</option>
                     @endforeach
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary">Save</button>
-        </form>
-    </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Create User</button>
+        </div>
+    </form>
 </div>
 @endsection

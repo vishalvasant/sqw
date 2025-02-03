@@ -74,13 +74,13 @@
                         <li class="nav-item">
                             <a href="{{ route('purchase.requests.index') }}" class="nav-link">
                                 <i class="fas fa-list nav-icon"></i>
-                                <p>Purchase Requests</p>
+                                <p>Purchase Requests-Orders</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('purchase.orders.index') }}" class="nav-link">
                                 <i class="fas fa-file-invoice nav-icon"></i>
-                                <p>Purchase Orders</p>
+                                <p>Stock In</p>
                             </a>
                         </li>
                     </ul>
@@ -139,7 +139,45 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('tasks.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-tasks"></i>
+                        <p>Task Management</p>
+                    </a>
+                </li>
                 
+                <!-- User and Role Permission Management Module -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fa fa-users"></i>
+                        <p>
+                            User Management
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('users.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>Users</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('roles.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-user-tag"></i>
+                                <p>Roles</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('permissions.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-key"></i>
+                                <p>Permissions</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i class="fa fa-home nav-icon"></i>

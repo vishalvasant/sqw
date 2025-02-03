@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\StockImportController;
 use App\Http\Controllers\Inventory\ProductController;
@@ -18,7 +19,7 @@ use App\Http\Controllers\Fleet\TripLogController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\PartController;
 use App\Http\Controllers\FuelUsageController;
-
+use App\Http\Controllers\TaskController;
 
 Route::get('/', function () {
     return view('landing');
@@ -31,12 +32,19 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/purchase-requests/{id}/details', [PurchaseRequestController::class, 'getDetails']);
 
 Route::middleware(['auth'])->group(function () {
+    Route::resource('tasks', TaskController::class);
+    Route::delete('/tasks/{task}/delete-file', [TaskController::class, 'deleteFile'])->name('tasks.delete-file');
+
     Route::prefix('admin')->group(function () {
         // User Management
         Route::resource('users', UserController::class);
 
         // Role Management
         Route::resource('roles', RoleController::class);
+
+        // Permission Management
+        Route::resource('permissions', PermissionController::class);
+
 
         // Warehouse Routes
         Route::resource('warehouses', WarehouseController::class);
@@ -105,6 +113,7 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('suppliers', SupplierController::class);
         });
         Route::get('/products/utilization/{id}', [ProductController::class, 'productUtilization'])->name('products.utilization.report');
+        Route::get('/products/report', [ProductController::class, 'generateReport'])->name('inventory.products.report');
 
         Route::patch('purchase-orders/{id}/mark-as-billed', [PurchaseOrderController::class, 'markAsBilled'])->name('purchase.orders.markAsBilled');
         Route::patch('purchase-orders/{id}/update-status', [PurchaseOrderController::class, 'updateStatus'])->name('purchase.orders.updateStatus');
