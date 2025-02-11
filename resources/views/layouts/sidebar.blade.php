@@ -38,12 +38,14 @@
                             </a>
                         </li>
                         @endif
+                        @if ($usr->can('categories.view'))
                         <li class="nav-item">
                             <a href="{{ route('inventory.categories.index') }}" class="nav-link">
                                 <i class="fas fa-th-large nav-icon"></i>
                                 <p>Categories</p>
                             </a>
                         </li>
+                        @endif
                         <li class="nav-item">
                             <a href="{{ route('inventory.units.index') }}" class="nav-link">
                                 <i class="fas fa-ruler nav-icon"></i>

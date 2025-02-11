@@ -42,14 +42,16 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('users', UserController::class);
 
         // Role Management
-        Route::resource('roles', RoleController::class);
+        Route::resource('roles', RoleController::class)->except(['show']);
         Route::post('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
         Route::post('/roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.permissions.update');
 
         
         // Permission Management
-        Route::resource('permissions', PermissionController::class);
-        Route::post('/permissions/{permissions}', [PermissionController::class, 'update'])->name('permissions.update');
+        Route::resource('permissions', PermissionController::class)->except(['show']);
+        Route::get('/permissions/{role}', [PermissionController::class, 'getRolePermissions'])->name('permissions.getRolePermissions');
+        Route::put('/permissions/update', [PermissionController::class, 'update'])->name('permissions.update');
+        
 
         // Warehouse Routes
         Route::resource('warehouses', WarehouseController::class);

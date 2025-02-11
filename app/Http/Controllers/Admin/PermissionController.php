@@ -43,24 +43,45 @@ class PermissionController extends Controller
         return view('admin.permissions.edit', compact('permission'));
     }
 
+    public function getRolePermissions($roleId)
+    {
+        $role = Role::find($roleId);
+
+        if (!$role) {
+            return response()->json(['error' => 'Role not found'], 404);
+        }
+
+        $allPermissions = Permission::all();
+
+        $groupedPermissions = $allPermissions->map(function ($permission) use ($role) {
+            return [
+                'id' => $permission->id,
+                'name' => $permission->name,
+                'group' => strtoupper($permission->group_name), // Group by first word
+                'assigned' => $role->hasPermissionTo($permission->name),
+            ];
+        });
+
+        return response()->json(['permissions' => $groupedPermissions], 200);
+    }
+
+
     public function update(Request $request)
     {
         $request->validate([
+            'role_id' => 'required|exists:roles,id',
             'permissions' => 'array',
         ]);
 
-        foreach ($request->permissions as $roleId => $permissionIds) {
-            $role = Role::findOrFail($roleId);
-            
-            // Fetch permission names from IDs
-            $permissionNames = Permission::whereIn('id', $permissionIds)->pluck('name')->toArray();
-            
-            // Assign permissions using names
-            $role->syncPermissions($permissionNames);
-        }
+        $role = Role::findOrFail($request->role_id);
+        $permissionNames = Permission::whereIn('id', $request->permissions)->pluck('name')->toArray();
+        $role->syncPermissions($permissionNames);
 
         return redirect()->route('permissions.index')->with('success', 'Permissions updated successfully.');
     }
+
+
+    
 
 
     public function destroy(Permission $permission)
