@@ -1,41 +1,34 @@
-
-{{-- Role Permission Management UI --}}
+{{-- resources/views/admin/permissions/index.blade.php --}}
 @extends('layouts.admin')
-@section('page-title', 'Role Permissions')
+@section('page-title', 'Assign Permissions')
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Assign Permissions</h3>
+        <h3 class="card-title">Assign Permissions to Roles</h3>
     </div>
-    <div class="card-body">
-        <form action="{{ route('roles.update-permissions') }}" method="POST">
-            @csrf
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Module</th>
-                        <th>Permissions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($modules as $module)
-                        <tr>
-                            <td>{{ ucfirst($module) }}</td>
-                            <td>
-                                @foreach($permissions->where('module', $module) as $permission)
-                                    <label>
-                                        <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" 
-                                            {{ in_array($permission->id, $assignedPermissions) ? 'checked' : '' }}>
-                                        {{ $permission->name }}
-                                    </label>
-                                @endforeach
-                            </td>
-                        </tr>
+    <form action="{{ route('permissions.update' , $permissions) }}" method="POST">
+        @csrf
+        @method('PUT')
+        <div class="card-body">
+            @foreach ($roles as $role)
+                <h4>{{ $role->name }}</h4>
+                <div class="row">
+                    @foreach ($permissions as $permission)
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input type="checkbox" name="permissions[{{ $role->id }}][]" value="{{ $permission->id }}"
+                                    {{ $role->hasPermissionTo($permission->name) ? 'checked' : '' }}>
+                                <label>{{ $permission->name }}</label>
+                            </div>
+                        </div>
                     @endforeach
-                </tbody>
-            </table>
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-        </form>
-    </div>
+                </div>
+                <hr>
+            @endforeach
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Update Permissions</button>
+        </div>
+    </form>
 </div>
 @endsection

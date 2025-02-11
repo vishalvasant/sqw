@@ -49,8 +49,8 @@ class RoleController extends Controller
 
         $role->update(['name' => $request->name]);
         $role->syncPermissions($request->permissions);
-
-        return redirect()->route('roles.index')->with('success', 'Role updated successfully.');
+        $permissions = Permission::all();
+        return view('roles.index',compact('permissions'))->with('success', 'Role updated successfully.');
     }
 
     public function destroy(Role $role)
@@ -58,4 +58,18 @@ class RoleController extends Controller
         $role->delete();
         return redirect()->route('roles.index')->with('success', 'Role deleted successfully.');
     }
+
+    public function updatePermissions(Request $request, Role $role)
+    {
+        $request->validate([
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'exists:permissions,id',
+        ]);
+
+        // Sync permissions
+        $role->syncPermissions($request->permissions);
+
+        return redirect()->route('admin.roles.index')->with('success', 'Permissions updated successfully.');
+    }
+
 }

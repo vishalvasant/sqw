@@ -1,3 +1,6 @@
+@php
+    $usr = Auth::guard('web')->user();
+ @endphp
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="/" class="brand-link">
@@ -9,12 +12,14 @@
     <div class="sidebar">
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                @if ($usr->can('dashboard.view'))
                 <li class="nav-item">
                     <a href="{{ route('home') }}" class="nav-link">
                         <i class="fa fa-home nav-icon"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
+                @endif
                 <!-- Inventory Module -->
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
@@ -25,12 +30,14 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
+                        @if ($usr->can('products.view'))
                         <li class="nav-item">
                             <a href="{{ route('inventory.products.index') }}" class="nav-link">
                                 <i class="fas fa-cube nav-icon"></i>
                                 <p>Products</p>
                             </a>
                         </li>
+                        @endif
                         <li class="nav-item">
                             <a href="{{ route('inventory.categories.index') }}" class="nav-link">
                                 <i class="fas fa-th-large nav-icon"></i>

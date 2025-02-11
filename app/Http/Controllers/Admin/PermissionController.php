@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -11,13 +12,14 @@ class PermissionController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('can:manage permissions');
+        // $this->middleware('can:manage permissions');
     }
 
     public function index()
     {
         $permissions = Permission::all();
-        return view('admin.permissions.index', compact('permissions'));
+        $roles = Role::all();
+        return view('admin.permissions.index', compact('permissions', 'roles'));
     }
 
     public function create()
@@ -30,9 +32,10 @@ class PermissionController extends Controller
         $request->validate([
             'name' => 'required|unique:permissions,name'
         ]);
-        
+
         Permission::create(['name' => $request->name]);
-        return redirect()->route('admin.permissions.index')->with('success', 'Permission created successfully');
+
+        return redirect()->route('admin.permissions.index')->with('success', 'Permission created successfully.');
     }
 
     public function edit(Permission $permission)
@@ -40,19 +43,30 @@ class PermissionController extends Controller
         return view('admin.permissions.edit', compact('permission'));
     }
 
-    public function update(Request $request, Permission $permission)
+    public function update(Request $request)
     {
         $request->validate([
-            'name' => 'required|unique:permissions,name,' . $permission->id
+            'permissions' => 'array',
         ]);
-        
-        $permission->update(['name' => $request->name]);
-        return redirect()->route('admin.permissions.index')->with('success', 'Permission updated successfully');
+
+        foreach ($request->permissions as $roleId => $permissionIds) {
+            $role = Role::findOrFail($roleId);
+            
+            // Fetch permission names from IDs
+            $permissionNames = Permission::whereIn('id', $permissionIds)->pluck('name')->toArray();
+            
+            // Assign permissions using names
+            $role->syncPermissions($permissionNames);
+        }
+
+        return redirect()->route('permissions.index')->with('success', 'Permissions updated successfully.');
     }
+
 
     public function destroy(Permission $permission)
     {
         $permission->delete();
-        return redirect()->route('admin.permissions.index')->with('success', 'Permission deleted successfully');
+
+        return redirect()->route('admin.permissions.index')->with('success', 'Permission deleted successfully.');
     }
 }

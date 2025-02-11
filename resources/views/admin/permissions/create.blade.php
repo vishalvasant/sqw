@@ -12,7 +12,7 @@
         <div class="card-body">
             <div class="form-group">
                 <label for="name">Permission Name</label>
-                <input type="text" name="name" class="form-control" required>
+                <input type="text" name="name" class="form-control" placeholder="Enter permission name" required>
             </div>
         </div>
         <div class="card-footer">

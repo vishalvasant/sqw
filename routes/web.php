@@ -20,6 +20,8 @@ use App\Http\Controllers\AssetController;
 use App\Http\Controllers\PartController;
 use App\Http\Controllers\FuelUsageController;
 use App\Http\Controllers\TaskController;
+use Spatie\Permission\Middleware\RoleMiddleware;
+use Spatie\Permission\Middleware\PermissionMiddleware;
 
 Route::get('/', function () {
     return view('landing');
@@ -36,15 +38,18 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/tasks/{task}/delete-file', [TaskController::class, 'deleteFile'])->name('tasks.delete-file');
 
     Route::prefix('admin')->group(function () {
-        // User Management
+            // User Management
         Route::resource('users', UserController::class);
 
         // Role Management
         Route::resource('roles', RoleController::class);
+        Route::post('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
+        Route::post('/roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.permissions.update');
 
+        
         // Permission Management
         Route::resource('permissions', PermissionController::class);
-
+        Route::post('/permissions/{permissions}', [PermissionController::class, 'update'])->name('permissions.update');
 
         // Warehouse Routes
         Route::resource('warehouses', WarehouseController::class);
@@ -88,12 +93,12 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('inventory')->name('inventory.')->middleware('auth')->group(function () {
             // Warehouses
             Route::resource('warehouses', WarehouseController::class);
-        
             // Stock Imports
             Route::resource('stock-imports', StockImportController::class);
-
             // Product Routes
             Route::resource('products', ProductController::class);
+
+
 
             // Category Routes
             Route::resource('categories', CategoryController::class);
