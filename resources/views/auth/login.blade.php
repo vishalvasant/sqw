@@ -1,11 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container vh-100">
+<div class="container vh-100 text-m">
     <div class="row justify-content-center vh-100 align-items-center">
         <div class="col-md-5 center">
             <div class="card justify-content-center">
-                <img src="./images/logo.png" class="w-50 h-auto">
+                <div class="w-100 text-center p-4">
+                    <img src="./images/logo.png" class="w-50 h-auto">
+                </div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">

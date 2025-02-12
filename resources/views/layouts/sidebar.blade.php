@@ -2,9 +2,11 @@
     $usr = Auth::guard('web')->user();
 @endphp
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <a href="/" class="brand-link">
-        <span class="brand-text font-weight-light">SHREEJI QUARRY WORKS</span>
-    </a>
+    <div class="text-center">
+        <a href="/" class="brand-link">
+            <span class="brand-text center">SHREEJI QUARRY WORKS</span>
+        </a>
+    </div>
     <div class="sidebar">
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
