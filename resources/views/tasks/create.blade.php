@@ -32,6 +32,15 @@
                 </select>
             </div>
             <div class="form-group">
+                <label for="approver_id">Approver</label>
+                <select name="approver_id" class="form-control" required>
+                    <option value="">Select Approver</option>
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="due_date">Due Date</label>
                 <input type="date" name="due_date" class="form-control">
             </div>

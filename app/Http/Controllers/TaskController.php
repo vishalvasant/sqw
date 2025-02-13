@@ -24,6 +24,12 @@ class TaskController extends Controller
         return view('tasks.create', compact('users'));
     }
 
+    public function show($id)
+    {
+        $task = Task::with('assignee', 'approver')->findOrFail($id);
+        return view('tasks.show', compact('task'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -46,18 +52,18 @@ class TaskController extends Controller
             'status' => $request->status ?? 'pending',
             'due_date' => $request->due_date,
             'assigned_to' => $request->assigned_to,
+            'approver_id' => $request->approver_id,
             'file_path' => $filePath,
             'created_by' => auth()->id(),
         ]);
 
-        $approver = User::find($task->assigned_to); // Approver user
+        // Notify Assigned User
+        $assignedUser = User::find($request->assigned_to);
+        $assignedUser->notify(new TaskNotification($task, 'assigned'));
 
-        // Notify the approver
-        $approver->notify(new TaskNotification($task, 'assigned'));
-
-        // Notify admin
-        $adminUsers = User::where('id', 1)->get();
-        Notification::send($adminUsers, new TaskNotification($task, 'created'));
+        // Notify Approver
+        $approver = User::find($request->approver_id);
+        $approver->notify(new TaskNotification($task, 'approval required'));
 
         return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
     }
