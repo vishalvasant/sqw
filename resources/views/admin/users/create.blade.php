@@ -23,10 +23,14 @@
                 <input type="password" name="password" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="role">Assign Role</label>
-                <select name="role_id" class="form-control">
+                <label for="password_confirmation">Confirm Password</label>
+                <input type="password" name="password_confirmation" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="roles">Assign Roles</label>
+                <select name="roles[]" class="form-control select2" multiple required>
                     @foreach ($roles as $role)
-                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                        <option value="{{ $role->name }}">{{ $role->name }}</option>
                     @endforeach
                 </select>
             </div>

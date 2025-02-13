@@ -20,10 +20,18 @@
                 <input type="email" name="email" class="form-control" value="{{ $user->email }}" required>
             </div>
             <div class="form-group">
-                <label for="role">Assign Role</label>
-                <select name="role_id" class="form-control">
+                <label for="password">New Password (Leave blank if not changing)</label>
+                <input type="password" name="password" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="password_confirmation">Confirm New Password</label>
+                <input type="password" name="password_confirmation" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="roles">Assign Roles</label>
+                <select name="roles[]" class="form-control select2" multiple required>
                     @foreach ($roles as $role)
-                        <option value="{{ $role->id }}" {{ $user->role_id == $role->id ? 'selected' : '' }}>
+                        <option value="{{ $role->name }}" {{ $user->roles->contains('name', $role->name) ? 'selected' : '' }}>
                             {{ $role->name }}
                         </option>
                     @endforeach

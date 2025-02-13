@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SHREEJI QUARRY WORKS</title>
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/css/select2.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
     <!-- DataTables -->
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
@@ -115,7 +118,17 @@
     <script src="{{ asset('adminlte/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
     <script src="{{ asset('adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
     <script src="{{ asset('adminlte/js/adminlte.min.js') }}"></script>
+    <!-- Select2 -->
+    <script src="{{asset('adminlte/plugins/select2/js/select2.full.min.js')}}"></script>
 
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: "Select Roles",
+                allowClear: true
+            });
+        });
+    </script>
     <script>
     $(function () {
         $("#example1").DataTable({
