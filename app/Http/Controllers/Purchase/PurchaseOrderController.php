@@ -181,5 +181,29 @@ class PurchaseOrderController extends Controller
         return redirect()->route('purchase.orders.index')->with('success', 'Billed status updated successfully.');
     }
 
+    public function purchaseOrdersReport(Request $request)
+    {
+        $query = PurchaseOrder::with('supplier');
+
+        // Filter by date range
+        if ($request->has('from_date') && $request->has('to_date')) {
+            $query->whereBetween('created_at', [$request->from_date, $request->to_date]);
+        }
+
+        // Filter by status
+        if ($request->has('status') && !empty($request->status)) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by billed/unbilled
+        if ($request->has('billed') && $request->billed !== '') {
+            $query->where('billed', $request->billed);
+        }
+
+        $purchaseOrders = $query->get();
+
+        return view('purchase.orders.reports', compact('purchaseOrders'));
+    }
+
 
 }

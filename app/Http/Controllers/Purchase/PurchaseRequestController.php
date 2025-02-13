@@ -151,4 +151,17 @@ class PurchaseRequestController extends Controller
         ]);
     }
 
+    public function purchaseRequestsReport(Request $request)
+    {
+        $query = PurchaseRequest::with(['user', 'product']);
+
+        if ($request->has('from_date') && $request->has('to_date')) {
+            $query->whereBetween('created_at', [$request->from_date, $request->to_date]);
+        }
+
+        $purchaseRequests = $query->get();
+
+        return view('purchase.requests.reports', compact('purchaseRequests'));
+    }
+
 }

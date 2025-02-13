@@ -3,7 +3,45 @@
 @section('page-title', 'Purchase Orders')
 
 @section('content')
-
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Stock-In Report</h3>
+        </div>
+        <div class="card-body">
+            <form method="GET" action="{{ route('purchase.orders.report') }}">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>From Date:</label>
+                        <input type="date" name="from_date" class="form-control" value="{{ request()->from_date }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label>To Date:</label>
+                        <input type="date" name="to_date" class="form-control" value="{{ request()->to_date }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label>Status:</label>
+                        <select name="status" class="form-control">
+                            <option value="">All</option>
+                            <option value="Pending" {{ request()->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="Approved" {{ request()->status == 'Approved' ? 'selected' : '' }}>Approved</option>
+                            <option value="Completed" {{ request()->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label>Billed / Unbilled:</label>
+                        <select name="billed" class="form-control">
+                            <option value="">All</option>
+                            <option value="1" {{ request()->billed == '1' ? 'selected' : '' }}>Billed</option>
+                            <option value="0" {{ request()->billed == '0' ? 'selected' : '' }}>Unbilled</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end justify-content-end">
+                        <button type="submit" class="btn btn-success"><i class="fas fa-file-alt"></i> Generate Report</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Stock-In</h3>

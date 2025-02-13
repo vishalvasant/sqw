@@ -94,6 +94,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('assets/{id}/parts-report', [AssetController::class, 'partsReport'])->name('assets.parts.report');
         Route::resource('assets.parts', PartController::class)->except(['show']);
         Route::get('assets.parts.index', [AssetController::class, 'show'])->name('assets.parts.index');
+        Route::get('assets.reports', [AssetController::class, 'assetsReport'])->name('assets.reports');
 
         
 
@@ -114,12 +115,15 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('units', UnitController::class);
         });
 
+        Route::get('/reports', [PurchaseRequestController::class, 'purchaseRequestsReport'])->name('purchase.requests.report');
         Route::prefix('purchase')->name('purchase.')->middleware('auth')->group(function () {
             // Purchase Requests
             Route::resource('requests', PurchaseRequestController::class);
-        
+            
+            
             // Purchase Orders
             Route::resource('orders', PurchaseOrderController::class);
+            Route::get('/reports', [PurchaseOrderController::class, 'purchaseOrdersReport'])->name('orders.report');
 
             // Supplier
             Route::resource('suppliers', SupplierController::class);
@@ -133,7 +137,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('purchase-orders/{id}/receive-docket', [PurchaseOrderController::class, 'receiveDocket'])->name('purchase.orders.receiveDocket');
         Route::get('fleet/vehicles/{id}/utilization', [FleetController::class, 'utilization'])->name('fleet.vehicles.utilization');
         Route::get('fleet/utilization-report', [FleetController::class, 'generateUtilizationReport'])->name('fleet.utilization.report');
-
+        
     
     });
 });

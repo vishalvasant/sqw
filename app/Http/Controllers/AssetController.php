@@ -107,4 +107,29 @@ class AssetController extends Controller
         return view('assets.parts_report', compact('asset','reportData'));
     }
 
+    public function assetsReport(Request $request)
+    {
+        $query = Asset::with('product');
+
+        // Filter by date range
+        if ($request->has('from_date') && $request->has('to_date')) {
+            $query->whereBetween('purchase_date', [$request->from_date, $request->to_date]);
+        }
+
+        // Filter by category
+        if ($request->has('product_id') && !empty($request->product_id)) {
+            $query->where('product_id', $request->product_id);
+        }
+
+        // Filter by status
+        if ($request->has('status') && !empty($request->status)) {
+            $query->where('status', $request->status);
+        }
+
+        $assets = $query->get();
+        $products = Product::all();
+
+        return view('assets.reports', compact('assets', 'products'));
+    }
+
 }
