@@ -6,9 +6,9 @@
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Assets</h3>
+        <a href="{{ route('assets.create') }}" class="btn btn-primary float-right"><i class="fas fa-plus-square"></i> Add New</a>
     </div>
     <div class="card-body">
-        <a href="{{ route('assets.create') }}" class="btn btn-primary mb-3">Add New Asset</a>
         <table class="table table-bordered" id="example1">
             <thead>
                 <tr>

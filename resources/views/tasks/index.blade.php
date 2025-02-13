@@ -6,17 +6,17 @@
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Tasks</h3>
-        <a href="{{ route('tasks.create') }}" class="btn btn-primary float-right">Add New Task</a>
+        <a href="{{ route('tasks.create') }}" class="btn btn-primary float-right"><i class="fas fa-plus-square"></i> Add New</a>
     </div>
     <div class="card-body">
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="example2">
             <thead>
                 <tr>
                     <th>Title</th>
                     <th>Assigned To</th>
                     <th>Status</th>
                     <th>Due Date</th>
-                    <th>Actions</th>
+                    <th width="10%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,11 +27,11 @@
                         <td>{{ ucfirst($task->status) }}</td>
                         <td>{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('j F, Y') : 'N/A' }}</td>
                         <td>
-                            <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning">Edit</a>
+                            <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a>
                             <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                             </form>
                         </td>
                     </tr>

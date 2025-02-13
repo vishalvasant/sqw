@@ -13,7 +13,7 @@
                 @if ($usr->can('dashboard.view'))
                 <li class="nav-item">
                     <a href="{{ route('home') }}" class="nav-link">
-                        <i class="fa fa-home nav-icon"></i>
+                        <i class="fas fa-tachometer-alt nav-icon"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
@@ -22,7 +22,7 @@
                 @if ($usr->can('products.view') || $usr->can('categories.view') || $usr->can('units.view'))
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-cogs"></i>
+                        <i class="nav-icon fas fa-cubes"></i>
                         <p>Inventory<i class="right fas fa-angle-left"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
@@ -64,7 +64,7 @@
                         @if ($usr->can('suppliers.view'))
                         <li class="nav-item">
                             <a href="{{ route('purchase.suppliers.index') }}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fas fa-parachute-box nav-icon"></i>
                                 <p>Suppliers</p>
                             </a>
                         </li>
@@ -72,7 +72,7 @@
                         @if ($usr->can('requests.view'))
                         <li class="nav-item">
                             <a href="{{ route('purchase.requests.index') }}" class="nav-link">
-                                <i class="fas fa-list nav-icon"></i>
+                                <i class="fas fa-print nav-icon"></i>
                                 <p>Purchase Requests-Orders</p>
                             </a>
                         </li>
@@ -135,7 +135,7 @@
                 <!-- Asset Management Module -->
                 <li class="nav-item">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-cogs"></i>
+                        <i class="nav-icon fas fa-truck-loading"></i>
                         <p>
                             Asset Management
                             <i class="right fas fa-angle-left"></i>
@@ -144,7 +144,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('assets.index') }}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fas fa-truck nav-icon"></i>
                                 <p>Assets</p>
                             </a>
                         </li>

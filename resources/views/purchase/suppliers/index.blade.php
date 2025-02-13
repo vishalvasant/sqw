@@ -6,7 +6,7 @@
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Suppliers</h3>
-        <a href="{{ route('purchase.suppliers.create') }}" class="btn btn-primary float-right">Add Supplier</a>
+        <a href="{{ route('purchase.suppliers.create') }}" class="btn btn-primary float-right"><i class="fas fa-plus-square"></i> Add New</a>
     </div>
     <div class="card-body">
         <table class="table table-bordered" id="example1">

@@ -25,11 +25,11 @@
                         <td>{{ $warehouse->warehouse_name }}</td>
                         <td>{{ $warehouse->location }}</td>
                         <td>
-                            <a href="{{ route('warehouses.edit', $warehouse) }}" class="btn btn-warning">Edit</a>
+                            <a href="{{ route('warehouses.edit', $warehouse) }}" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a>
                             <form action="{{ route('warehouses.destroy', $warehouse) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                             </form>
                         </td>
                     </tr>

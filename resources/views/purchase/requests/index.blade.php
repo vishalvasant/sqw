@@ -6,7 +6,7 @@
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Purchase Requests</h3>
-        <a href="{{ route('purchase.requests.create') }}" class="btn btn-primary float-right">Create New Request</a>
+        <a href="{{ route('purchase.requests.create') }}" class="btn btn-primary float-right"><i class="fas fa-plus-square"></i> Add New</a>
     </div>
     <div class="card-body">
         <table class="table table-bordered" id="example1">
@@ -30,7 +30,7 @@
                     <td>{{ $request->user->name }}</td>
                     <td>
                         <!-- <a href="{{ route('purchase.requests.show', $request->id) }}" class="btn btn-sm btn-info">View</a> -->
-                        <a href="{{ route('purchase.requests.edit', $request->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="{{ route('purchase.requests.edit', $request->id) }}" class="btn btn-sm btn-warning"><i class="fas fa-pencil-alt"></i></a>
                         <form action="{{ route('purchase.requests.destroy', $request->id) }}" method="POST" class="d-inline-block">
                             @csrf
                             @method('DELETE')

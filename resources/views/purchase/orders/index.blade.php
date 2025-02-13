@@ -3,11 +3,11 @@
 @section('page-title', 'Purchase Orders')
 
 @section('content')
-<div class="container">
+
     <div class="card">
-        <div class="card-header d-flex justify-content-between">
-            <h3>Purchase Orders</h3>
-            <a href="{{ route('purchase.orders.create') }}" class="btn btn-primary">Create Purchase Order</a>
+        <div class="card-header">
+            <h3 class="card-title">Stock-In</h3>
+            <a href="{{ route('purchase.orders.create') }}" class="btn btn-primary float-right"><i class="fas fa-plus-square"></i> Add New</a>
         </div>
         <div class="card-body">
             <table class="table table-bordered" id="example1">
@@ -70,5 +70,5 @@
             </table>
         </div>
     </div>
-</div>
+
 @endsection

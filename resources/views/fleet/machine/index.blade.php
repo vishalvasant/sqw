@@ -18,11 +18,11 @@
                     <td>{{ $machine->name }}</td>
                     <td>{{ $machine->per_hour_cost }}</td>
                     <td>
-                        <a href="{{ route('machines.edit', $machine->id) }}" class="btn btn-warning">Edit</a>
+                        <a href="{{ route('machines.edit', $machine->id) }}" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a>
                         <form action="{{ route('machines.destroy', $machine->id) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                         </form>
                     </td>
                 </tr>

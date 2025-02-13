@@ -19,8 +19,8 @@
                     <label for="to_date">To Date:</label>
                     <input type="date" name="to_date" class="form-control" required>
                 </div>
-                <div class="col-md-4 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary">Generate Report</button>
+                <div class="col-md-4 d-flex align-items-end justify-content-end">
+                    <button type="submit" class="btn btn-success float-right"><i class="fas fa-file-alt"></i> Generate Report</button>
                 </div>
             </div>
         </form>
@@ -29,7 +29,7 @@
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Fleet</h3>
-        <a href="{{ route('fleet.vehicles.create') }}" class="btn btn-primary float-right">Add New Vehicle</a>
+        <a href="{{ route('fleet.vehicles.create') }}" class="btn btn-primary float-right"><i class="fas fa-plus-square"></i> Add New</a>
     </div>
     <div class="card-body">
         
