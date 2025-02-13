@@ -160,7 +160,7 @@
                 </li>
 
                 
-                @if ($usr->can('user.view') || $usr->can('role.view') || $usr->can('permission.view'))
+                @if ($usr->can('users.view') || $usr->can('roles.view') || $usr->can('permissions.view'))
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-users"></i>
@@ -183,7 +183,7 @@
                             </a>
                         </li>
                         @endif
-                        @if ($usr->hasRole('admin'))
+                        @if ($usr->can('permissions.view'))
                         <li class="nav-item">
                             <a href="{{ route('permissions.index') }}" class="nav-link">
                                 <i class="nav-icon fas fa-key"></i>
