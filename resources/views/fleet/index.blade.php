@@ -3,6 +3,11 @@
 @section('page-title', 'Fleet Management')
 
 @section('content')
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
+@if ($usr->can('reports.view'))
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Fleet Utilization Report</h3>
@@ -26,10 +31,13 @@
         </form>
     </div>
 </div>
+@endif
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Fleet</h3>
+        @if ($usr->can('vehicles.create'))
         <a href="{{ route('fleet.vehicles.create') }}" class="btn btn-primary float-right"><i class="fas fa-plus-square"></i> Add New</a>
+        @endif
     </div>
     <div class="card-body">
         
@@ -50,9 +58,11 @@
                         <td>{{ $vehicle->vehicle_type }}</td>
                         <td>{{ $vehicle->fixed_cost_per_hour }}</td>
                         <td>
+                            @if ($usr->can('vehicles.edit'))
                             <a href="{{ route('fleet.vehicles.utilization', $vehicle->id) }}" class="btn btn-info">
                                 Fuel Utilization Report
                             </a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

@@ -3,6 +3,10 @@
 @section('page-title', 'Products')
 
 @section('content')
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+@if ($usr->can('reports.view'))
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Product Utilization Report</h3>
@@ -25,10 +29,13 @@
         </form>
     </div>
 </div>
+@endif
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Products</h3>
+        @if ($usr->can('products.create'))
         <a href="{{ route('inventory.products.create') }}" class="btn btn-primary float-right"><i class="fas fa-plus-square"></i> Add New</a>
+        @endif
     </div>
     <div class="card-body">
         <table class="table table-bordered" id="example1">
@@ -62,13 +69,19 @@
                             {{ $totalReceived }}
                         </td>
                         <td>
+                            @if ($usr->can('products.edit'))
                             <a href="{{ route('inventory.products.edit', $product) }}" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a>
+                            @endif
+                            @if ($usr->can('products.delete'))
                             <form action="{{ route('inventory.products.destroy', $product) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                             </form>
+                            @endif
+                            @if ($usr->can('products.view'))
                             <a href="{{ route('products.utilization.report', $product->id) }}" class="btn btn-info">Utilization</a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

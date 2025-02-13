@@ -3,6 +3,10 @@
 @section('page-title', 'Purchase Orders')
 
 @section('content')
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+    @if ($usr->can('reports.view'))
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Stock-In Report</h3>
@@ -42,10 +46,13 @@
             </form>
         </div>
     </div>
+    @endif
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Stock-In</h3>
+            @if ($usr->can('orders.create'))
             <a href="{{ route('purchase.orders.create') }}" class="btn btn-primary float-right"><i class="fas fa-plus-square"></i> Add New</a>
+            @endif
         </div>
         <div class="card-body">
             <table class="table table-bordered" id="example1">
@@ -66,6 +73,7 @@
                             <td>{{ $order->order_number }}</td>
                             <td>{{ $order->supplier->name ?? 'N/A'  }}</td>
                             <td>
+                                @if ($usr->can('orders.edit'))
                                 <form action="{{ route('purchase.orders.updateStatus', $order->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('PATCH')
@@ -79,8 +87,10 @@
                                         <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                                     </select>
                                 </form>
+                                @endif
                             </td>
                             <td>
+                                @if ($usr->can('orders.edit'))
                                 <form action="{{ route('purchase.orders.updateBilled', $order->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('PATCH')
@@ -93,14 +103,19 @@
                                         <option value="1" {{ $order->billed ? 'selected' : '' }}>Billed</option>
                                     </select>
                                 </form>
+                                @endif
                             </td>
                             <td>
+                                @if ($usr->can('orders.view'))
                                 <a href="{{ route('purchase.orders.show', $order->id) }}" class="btn btn-info btn-sm">View</a>
+                                @endif
+                                @if ($usr->can('orders.delete'))
                                 <form action="{{ route('purchase.orders.destroy', $order->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
                                 </form>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

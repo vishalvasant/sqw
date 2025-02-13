@@ -3,6 +3,10 @@
 @section('page-title', 'Purchase Requests')
 
 @section('content')
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+@if ($usr->can('reports.view'))
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">PR-PO Report</h3>
@@ -25,10 +29,13 @@
         </form>
     </div>
 </div>
+@endif
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Purchase Requests</h3>
+        @if ($usr->can('requests.create'))
         <a href="{{ route('purchase.requests.create') }}" class="btn btn-primary float-right"><i class="fas fa-plus-square"></i> Add New</a>
+        @endif
     </div>
     <div class="card-body">
         <table class="table table-bordered" id="example1">
@@ -52,12 +59,16 @@
                     <td>{{ $request->user->name }}</td>
                     <td>
                         <!-- <a href="{{ route('purchase.requests.show', $request->id) }}" class="btn btn-sm btn-info">View</a> -->
+                        @if ($usr->can('requests.edit'))
                         <a href="{{ route('purchase.requests.edit', $request->id) }}" class="btn btn-sm btn-warning"><i class="fas fa-pencil-alt"></i></a>
+                        @endif
+                        @if ($usr->can('requests.delete'))
                         <form action="{{ route('purchase.requests.destroy', $request->id) }}" method="POST" class="d-inline-block">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
                         </form>
+                        @endif
                     </td>
                 </tr>
                 @endforeach

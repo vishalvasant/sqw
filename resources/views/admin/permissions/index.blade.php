@@ -1,6 +1,9 @@
 @extends('layouts.admin')
 @section('page-title', 'Assign Permissions')
 @section('content')
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
 
 <div class="card">
     <div class="card-header">
@@ -25,7 +28,9 @@
             <div id="permissions_container" class="mt-3"></div>
 
             <div class="card-footer text-end">
+                @if ($usr->can('permissions.edit'))
                 <button type="submit" class="btn btn-primary" id="save_permissions" disabled>Update Permissions</button>
+                @endif
             </div>
         </form>
     </div>

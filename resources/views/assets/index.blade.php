@@ -3,6 +3,10 @@
 @section('page-title', 'Asset Management')
 
 @section('content')
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+@if ($usr->can('reports.view'))
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Assets Report</h3>
@@ -34,10 +38,13 @@
         </form>
     </div>
 </div>
+@endif
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Assets</h3>
+        @if ($usr->can('assets.create'))
         <a href="{{ route('assets.create') }}" class="btn btn-primary float-right"><i class="fas fa-plus-square"></i> Add New</a>
+        @endif
     </div>
     <div class="card-body">
         <table class="table table-bordered" id="example1">
@@ -58,8 +65,12 @@
                         <td>{{ $asset->value }}</td>
                         <td>{{ $asset->status }}</td>
                         <td>
+                            @if ($usr->can('parts.edit'))
                             <a href="{{ route('assets.show', $asset->id) }}" class="btn btn-info">Allocate Part</a>
+                            @endif
+                            @if ($usr->can('parts.view'))
                             <a href="{{ route('assets.parts.report', $asset->id) }}" class="btn btn-success">Utilization Report</a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
