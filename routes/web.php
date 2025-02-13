@@ -36,6 +36,11 @@ Route::get('/purchase-requests/{id}/details', [PurchaseRequestController::class,
 Route::middleware(['auth'])->group(function () {
     Route::resource('tasks', TaskController::class);
     Route::delete('/tasks/{task}/delete-file', [TaskController::class, 'deleteFile'])->name('tasks.delete-file');
+    Route::post('/tasks/{id}/approve', [TaskController::class, 'approveTask'])->name('tasks.approve');
+    Route::get('/notifications/read-all', function () {
+        auth()->user()->unreadNotifications->markAsRead();
+        return back();
+    })->name('notifications.markAllAsRead');
 
     Route::prefix('admin')->group(function () {
             // User Management

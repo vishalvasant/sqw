@@ -5,14 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Notifications\TaskNotification;
+use Illuminate\Support\Facades\Notification;
 
 class TaskController extends Controller
 {
+    
     public function index()
     {
-        $tasks = Task::with(['assignee', 'creator'])->get();
+        $tasks = Task::where('assigned_to', auth()->id())->get();
         return view('tasks.index', compact('tasks'));
     }
+
 
     public function create()
     {
@@ -25,6 +29,7 @@ class TaskController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'recurrence' => 'required|in:none,daily,weekly,monthly',
             'assigned_to' => 'required|exists:users,id',
             'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048', // File validation
         ]);
@@ -34,9 +39,10 @@ class TaskController extends Controller
             $filePath = $request->file('file')->store('task_files', 'public'); // Store file
         }
 
-        Task::create([
+        $task = Task::create([
             'title' => $request->title,
             'description' => $request->description,
+            'recurrence' => $request->recurrence,
             'status' => $request->status ?? 'pending',
             'due_date' => $request->due_date,
             'assigned_to' => $request->assigned_to,
@@ -44,8 +50,30 @@ class TaskController extends Controller
             'created_by' => auth()->id(),
         ]);
 
+        $approver = User::find($task->assigned_to); // Approver user
+
+        // Notify the approver
+        $approver->notify(new TaskNotification($task, 'assigned'));
+
+        // Notify admin
+        $adminUsers = User::where('id', 1)->get();
+        Notification::send($adminUsers, new TaskNotification($task, 'created'));
+
         return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
     }
+
+    public function approveTask($id)
+    {
+        $task = Task::findOrFail($id);
+        if (auth()->user()->role !== 'admin') {
+            return redirect()->back()->with('error', 'Unauthorized access.');
+        }
+        $task->status = 'approved';
+        $task->save();
+
+        return redirect()->back()->with('success', 'Task approved successfully.');
+    }
+
 
     public function edit(Task $task)
     {

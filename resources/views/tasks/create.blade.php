@@ -35,6 +35,15 @@
                 <label for="due_date">Due Date</label>
                 <input type="date" name="due_date" class="form-control">
             </div>
+            <div class="form-group">
+                <label for="recurrence">Recurrence</label>
+                <select name="recurrence" class="form-control">
+                    <option value="none">None</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+            </div>
         </div>
         <div class="card-footer">
             <button type="submit" class="btn btn-primary">Create Task</button>
