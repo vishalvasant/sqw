@@ -214,14 +214,18 @@ class PurchaseOrderController extends Controller
         }
 
         // Filter by status
-        // if ($request->has('status') && !empty($request->status)) {
-        //     $query->where('status', $request->status);
-        // }
+        if ($request->has('status')) {
+            if($request->status != ""){
+                $query->where('status', $request->status);
+            }
+        }
 
         // // Filter by billed/unbilled
-        // if ($request->has('billed') && $request->billed !== '') {
-        //     $query->where('billed', $request->billed);
-        // }
+        if ($request->has('billed')) {
+            if($request->billed != ""){
+                $query->where('billed', $request->billed);
+            }
+        }
 
         $purchaseOrders = $query->get();
 

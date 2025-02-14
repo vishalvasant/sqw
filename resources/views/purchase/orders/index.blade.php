@@ -26,17 +26,17 @@
                         <label>Status:</label>
                         <select name="status" class="form-control">
                             <option value="">All</option>
-                            <option value="Pending" {{ request()->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="Approved" {{ request()->status == 'Approved' ? 'selected' : '' }}>Approved</option>
-                            <option value="Completed" {{ request()->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="completed">Completed</option>
                         </select>
                     </div>
                     <div class="col-md-2">
                         <label>Billed / Unbilled:</label>
                         <select name="billed" class="form-control">
                             <option value="">All</option>
-                            <option value="1" {{ request()->billed == '1' ? 'selected' : '' }}>Billed</option>
-                            <option value="0" {{ request()->billed == '0' ? 'selected' : '' }}>Unbilled</option>
+                            <option value="1">Billed</option>
+                            <option value="0">Unbilled</option>
                         </select>
                     </div>
                     <div class="col-md-2 d-flex align-items-end justify-content-end">
