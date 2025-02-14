@@ -41,14 +41,14 @@
         <table class="table table-bordered" id="example1">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th width="5%">#</th>
                     <th>Product Name</th>
                     <th>Category</th>
                     <th>Unit</th>
                     <th>Price</th>
                     <th>Stock Quantity</th>
                     <th>Total Received</th>
-                    <th>Actions</th>
+                    <th width="15%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -80,7 +80,7 @@
                             </form>
                             @endif
                             @if ($usr->can('products.view'))
-                            <a href="{{ route('products.utilization.report', $product->id) }}" class="btn btn-info">Utilization</a>
+                            <a href="{{ route('products.utilization.report', $product->id) }}" class="btn btn-info"><i class="fas fa-recycle"></i></a>
                             @endif
                         </td>
                     </tr>

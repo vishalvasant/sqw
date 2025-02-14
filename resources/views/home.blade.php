@@ -86,10 +86,10 @@
                     <tbody>
                         @foreach ($latestPRs as $pr)
                         <tr>
-                            <td>{{ $pr->id }}</td>
-                            <td>{{ $pr->requestor->name }}</td>
+                            <td>{{ $pr->request_number }}</td>
+                            <td>{{ $pr->user->name }}</td>
                             <td>{{ $pr->created_at->format('d-m-Y') }}</td>
-                            <td><span class="badge badge-{{ $pr->status == 'Pending' ? 'warning' : 'success' }}">{{ $pr->status }}</span></td>
+                            <td><span class="badge badge-{{ $pr->status == 'pending' ? 'warning' : 'success' }}">{{ $pr->status }}</span></td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -115,7 +115,7 @@
                     <tbody>
                         @foreach ($latestPOs as $po)
                         <tr>
-                            <td>{{ $po->id }}</td>
+                            <td>{{ $po->order_number }}</td>
                             <td>{{ $po->supplier->name }}</td>
                             <td>{{ $po->created_at->format('d-m-Y') }}</td>
                             <td><span class="badge badge-{{ $po->status == 'Pending' ? 'warning' : 'success' }}">{{ $po->status }}</span></td>

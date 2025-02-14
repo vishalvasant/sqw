@@ -17,9 +17,9 @@
         <table class="table table-bordered" id="example2">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th width="10%">#</th>
                     <th>Unit Name</th>
-                    <th>Actions</th>
+                    <th width="10%">Actions</th>
                 </tr>
             </thead>
             <tbody>

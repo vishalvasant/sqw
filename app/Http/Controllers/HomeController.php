@@ -33,7 +33,7 @@ class HomeController extends Controller
         $completedPOs = PurchaseOrder::where('status', 'Completed')->count();
 
         // Recent POs & PRs
-        $latestPRs = PurchaseRequest::latest()->limit(5)->get();
+        $latestPRs = PurchaseRequest::with(['user'])->latest()->limit(5)->get();
         $latestPOs = PurchaseOrder::latest()->limit(5)->get();
 
         // Monthly PO & PR Report
@@ -48,6 +48,7 @@ class HomeController extends Controller
         $prCounts = PurchaseRequest::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
             ->groupBy('month')
             ->pluck('count', 'month')->toArray();
+        
 
         return view('home', compact(
             'totalAssets', 'totalUsers', 'pendingPRs', 'completedPOs',

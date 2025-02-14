@@ -125,6 +125,20 @@
     <script src="{{asset('adminlte/plugins/select2/js/select2.full.min.js')}}"></script>
     <!-- ChartJS -->
     <script src="{{asset('adminlte/plugins/chart.js/Chart.min.js')}}"></script>
+    @if(session('success'))
+        <script>
+            $(document).ready(function() {
+                $(document).Toasts('create', {
+                    class: 'bg-success', // Green success toast
+                    title: 'Success',
+                    subtitle: 'Now',
+                    body: '{{ session("success") }}',
+                    autohide: true,
+                    delay: 3000 // Toast will disappear after 3 seconds
+                });
+            });
+        </script>
+    @endif
     <script>
         $(document).ready(function() {
             $('.select2').select2({

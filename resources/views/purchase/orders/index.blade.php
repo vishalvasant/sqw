@@ -16,11 +16,11 @@
                 <div class="row">
                     <div class="col-md-3">
                         <label>From Date:</label>
-                        <input type="date" name="from_date" class="form-control" value="{{ request()->from_date }}">
+                        <input type="date" name="from_date" class="form-control" value="">
                     </div>
                     <div class="col-md-3">
                         <label>To Date:</label>
-                        <input type="date" name="to_date" class="form-control" value="{{ request()->to_date }}">
+                        <input type="date" name="to_date" class="form-control" value="">
                     </div>
                     <div class="col-md-2">
                         <label>Status:</label>

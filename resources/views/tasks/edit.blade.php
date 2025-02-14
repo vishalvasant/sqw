@@ -34,7 +34,7 @@
                     @endif
 
                     <!-- Delete File Button -->
-                    <button type="button" class="btn btn-danger btn-sm delete-file" data-task-id="{{ $task->id }}">Delete File</button>
+                    <button type="button" class="btn btn-danger btn-sm delete-file" data-task-id="{{ $task->id }}"  onclick="return confirm('Are you sure?')">Delete File</button>
                     <input type="hidden" id="taskId" name="taskId" value="{{$task->id}}">
                 </div>
             @endif

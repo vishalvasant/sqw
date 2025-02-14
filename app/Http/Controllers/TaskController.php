@@ -13,7 +13,14 @@ class TaskController extends Controller
     
     public function index()
     {
-        $tasks = Task::where('assigned_to', auth()->id())->get();
+        if(auth()->id() == 1) {
+            $tasks = Task::all();
+        }else{
+            $tasks = Task::where(function($query) {
+                $query->where('assigned_to', auth()->id())
+                      ->orWhere('approver_id', auth()->id());
+            })->get();
+        }
         return view('tasks.index', compact('tasks'));
     }
 

@@ -8,7 +8,7 @@
         <h3 class="card-title">Add New Product</h3>
     </div>
     <div class="card-body">
-        <form action="{{ route('admin.products.store') }}" method="POST">
+        <form action="{{ route('inventory.products.store') }}" method="POST">
             @csrf
             <div class="form-group">
                 <label for="product_name">Product Name</label>

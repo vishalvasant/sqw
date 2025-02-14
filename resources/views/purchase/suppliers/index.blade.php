@@ -17,12 +17,12 @@
         <table class="table table-bordered" id="example1">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th width="5%">#</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Address</th>
-                    <th>Actions</th>
+                    <th width="10%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,13 +35,13 @@
                     <td>{{ $supplier->address }}</td>
                     <td>
                         @if ($usr->can('suppliers.edit'))
-                        <a href="{{ route('purchase.suppliers.edit', $supplier) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{{ route('purchase.suppliers.edit', $supplier) }}" class="btn btn-warning btn-sm"><i class="fas fa-pencil-alt"></i></a>
                         @endif
                         @if ($usr->can('suppliers.delete'))
                         <form action="{{ route('purchase.suppliers.destroy', $supplier) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i></button>
                         </form>
                         @endif
                     </td>

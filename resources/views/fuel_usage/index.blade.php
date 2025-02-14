@@ -47,7 +47,7 @@
                             <form action="{{ route('fleet.fuel_usages.destroy', $usage->id) }}" method="POST" style="display:inline-block;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                <button type="submit" class="btn btn-danger btn-sm"  onclick="return confirm('Are you sure?')">Delete</button>
                             </form>
                             @endif
                         </td>

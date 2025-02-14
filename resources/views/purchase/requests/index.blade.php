@@ -14,15 +14,25 @@
     <div class="card-body">
         <form method="GET" action="{{ route('purchase.requests.report') }}">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="from_date">From Date</label>
                     <input type="date" name="from_date" class="form-control" required>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="to_date">To Date</label>
                     <input type="date" name="to_date" class="form-control" required>
                 </div>
-                <div class="col-md-4 d-flex align-items-end justify-content-end">
+
+                <div class="col-md-3">
+                    <label for="to_date">Status</label>
+                    <select name="status" id="status" class="form-control" required>
+                        <option value="all">All</option>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end justify-content-end">
                     <button type="submit" class="btn btn-success"><i class="fas fa-file-alt"></i> Generate Report</button>
                 </div>
             </div>
@@ -46,7 +56,7 @@
                     <th>Title</th>
                     <th>Status</th>
                     <th>Created By</th>
-                    <th>Actions</th>
+                    <th widht="10%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -66,7 +76,7 @@
                         <form action="{{ route('purchase.requests.destroy', $request->id) }}" method="POST" class="d-inline-block">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i></button>
                         </form>
                         @endif
                     </td>

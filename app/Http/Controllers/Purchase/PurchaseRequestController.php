@@ -59,9 +59,19 @@ class PurchaseRequestController extends Controller
 
     protected function generateRequestNumber()
     {
-        return 'PR-' . strtoupper(uniqid());
+        $year = date('Y'); // Get current year (e.g., 2025)
+        $month = date('m'); // Get current month (e.g., 02)
+    
+        // Count the number of PRs for the current month
+        $count = PurchaseRequest::whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->count() + 1; // Increment count to start from 001
+    
+        // Format count as three-digit number (e.g., 001, 002, 010, 100)
+        $prNumber = sprintf('%03d', $count);
+    
+        return "PR-{$year}{$month}{$prNumber}";
     }
-
 
 
     public function show($id)
@@ -153,14 +163,17 @@ class PurchaseRequestController extends Controller
 
     public function purchaseRequestsReport(Request $request)
     {
-        $query = PurchaseRequest::with(['user', 'product']);
+        $query = PurchaseRequest::with(['user', 'supplier']);
 
         if ($request->has('from_date') && $request->has('to_date')) {
             $query->whereBetween('created_at', [$request->from_date, $request->to_date]);
         }
-
+        if ($request->has('status')) {
+            if($request->status != "all"){
+                $query->where('status', $request->status);
+            }
+        }
         $purchaseRequests = $query->get();
-
         return view('purchase.requests.reports', compact('purchaseRequests'));
     }
 

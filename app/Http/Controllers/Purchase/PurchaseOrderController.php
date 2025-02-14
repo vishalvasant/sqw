@@ -18,7 +18,24 @@ class PurchaseOrderController extends Controller
     {
         $purchaseOrders = PurchaseOrder::with('purchaseRequest')->get();
         $suppliers = Supplier::all();
+        
         return view('purchase.orders.index', compact('purchaseOrders','suppliers'));
+    }
+
+    protected function generateGNumber()
+    {
+        $year = date('Y'); // Get current year (e.g., 2025)
+        $month = date('m'); // Get current month (e.g., 02)
+    
+        // Count the number of PRs for the current month
+        $count = PurchaseOrder::whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->count() + 1; // Increment count to start from 001
+    
+        // Format count as three-digit number (e.g., 001, 002, 010, 100)
+        $prNumber = sprintf('%03d', $count);
+    
+        return "GR-{$year}{$month}{$prNumber}";
     }
 
     public function create(Request $request)
@@ -36,7 +53,8 @@ class PurchaseOrderController extends Controller
         }else{
             $suppliers = Supplier::all();
         }
-        return view('purchase.orders.create', compact('suppliers', 'purchaseRequests', 'selectedRequest'));
+        $gr_number = $this->generateGNumber();
+        return view('purchase.orders.create', compact('suppliers', 'purchaseRequests', 'selectedRequest','gr_number'));
     }
 
 
@@ -84,12 +102,6 @@ class PurchaseOrderController extends Controller
             return back()->withErrors(['error' => $e->getMessage()]);
         }
     }
-
-
-
-
-
-
 
     public function show($id)
     {
@@ -142,7 +154,18 @@ class PurchaseOrderController extends Controller
 
     private function generateOrderNumber()
     {
-        return 'PO-' . strtoupper(uniqid());
+        $year = date('Y'); // Get current year (e.g., 2025)
+        $month = date('m'); // Get current month (e.g., 02)
+    
+        // Count the number of PRs for the current month
+        $count = PurchaseOrder::whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->count() + 1; // Increment count to start from 001
+    
+        // Format count as three-digit number (e.g., 001, 002, 010, 100)
+        $prNumber = sprintf('%03d', $count);
+    
+        return "PO-{$year}{$month}{$prNumber}";
     }
 
     public function receiveDocket($id)
@@ -191,14 +214,14 @@ class PurchaseOrderController extends Controller
         }
 
         // Filter by status
-        if ($request->has('status') && !empty($request->status)) {
-            $query->where('status', $request->status);
-        }
+        // if ($request->has('status') && !empty($request->status)) {
+        //     $query->where('status', $request->status);
+        // }
 
-        // Filter by billed/unbilled
-        if ($request->has('billed') && $request->billed !== '') {
-            $query->where('billed', $request->billed);
-        }
+        // // Filter by billed/unbilled
+        // if ($request->has('billed') && $request->billed !== '') {
+        //     $query->where('billed', $request->billed);
+        // }
 
         $purchaseOrders = $query->get();
 

@@ -20,24 +20,28 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Request ID</th>
-                        <th>Requested By</th>
-                        <th>Product</th>
-                        <th>Quantity</th>
-                        <th>Status</th>
                         <th>Date</th>
+                        <th>PR-Number</th>
+                        <th>Requested By</th>
+                        <th>Supplier</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($purchaseRequests as $index => $request)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $request->id }}</td>
-                            <td>{{ $request->user->name }}</td>
-                            <td>{{ $request->product->name }}</td>
-                            <td>{{ $request->quantity }}</td>
-                            <td><span class="badge badge-info">{{ $request->status }}</span></td>
                             <td>{{ $request->created_at->format('d-m-Y') }}</td>
+                            <td>{{ $request->request_number }}</td>
+                            <td>{{ $request->user->name }}</td>
+                            <td>{{ $request->supplier->name }}</td>
+                            @if($request->status == 'pending')
+                            <td><span class="badge badge-info">{{ $request->status }}</span></td>
+                            @elseif($request->status == 'approved')
+                            <td><span class="badge badge-success">{{ $request->status }}</span></td>
+                            @elseif($request->status == 'rejected')
+                            <td><span class="badge badge-danger">{{ $request->status }}</span></td>
+                            @endif
                         </tr>
                     @endforeach
                 </tbody>
