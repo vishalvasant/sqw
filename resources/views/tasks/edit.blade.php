@@ -3,11 +3,14 @@
 @section('page-title', 'Edit Task')
 
 @section('content')
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Edit Task</h3>
     </div>
-    <form action="{{ route('tasks.update', $task->id) }}" method="POST">
+    <form action="{{ route('tasks.update', $task->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="card-body">
@@ -34,8 +37,13 @@
                     @endif
 
                     <!-- Delete File Button -->
-                    <button type="button" class="btn btn-danger btn-sm delete-file" data-task-id="{{ $task->id }}"  onclick="return confirm('Are you sure?')">Delete File</button>
+                    <button type="button" class="btn btn-danger btn-sm delete-file" data-task-id="{{ $task->id }}">Delete File</button>
                     <input type="hidden" id="taskId" name="taskId" value="{{$task->id}}">
+                </div>
+            @else
+                <div class="form-group">
+                    <label for="file">Attach File</label>
+                    <input type="file" name="file" class="form-control">
                 </div>
             @endif
             <div class="form-group">
@@ -49,7 +57,19 @@
                     @endforeach
                 </select>
             </div>
-
+            @if ($usr->id == 1 || $usr->id == $task->approver_id)
+            <div class="form-group">
+                <label for="approver_id">Approver</label>
+                <select name="approver_id" class="form-control" required>
+                    <option value="">Select User</option>
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}" {{ $task->approver_id == $user->id ? 'selected' : '' }}>
+                            {{ $user->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            @endif
             <div class="form-group">
                 <label for="status">Status</label>
                 <select name="status" class="form-control">
@@ -58,7 +78,15 @@
                     <option value="completed" {{ $task->status == 'completed' ? 'selected' : '' }}>Completed</option>
                 </select>
             </div>
-
+            <div class="form-group">
+                <label for="recurrence">Recurrence</label>
+                <select name="recurrence" class="form-control">
+                    <option value="none" {{ $task->recurrence == 'none' ? 'selected' : '' }}>None</option>
+                    <option value="daily" {{ $task->recurrence == 'daily' ? 'selected' : '' }}>Daily</option>
+                    <option value="weekly" {{ $task->recurrence == 'weekly' ? 'selected' : '' }}>Weekly</option>
+                    <option value="monthly" {{ $task->recurrence == 'monthly' ? 'selected' : '' }}>Monthly</option>
+                </select>
+            </div>
             <div class="form-group">
                 <label for="deadline">Deadline</label>
                 <input type="date" name="due_date" class="form-control" value="{{ \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') }}" required>

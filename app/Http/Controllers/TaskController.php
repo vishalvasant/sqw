@@ -99,24 +99,51 @@ class TaskController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'recurrence' => 'required|in:none,daily,weekly,monthly',
+            'assigned_to' => 'required|exists:users,id',
+            'approver_id' => 'required|exists:users,id',
             'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
+            'status' => 'required|in:pending,in-progress,completed',
         ]);
 
+        // Handle File Upload (If New File is Uploaded)
         if ($request->hasFile('file')) {
-            // Delete the old file
-            if ($task->file_path) {
+            // Delete old file if exists
+            if ($task->file_path && Storage::disk('public')->exists($task->file_path)) {
                 Storage::disk('public')->delete($task->file_path);
             }
-
-            // Upload new file
+            // Store new file
             $filePath = $request->file('file')->store('task_files', 'public');
             $task->file_path = $filePath;
         }
 
-        $task->update($request->except(['file']));
+        // Update Task
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'recurrence' => $request->recurrence,
+            'status' => $request->status,
+            'due_date' => $request->due_date,
+            'assigned_to' => $request->assigned_to,
+            'approver_id' => $request->approver_id,
+            'created_by' => auth()->id(),
+        ]);
+
+        // Notify Assigned User (If changed)
+        if ($task->wasChanged('assigned_to')) {
+            $assignedUser = User::find($request->assigned_to);
+            $assignedUser->notify(new TaskNotification($task, 'updated'));
+        }
+
+        // Notify Approver (If changed)
+        if ($task->wasChanged('approver_id')) {
+            $approver = User::find($request->approver_id);
+            $approver->notify(new TaskNotification($task, 'approval required'));
+        }
 
         return redirect()->route('tasks.index')->with('success', 'Task updated successfully.');
     }
+
 
     // Delete File Method
     public function deleteFile(Task $task)
@@ -134,5 +161,29 @@ class TaskController extends Controller
     {
         $task->delete();
         return redirect()->route('tasks.index')->with('success', 'Task deleted successfully.');
+    }
+
+    public function report(Request $request)
+    {
+        $query = Task::query();
+
+        // Filter by date range
+        if ($request->has('from_date')) {
+            $fromDate = $request->from_date . ' 00:00:00';
+            $query->where('created_at', '>=', $fromDate);
+        }
+        if ($request->has('to_date')) {
+            $toDate = $request->to_date . ' 23:59:59';
+            $query->where('created_at', '<=', $toDate);
+        }
+
+        // Filter by status
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        $tasks = $query->with('assignee')->get();
+
+        return view('tasks.reports', compact('tasks'));
     }
 }

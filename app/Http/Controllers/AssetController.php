@@ -112,8 +112,17 @@ class AssetController extends Controller
         $query = Asset::with('product');
 
         // Filter by date range
-        if ($request->has('from_date') && $request->has('to_date')) {
-            $query->whereBetween('purchase_date', [$request->from_date, $request->to_date]);
+        // if ($request->has('from_date') && $request->has('to_date')) {
+        //     $query->whereBetween('purchase_date', [$request->from_date, $request->to_date]);
+        // }
+
+        if ($request->has('from_date')) {
+            $fromDate = $request->from_date . ' 00:00:00';
+            $query->where('created_at', '>=', $fromDate);
+        }
+        if ($request->has('to_date')) {
+            $toDate = $request->to_date . ' 23:59:59';
+            $query->where('created_at', '<=', $toDate);
         }
 
         // Filter by category

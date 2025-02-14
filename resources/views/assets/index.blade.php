@@ -54,7 +54,7 @@
                     <th>Description</th>
                     <th>Value</th>
                     <th>Status</th>
-                    <th>Actions</th>
+                    <th width="20%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -66,10 +66,10 @@
                         <td>{{ $asset->status }}</td>
                         <td>
                             @if ($usr->can('parts.edit'))
-                            <a href="{{ route('assets.show', $asset->id) }}" class="btn btn-info">Allocate Part</a>
+                            <a href="{{ route('assets.show', $asset->id) }}" class="btn btn-info"><i class="fas fa-recycle"></i> Allocate</a>
                             @endif
                             @if ($usr->can('parts.view'))
-                            <a href="{{ route('assets.parts.report', $asset->id) }}" class="btn btn-success">Utilization Report</a>
+                            <a href="{{ route('assets.parts.report', $asset->id) }}" class="btn btn-success"><i class="fas fa-file-alt"></i> Report</a>
                             @endif
                         </td>
                     </tr>

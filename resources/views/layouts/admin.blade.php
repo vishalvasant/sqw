@@ -208,7 +208,19 @@
         });
     </script>
     @endisset
-
+    @if ($errors->any())
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: 'Error',
+                    body: "{{ $errors->first() }}",
+                    autohide: true,
+                    delay: 5000
+                });
+            });
+        </script>
+    @endif
 <!-- Script to calculate avarage in difference of value of odometer -->
     <script>
         $().ready(function() {
