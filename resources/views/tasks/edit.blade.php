@@ -76,6 +76,9 @@
                     <option value="pending" {{ $task->status == 'pending' ? 'selected' : '' }}>Pending</option>
                     <option value="in_progress" {{ $task->status == 'in_progress' ? 'selected' : '' }}>In Progress</option>
                     <option value="completed" {{ $task->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                    @if ($usr->id == 1 || $usr->id == $task->approver_id)
+                    <option value="approved" {{ $task->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                    @endif
                 </select>
             </div>
             <div class="form-group">
@@ -111,9 +114,11 @@
 
             if (confirm("Are you sure you want to delete the attached file?")) {
                 fetch(`/tasks/${taskId}/delete-file`, {
-                    method: "DELETE",
+                    method: "POST",
                     headers: {
-                        "XSRF-TOKEN": <?php echo json_encode(csrf_token()); ?>
+                        "X-CSRF-TOKEN": <?php echo json_encode(csrf_token()); ?>,
+                        "Content-Type": "application/json"
+
                     }
                 }).then(response => location.reload());
             }

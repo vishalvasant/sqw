@@ -35,7 +35,7 @@ Route::get('/purchase-requests/{id}/details', [PurchaseRequestController::class,
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('tasks', TaskController::class);
-    Route::delete('/tasks/{task}/delete-file', [TaskController::class, 'deleteFile'])->name('tasks.delete-file');
+    Route::post('/tasks/{task}/delete-file', [TaskController::class, 'deleteFile'])->name('tasks.delete-file');
     Route::post('/tasks/{id}/approve', [TaskController::class, 'approveTask'])->name('tasks.approve');
     Route::get('/tasks.report', [TaskController::class, 'report'])->name('tasks.report');
 
