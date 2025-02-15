@@ -89,7 +89,9 @@ class AssetController extends Controller
                 assets.status AS asset_status,
                 products.id AS product_id,
                 products.name AS product_name,
-                products.price AS product_price,
+                (SELECT AVG(purchase_order_items.price) 
+                 FROM purchase_order_items 
+                 WHERE purchase_order_items.product_id = products.id) AS avg_product_price,
                 asset_part.quantity AS product_quantity,
                 asset_part.req_by AS req_by,
                 asset_part.rec_by AS rec_by
@@ -109,34 +111,6 @@ class AssetController extends Controller
 
     public function assetsReport(Request $request)
     {
-        // $query = Asset::with('products');
-
-        // Filter by date range
-        // if ($request->has('from_date') && $request->has('to_date')) {
-        //     $query->whereBetween('purchase_date', [$request->from_date, $request->to_date]);
-        // }
-
-        // if ($request->has('from_date')) {
-        //     $fromDate = $request->from_date . ' 00:00:00';
-        //     $query->where('created_at', '>=', $fromDate);
-        // }
-        // if ($request->has('to_date')) {
-        //     $toDate = $request->to_date . ' 23:59:59';
-        //     $query->where('created_at', '<=', $toDate);
-        // }
-
-        // // Filter by category
-        // if ($request->has('product_id') && !empty($request->product_id)) {
-        //     $query->where('product_id', $request->product_id);
-        // }
-
-        // // Filter by status
-        // if ($request->has('status') && !empty($request->status)) {
-        //     $query->where('status', $request->status);
-        // }
-
-        // $assets = $query->get();
-
         $fromDate = $request->from_date . ' 00:00:00';
         $toDate = $request->to_date . ' 23:59:59';
         $st = $request->status;
@@ -154,6 +128,9 @@ class AssetController extends Controller
                 products.id AS product_id,
                 products.name AS product_name,
                 products.price AS product_price,
+                (SELECT AVG(purchase_order_items.price) 
+                 FROM purchase_order_items 
+                 WHERE purchase_order_items.product_id = products.id) AS avg_product_price,
                 asset_part.quantity AS product_quantity,
                 asset_part.req_by AS req_by,
                 asset_part.rec_by AS rec_by
