@@ -15,29 +15,45 @@
     
     <!-- Report Table -->
     <div class="card-body">
-        @if(isset($assets) && count($assets) > 0)
-            <table class="table table-bordered">
-                <thead>
+        @if(isset($reportData) && count($reportData) > 0)
+        <table class="table table-bordered" id="example1">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Asset Name</th>
+                    <th>Asset Status</th>
+                    <th>Request By</th>
+                    <th>Recived By</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($reportData as $index => $row)
                     <tr>
-                        <th>#</th>
-                        <th>Asset Name</th>
-                        <th>Product</th>
-                        <th>Status</th>
-                        <th>Purchase Date</th>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $row->asset_name }}</td>
+                        <td>
+                            @if ($row->asset_status == 'active')
+                                <span class="badge badge-success">{{ $row->asset_status }}</span>
+                            @elseif ($row->asset_status == 'inactive')
+                                <span class="badge badge-danger">{{ $row->asset_status }}</span>
+                            @else
+                                <span class="badge badge-warning">{{ $row->asset_status }}</span>
+                            @endif
+                        </td>
+                        <td>{{ $row->req_by }}</td>
+                        <td>{{ $row->rec_by }}</td>
+                        <td>{{ $row->product_name }}</td>
+                        <td>{{ $row->product_quantity }}</td>
+                        <td>{{ $row->product_price }}</td>
+                        <td>{{ number_format($row->product_price * $row->product_quantity, 2) }}</td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach ($assets as $index => $asset)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $asset->name }}</td>
-                            <td>{{ $asset->product->name }}</td>
-                            <td><span class="badge badge-info">{{ $asset->status }}</span></td>
-                            <td>{{ $asset->purchase_date->format('d-m-Y') }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                @endforeach
+            </tbody>
+        </table>
         @else
             <p class="text-center text-muted">No assets found for the selected filters.</p>
         @endif

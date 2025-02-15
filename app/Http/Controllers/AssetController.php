@@ -109,36 +109,67 @@ class AssetController extends Controller
 
     public function assetsReport(Request $request)
     {
-        $query = Asset::with('product');
+        // $query = Asset::with('products');
 
         // Filter by date range
         // if ($request->has('from_date') && $request->has('to_date')) {
         //     $query->whereBetween('purchase_date', [$request->from_date, $request->to_date]);
         // }
 
-        if ($request->has('from_date')) {
-            $fromDate = $request->from_date . ' 00:00:00';
-            $query->where('created_at', '>=', $fromDate);
-        }
-        if ($request->has('to_date')) {
-            $toDate = $request->to_date . ' 23:59:59';
-            $query->where('created_at', '<=', $toDate);
-        }
+        // if ($request->has('from_date')) {
+        //     $fromDate = $request->from_date . ' 00:00:00';
+        //     $query->where('created_at', '>=', $fromDate);
+        // }
+        // if ($request->has('to_date')) {
+        //     $toDate = $request->to_date . ' 23:59:59';
+        //     $query->where('created_at', '<=', $toDate);
+        // }
 
-        // Filter by category
-        if ($request->has('product_id') && !empty($request->product_id)) {
-            $query->where('product_id', $request->product_id);
-        }
+        // // Filter by category
+        // if ($request->has('product_id') && !empty($request->product_id)) {
+        //     $query->where('product_id', $request->product_id);
+        // }
 
-        // Filter by status
-        if ($request->has('status') && !empty($request->status)) {
-            $query->where('status', $request->status);
-        }
+        // // Filter by status
+        // if ($request->has('status') && !empty($request->status)) {
+        //     $query->where('status', $request->status);
+        // }
 
-        $assets = $query->get();
-        $products = Product::all();
+        // $assets = $query->get();
 
-        return view('assets.reports', compact('assets', 'products'));
+        $fromDate = $request->from_date . ' 00:00:00';
+        $toDate = $request->to_date . ' 23:59:59';
+        $st = $request->status;
+
+        $asset = Asset::with(['parts' => function ($query) {
+            $query->with('product');
+        }]);
+        $reportData = DB::select("
+            SELECT 
+                assets.id AS asset_id,
+                assets.asset_name,
+                assets.description AS asset_description,
+                assets.value AS asset_value,
+                assets.status AS asset_status,
+                products.id AS product_id,
+                products.name AS product_name,
+                products.price AS product_price,
+                asset_part.quantity AS product_quantity,
+                asset_part.req_by AS req_by,
+                asset_part.rec_by AS rec_by
+            FROM 
+                assets
+            JOIN 
+                asset_part ON assets.id = asset_part.asset_id
+            JOIN 
+                products ON asset_part.product_id = products.id
+            WHERE
+                date(asset_part.created_at) BETWEEN '$fromDate' AND '$toDate'
+            ORDER BY 
+                assets.asset_name, products.name
+        ");
+        // dd($reportData);
+        return view('assets.reports', compact('asset','reportData'));
     }
 
 }

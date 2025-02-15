@@ -14,24 +14,15 @@
     <div class="card-body">
         <form method="GET" action="{{ route('assets.reports') }}">
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label>From Date:</label>
                     <input type="date" name="from_date" class="form-control" value="{{ request()->from_date }}">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label>To Date:</label>
                     <input type="date" name="to_date" class="form-control" value="{{ request()->to_date }}">
                 </div>
-                <div class="col-md-3">
-                    <label>Status:</label>
-                    <select name="status" class="form-control">
-                        <option value="">All</option>
-                        <option value="Active" {{ request()->status == 'Active' ? 'selected' : '' }}>Active</option>
-                        <option value="Inactive" {{ request()->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
-                        <option value="Maintenance" {{ request()->status == 'Maintenance' ? 'selected' : '' }}>Under Maintenance</option>
-                    </select>
-                </div>
-                <div class="col-md-3 d-flex align-items-end justify-content-end">
+                <div class="col-md-4 d-flex align-items-end justify-content-end">
                     <button type="submit" class="btn btn-success"><i class="fas fa-file-alt"></i>  Generate Report</button>
                 </div>
             </div>
@@ -63,7 +54,14 @@
                         <td>{{ $asset->asset_name }}</td>
                         <td>{{ $asset->description }}</td>
                         <td>{{ $asset->value }}</td>
-                        <td>{{ $asset->status }}</td>
+                        <td>
+                            @if ($asset->status == 'active')
+                                <span class="badge badge-success">{{ $asset->status }}</span>
+                            @elseif ($asset->status == 'inactive')
+                                <span class="badge badge-danger">{{ $asset->status }}</span>
+                            @else
+                                <span class="badge badge-warning">{{ $asset->status }}</span>
+                            @endif
                         <td>
                             @if ($usr->can('parts.edit'))
                             <a href="{{ route('assets.show', $asset->id) }}" class="btn btn-info"><i class="fas fa-recycle"></i> Allocate</a>
