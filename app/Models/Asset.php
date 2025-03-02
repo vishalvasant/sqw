@@ -20,4 +20,9 @@ class Asset extends Model
     {
         return $this->belongsToMany(Product::class, 'asset_part')->withPivot('quantity')->withTimestamps();
     }
+
+    public function services()
+    {
+        return $this->belongsToMany(ProductService::class, 'asset_service')->withPivot('quantity')->withTimestamps();
+    }
 }

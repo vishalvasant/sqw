@@ -47,9 +47,9 @@
                         <td>{{ $row->req_by }}</td>
                         <td>{{ $row->rec_by }}</td>
                         <td>{{ $row->product_name }}</td>
-                        <td>{{ $row->product_quantity }}</td>
+                        <td>{{ $row->product_quantity ?? 'N/A' }}</td>
                         <td>{{ number_format($row->avg_product_price, 2) }}</td>
-                        <td>{{ number_format($row->avg_product_price * $row->product_quantity, 2) }}</td>
+                        <td>{{ number_format($row->avg_product_price * ($row->product_quantity ?? 1) , 2) }}</td>
                     </tr>
                 @endforeach
             </tbody>

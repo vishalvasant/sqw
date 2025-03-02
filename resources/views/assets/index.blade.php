@@ -14,15 +14,23 @@
     <div class="card-body">
         <form method="GET" action="{{ route('assets.reports') }}">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label>From Date:</label>
                     <input type="date" name="from_date" class="form-control" value="{{ request()->from_date }}">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label>To Date:</label>
                     <input type="date" name="to_date" class="form-control" value="{{ request()->to_date }}">
                 </div>
-                <div class="col-md-4 d-flex align-items-end justify-content-end">
+                <div class="col-md-3">
+                    <label>Type:</label>
+                    <select name="type" class="form-control">
+                        <option value="">Select Type</option>
+                        <option value="parts" >Parts</option>
+                        <option value="service">Service</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end justify-content-end">
                     <button type="submit" class="btn btn-success"><i class="fas fa-file-alt"></i>  Generate Report</button>
                 </div>
             </div>

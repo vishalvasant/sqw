@@ -18,13 +18,23 @@
                         <form action="{{ route('assets.parts.allocate', $asset->id) }}" method="POST">
                             @csrf
                             <div class="row">
-                                <div class="col-md-8">
+                                <div class="col-md-4">
                                     <label for="part_id">Part Name</label>
-                                    <select name="part_id" id="part_id" class="form-control" required>
+                                    <select name="part_id" id="part_id" class="form-control">
                                         <option value="">Select a Part</option>
-                                        @foreach($availableParts as $part)
-                                            <option value="{{ $part->id }}">{{ $part->name }}</option>
-                                        @endforeach
+                                            @foreach($availableParts as $part)
+                                                <option value="{{ $part->id }}">{{ $part->name }}</option>
+                                            @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="part_id">Service Name</label>
+                                    <select name="service_id" id="service_id" class="form-control">
+                                        <option value="">Select a Part</option>
+                                            @foreach($availableServices as $service)
+                                                <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                            @endforeach
+
                                     </select>
                                 </div>
                                 <div class="col-md-4">

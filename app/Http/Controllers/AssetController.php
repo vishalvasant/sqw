@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Asset;
 use App\Models\Part;
 use App\Models\Product;
+use App\Models\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -42,7 +43,8 @@ class AssetController extends Controller
     {
         $asset = Asset::findOrFail($asset->id);
         $availableParts = Product::all();
-        return view('assets.parts.index', compact('asset','availableParts'));
+        $availableServices = ProductService::all();
+        return view('assets.parts.index', compact('asset','availableParts','availableServices'));
     }
 
     public function assetParts()
@@ -56,9 +58,12 @@ class AssetController extends Controller
     public function allocateParts(Request $request, $assetId)
     {
         $asset = Asset::findOrFail($assetId);
-        // $products = $request->part_id;
+        if($request->part_id == null){
+            $service = ProductService::findOrFail($request->service_id);
+            $asset->services()->attach($service->id, ['req_by' => $request->req_by, 'rec_by' => $request->rec_by]);
+            return redirect()->route('assets.index')->with('success', 'Service allocated successfully.');
+        }else{
 
-        // foreach ($products as $productData) {
             $product = Product::findOrFail($request->part_id);
             
             // Check stock availability
@@ -70,9 +75,11 @@ class AssetController extends Controller
             } else {
                 return redirect()->back()->withErrors(['error' => 'Not enough stock for ' . $product->name]);
             }
+            return redirect()->route('assets.index')->with('success', 'Parts allocated successfully.');
+        }
         // }
 
-        return redirect()->route('assets.index')->with('success', 'Parts allocated successfully.');
+        
     }
 
     public function allocateRemove(Request $request)
@@ -131,7 +138,8 @@ class AssetController extends Controller
         $asset = Asset::with(['parts' => function ($query) {
             $query->with('product');
         }]);
-        $reportData = DB::select("
+        if($request->type == 'parts'){
+            $reportData = DB::select("
             SELECT 
                 assets.id AS asset_id,
                 assets.asset_name,
@@ -158,6 +166,37 @@ class AssetController extends Controller
             ORDER BY 
                 assets.asset_name, products.name
         ");
+        }else{
+
+            $reportData = DB::select("
+            SELECT 
+                assets.id AS asset_id,
+                assets.asset_name,
+                assets.description AS asset_description,
+                assets.value AS asset_value,
+                assets.status AS asset_status,
+                product_services.id AS product_id,
+                product_services.name AS product_name,
+                product_services.cost AS product_price,
+                (SELECT AVG(service_purchase_order_items.unit_price) 
+                 FROM service_purchase_order_items 
+                 WHERE service_purchase_order_items.service_id = product_services.id) AS avg_product_price,
+                asset_service.req_by AS req_by,
+                asset_service.rec_by AS rec_by
+            FROM 
+                assets
+            JOIN 
+                asset_service ON assets.id = asset_service.asset_id
+            JOIN 
+                product_services ON asset_service.product_service_id = product_services.id
+            WHERE
+                date(asset_service.created_at) BETWEEN '$fromDate' AND '$toDate'
+            ORDER BY 
+                assets.asset_name, product_services.name
+        ");
+
+        }
+        
         // dd($reportData);
         return view('assets.reports', compact('asset','reportData'));
     }
