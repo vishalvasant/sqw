@@ -148,8 +148,9 @@ class TaskController extends Controller
     // Delete File Method
     public function deleteFile($id)
     {
+        $task = Task::findOrFail($id);
         if ($task->file_path) {
-            Storage::disk('public')->delete($task->file_path);
+            // Storage::disk('public')->delete($task->file_path);
             $task->file_path = null;
             $task->save();
         }

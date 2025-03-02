@@ -25,21 +25,11 @@
             </div>
             @if ($task->file_path)
                 <div class="mt-3">
-                    @php
-                        $fileExtension = pathinfo($task->file_path, PATHINFO_EXTENSION);
-                        $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
-                    @endphp
-                    
-                    @if (in_array($fileExtension, $imageExtensions))
-                        <img src="{{ asset('storage/' . $task->file_path) }}" alt="Task File" class="img-thumbnail" style="width: 150px;">
-                    @else
-                        <a href="{{ asset('storage/' . $task->file_path) }}" target="_blank" class="btn btn-primary btn-sm">Download File</a>
-                    @endif
-
-                    <!-- Delete File Button -->
+                    <a href="{{ asset('storage/' . $task->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
+                    <a href="{{ asset('storage/' . $task->file_path) }}" download class="btn btn-success btn-sm">Download File</a>
                     <button type="button" class="btn btn-danger btn-sm delete-file" data-task-id="{{ $task->id }}">Delete File</button>
                     <input type="hidden" id="taskId" name="taskId" value="{{$task->id}}">
-                </div>
+                </div>    
             @else
                 <div class="form-group">
                     <label for="file">Attach File</label>
@@ -113,7 +103,7 @@
             let taskId = document.querySelector("#taskId").value;
 
             if (confirm("Are you sure you want to delete the attached file?")) {
-                fetch(`/tasks/${taskId}/delete-file`, {
+                fetch(`http://localhost/sqw/public/tasks/${taskId}/delete-file`, {
                     method: "POST",
                     headers: {
                         "X-CSRF-TOKEN": <?php echo json_encode(csrf_token()); ?>,
