@@ -23,15 +23,15 @@
                 <tr>
                     <th>Service</th>
                     <th>Quantity</th>
-                    <th>Remarks</th>
+                    <th>Price</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($servicePurchaseRequest->items as $service)
+                @foreach($servicePurchaseRequest->services as $service)
                 <tr>
                     <td>{{ $service->name }}</td>
                     <td>{{ $service->pivot->quantity }}</td>
-                    <td>{{ $service->pivot->remarks }}</td>
+                    <td>{{ $service->pivot->description }}</td>
                 </tr>
                 @endforeach
             </tbody>

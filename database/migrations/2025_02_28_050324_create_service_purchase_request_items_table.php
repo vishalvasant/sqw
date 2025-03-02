@@ -15,8 +15,8 @@ return new class extends Migration {
             $table->text('description')->nullable();
             $table->timestamps();
 
-            // $table->foreign('service_purchase_request_id')->references('id')->on('service_purchase_requests')->onDelete('cascade');
-            // $table->foreign('service_id')->references('id')->on('product_services')->onDelete('cascade');
+            $table->foreign('service_purchase_request_id', 'test_foreign')->references('id')->on('service_purchase_requests')->onDelete('cascade');
+            $table->foreign('service_id')->references('id')->on('product_services')->onDelete('cascade');
         });
     }
 

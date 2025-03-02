@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('title');
             $table->text('description')->nullable();
             $table->foreignId('assigned_to')->constrained('users')->onDelete('cascade'); // User assigned
+            $table->foreignId('approver_id')->constrained('users')->onDelete('cascade'); // User assigned
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade'); // User who created the task
             $table->enum('status', ['pending', 'in_progress', 'completed', 'approved'])->default('pending');
             $table->timestamp('due_date')->nullable();

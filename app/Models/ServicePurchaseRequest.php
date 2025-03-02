@@ -30,4 +30,8 @@ class ServicePurchaseRequest extends Model
     {
         return $this->hasMany(ServicePurchaseRequestItem::class);
     }
+
+    public function services(){
+        return $this->belongsToMany(ProductService::class, 'service_purchase_request_items', 'service_purchase_request_id', 'service_id')->withPivot('quantity', 'description');
+    }
 }

@@ -33,9 +33,9 @@
             <div class="form-group">
                 <label for="status">Status</label>
                 <select name="status" class="form-control" required>
-                        <option value="pending" {{ $servicePurchaseRequest->status == 'pending'? 'selected' : '' }}>Pending</option>
-                        <option value="approved" {{ $servicePurchaseRequest->status == 'approved'? 'selected' : '' }}>Approved</option>
-                        <option value="rejected" {{ $servicePurchaseRequest->status == 'rejected'? 'selected' : '' }}>Rejected</option>
+                    <option value="pending" {{ old('status', $servicePurchaseRequest->status) == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="approved" {{ old('status', $servicePurchaseRequest->status) == 'approved' ? 'selected' : '' }}>Approved</option>
+                    <option value="rejected" {{ old('status', $servicePurchaseRequest->status) == 'rejected' ? 'selected' : '' }}>Rejected</option>
                 </select>
             </div>
             <div class="form-group">
@@ -45,16 +45,31 @@
                         <tr>
                             <th>Service</th>
                             <th>Quantity</th>
-                            <th>Remarks</th>
+                            <th>Price</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="service-table">
                         @foreach($servicePurchaseRequest->items as $index => $service)
                         <tr>
-                            <td><input type="text" name="services[{{ $index }}][name]" class="form-control" value="{{ $service->name }}" required></td>
-                            <td><input type="number" name="services[{{ $index }}][quantity]" class="form-control" value="{{ $service->pivot->quantity }}" required></td>
-                            <td><input type="text" name="services[{{ $index }}][remarks]" class="form-control" value="{{ $service->pivot->remarks }}"></td>
+                        <td>
+                                <input type="hidden" name="service[{{ $loop->index }}][id]" value="{{ $service->id }}">
+                                <select 
+                                    name="services[{{ $loop->index }}][service_id]" 
+                                    class="form-control" 
+                                    required>
+                                    <option value="">Select Services</option>
+                                    @foreach ($services as $product)
+                                        <option 
+                                            value="{{ $product->id }}" 
+                                            {{ old("service.{$loop->index}.service_id", $service->service_id) == $product->id ? 'selected' : '' }}>
+                                            {{ $product->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td><input type="text" name="services[{{ $index }}][quantity]" class="form-control" value="{{ $service->quantity }}" required></td>
+                            <td><input type="text" name="services[{{ $index }}][description]" class="form-control" value="{{ $service->description }}" required></td>
                             <td><button type="button" class="btn btn-danger btn-sm remove-row">Remove</button></td>
                         </tr>
                         @endforeach

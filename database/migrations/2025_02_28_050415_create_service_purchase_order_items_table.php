@@ -16,8 +16,8 @@ return new class extends Migration {
             $table->decimal('total_price', 12, 2);
             $table->timestamps();
 
-            // $table->foreign('service_purchase_order_id')->references('id')->on('service_purchase_orders')->onDelete('cascade');
-            // $table->foreign('service_id')->references('id')->on('product_services')->onDelete('cascade');
+            $table->foreign('service_purchase_order_id')->references('id')->on('service_purchase_orders')->onDelete('cascade');
+            $table->foreign('service_id')->references('id')->on('product_services')->onDelete('cascade');
         });
     }
 

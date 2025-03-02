@@ -32,7 +32,7 @@
                         <tr>
                             <th>Service</th>
                             <th>Quantity</th>
-                            <th>Description</th>
+                            <th>Price</th>
                             <th><button type="button" class="btn btn-sm btn-success add-row">+</button></th>
                         </tr>
                     </thead>

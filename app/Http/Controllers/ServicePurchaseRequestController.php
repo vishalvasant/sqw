@@ -53,27 +53,58 @@ class ServicePurchaseRequestController extends Controller
         return redirect()->route('service_pr.index')->with('success', 'Service PR created successfully.');
     }
 
-    public function show(ServicePurchaseRequest $servicePurchaseRequest)
+    public function show($id)
     {
+        $servicePurchaseRequest = ServicePurchaseRequest::with('items','services')->findOrFail($id);
         return view('service_pr.show', compact('servicePurchaseRequest'));
     }
 
-    public function edit(ServicePurchaseRequest $servicePurchaseRequest)
+    public function edit($id)
     {
         $vendors = Vendor::all();
         $services = ProductService::all();
+        $servicePurchaseRequest = ServicePurchaseRequest::with('items','services')->findOrFail($id);
         return view('service_pr.edit', compact('servicePurchaseRequest', 'vendors', 'services'));
     }
 
-    public function update(Request $request, ServicePurchaseRequest $servicePurchaseRequest)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'vendor_id' => 'nullable|exists:vendors,id',
             'request_date' => 'required|date',
-            'status' => 'required|in:pending,approved,rejected'
+            'services' => 'required|array',
+            'services.*.service_id' => 'required|exists:product_services,id',
+            'services.*.quantity' => 'required|integer|min:1'
+        ]);
+        $servicePurchaseRequest = ServicePurchaseRequest::findOrFail($id);
+        $servicePurchaseRequest->update([
+            'vendor_id' => $request->vendor_id,
+            'requested_by' => auth()->id(),
+            'request_date' => $request->request_date,
+            'status' => $request->status
         ]);
 
-        $servicePurchaseRequest->update($request->only('vendor_id', 'request_date', 'status'));
+        $existingItemIds = collect($validatedData['services'])->pluck('id')->filter();
+        $servicePurchaseRequest->items()->whereNotIn('id', $existingItemIds)->delete();
+
+        foreach ($request->services as $service) {
+            if (isset($service['id'])) {
+                // Update existing item
+                $servicePurchaseRequestItem = ServicePurchaseRequestItem::findOrFail($service['id']);
+                $servicePurchaseRequestItem->update([
+                    'service_id' => $service['service_id'],
+                    'quantity' => $service['quantity'],
+                    'description' => $service['description'] ?? null
+                ]);
+            } else {
+                // Add new item
+                $servicePurchaseRequest->items()->create([
+                    'service_id' => $service['service_id'],
+                    'quantity' => $service['quantity'],
+                    'description' => $service['description'] ?? null
+                ]);
+            }
+        }
 
         return redirect()->route('service_pr.index')->with('success', 'Service PR updated successfully.');
     }
