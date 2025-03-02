@@ -97,6 +97,9 @@ class FuelUsageController extends Controller
 
     public function destroy(FuelUsage $fuelUsage)
     {
+        $product = Product::findOrFail($fuelUsage->product_id);
+        $product->stock += $fuelUsage->fuel_amount;
+        $product->save();
         $fuelUsage->delete();
 
         return redirect()->route('fleet.fuel_usages.index')->with('success', 'Fuel usage record deleted successfully.');

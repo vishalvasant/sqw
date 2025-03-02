@@ -19,6 +19,7 @@
                     <th>Quantity</th>
                     <th>Price</th>
                     <th>Total</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,6 +33,16 @@
                         <td>{{ $row->product_quantity }}</td>
                         <td>{{ number_format($row->avg_product_price, 2) }}</td>
                         <td>{{ number_format($row->avg_product_price * $row->product_quantity, 2) }}</td>
+                        <td>
+                            <form action="{{ route('assets.parts.remove') }}" method="POST" class="d-inline">
+                                @csrf
+                                <input type="hidden" name="asset_id" value="{{ $row->asset_id }}">
+                                <input type="hidden" name="product_id" value="{{ $row->product_id }}">
+                                <input type="hidden" name="product_quantity" value="{{ $row->product_quantity }}">
+                                <input type="hidden" name="asset_part_id" value="{{ $row->asset_part_id }}">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

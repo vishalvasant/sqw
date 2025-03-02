@@ -22,6 +22,11 @@ use App\Http\Controllers\FuelUsageController;
 use App\Http\Controllers\TaskController;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use Spatie\Permission\Middleware\PermissionMiddleware;
+use App\Http\Controllers\ProductServiceController;
+use App\Http\Controllers\ServicePurchaseRequestController;
+use App\Http\Controllers\ServicePurchaseOrderController;
+use App\Http\Controllers\VendorController;
+
 
 Route::get('/', function () {
     return view('landing');
@@ -34,6 +39,12 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/purchase-requests/{id}/details', [PurchaseRequestController::class, 'getDetails']);
 
 Route::middleware(['auth'])->group(function () {
+    Route::resource('product_services', ProductServiceController::class);
+    Route::resource('service_pr', ServicePurchaseRequestController::class);
+    Route::resource('service_po', ServicePurchaseOrderController::class);
+    Route::resource('vendors', VendorController::class);
+
+
     Route::resource('tasks', TaskController::class);
     Route::post('/tasks/{task}/delete-file', [TaskController::class, 'deleteFile'])->name('tasks.delete-file');
     Route::post('/tasks/{id}/approve', [TaskController::class, 'approveTask'])->name('tasks.approve');
@@ -93,6 +104,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('assets', AssetController::class);
         Route::get('assets/{asset}', [AssetController::class, 'show'])->name('assets.show');
         Route::post('assets/{asset}/allocate', [AssetController::class, 'allocateParts'])->name('assets.parts.allocate');
+        Route::post('assets.parts.remove', [AssetController::class, 'allocateRemove'])->name('assets.parts.remove');
         Route::get('assets/{id}/parts-report', [AssetController::class, 'partsReport'])->name('assets.parts.report');
         Route::resource('assets.parts', PartController::class)->except(['show']);
         Route::get('assets.parts.index', [AssetController::class, 'show'])->name('assets.parts.index');

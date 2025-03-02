@@ -75,6 +75,18 @@ class AssetController extends Controller
         return redirect()->route('assets.index')->with('success', 'Parts allocated successfully.');
     }
 
+    public function allocateRemove(Request $request)
+    {
+        // dd($request->all());
+
+        $product = Product::findOrFail($request->product_id);
+        $product->stock += $request->product_quantity;
+        $product->save();
+        DB::table('asset_part')->where('id', $request->asset_part_id)->delete();
+
+        return redirect()->route('assets.index')->with('success', 'Parts deassociated successfully.');
+    }
+
     public function partsReport($id)
     {
         $asset = Asset::with(['parts' => function ($query) {
@@ -92,6 +104,7 @@ class AssetController extends Controller
                 (SELECT AVG(purchase_order_items.price) 
                  FROM purchase_order_items 
                  WHERE purchase_order_items.product_id = products.id) AS avg_product_price,
+                asset_part.id AS asset_part_id,
                 asset_part.quantity AS product_quantity,
                 asset_part.req_by AS req_by,
                 asset_part.rec_by AS rec_by

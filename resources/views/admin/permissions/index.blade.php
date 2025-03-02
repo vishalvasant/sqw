@@ -28,9 +28,7 @@
             <div id="permissions_container" class="mt-3"></div>
 
             <div class="card-footer text-end">
-                @if ($usr->can('permissions.edit'))
                 <button type="submit" class="btn btn-primary" id="save_permissions" disabled>Update Permissions</button>
-                @endif
             </div>
         </form>
     </div>

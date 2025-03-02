@@ -88,6 +88,46 @@
                     </ul>
                 </li>
                 @endif
+
+
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-recycle"></i>
+                        <p>Services<i class="right fas fa-angle-left"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+
+                        <li class="nav-item">
+                            <a href="{{ route('product_services.index') }}" class="nav-link">
+                                <i class="fas fa-parachute-box nav-icon"></i>
+                                <p>New Services</p>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a href="{{ route('service_pr.index') }}" class="nav-link">
+                                <i class="fas fa-print nav-icon"></i>
+                                <p>Service Requests-Orders</p>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a href="{{ route('service_po.index') }}" class="nav-link">
+                                <i class="fas fa-file-invoice nav-icon"></i>
+                                <p>Service Utilize</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('vendors.index') }}" class="nav-link">
+                                <i class="fas fa-user nav-icon"></i>
+                                <p>Vendors</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
                 
                 @if ($usr->can('fuel_usages.view') || $usr->can('vehicles.view') || $usr->can('drivers.view') || $usr->can('reports.view'))
                 <li class="nav-item has-treeview">
