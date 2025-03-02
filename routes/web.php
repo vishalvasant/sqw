@@ -41,7 +41,11 @@ Route::get('/purchase-requests/{id}/details', [PurchaseRequestController::class,
 Route::middleware(['auth'])->group(function () {
     Route::resource('product_services', ProductServiceController::class);
     Route::resource('service_pr', ServicePurchaseRequestController::class);
+    Route::get('/reports', [ServicePurchaseRequestController::class, 'servicePurchaseRequestsReport'])->name('service_pr.report');
     Route::resource('service_po', ServicePurchaseOrderController::class);
+    Route::patch('service_po/{id}/update-status', [ServicePurchaseOrderController::class, 'updateStatus'])->name('service_po.updateStatus');
+    Route::patch('service_po/{id}/update-billed', [ServicePurchaseOrderController::class, 'updateBilled'])->name('service_po.updateBilled');
+    Route::get('/service-reports', [ServicePurchaseOrderController::class, 'purchaseServiceOrdersReport'])->name('service_po.report');
     Route::resource('vendors', VendorController::class);
 
 

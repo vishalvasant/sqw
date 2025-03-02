@@ -34,7 +34,7 @@ class ServicePurchaseRequestController extends Controller
         ]);
 
         $pr = ServicePurchaseRequest::create([
-            'request_number' => 'PR-' . time(),
+            'request_number' => $this->generateServiceRequestNumber(),
             'vendor_id' => $request->vendor_id,
             'requested_by' => auth()->id(),
             'request_date' => $request->request_date,
@@ -51,6 +51,22 @@ class ServicePurchaseRequestController extends Controller
         }
 
         return redirect()->route('service_pr.index')->with('success', 'Service PR created successfully.');
+    }
+
+    protected function generateServiceRequestNumber()
+    {
+        $year = date('Y'); // Get current year (e.g., 2025)
+        $month = date('m'); // Get current month (e.g., 02)
+    
+        // Count the number of PRs for the current month
+        $count = ServicePurchaseRequest::whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->count() + 1; // Increment count to start from 001
+    
+        // Format count as three-digit number (e.g., 001, 002, 010, 100)
+        $prNumber = sprintf('%03d', $count);
+    
+        return "SR-{$year}{$month}{$prNumber}";
     }
 
     public function show($id)
@@ -109,9 +125,34 @@ class ServicePurchaseRequestController extends Controller
         return redirect()->route('service_pr.index')->with('success', 'Service PR updated successfully.');
     }
 
-    public function destroy(ServicePurchaseRequest $servicePurchaseRequest)
+    public function destroy($id)
     {
+        $servicePurchaseRequest = ServicePurchaseRequest::findOrFail($id);
         $servicePurchaseRequest->delete();
         return redirect()->route('service_pr.index')->with('success', 'Service PR deleted successfully.');
+    }
+
+    public function servicePurchaseRequestsReport(Request $request)
+    {
+        $query = ServicePurchaseRequest::with(['requester', 'vendor', 'items.service']);
+        if ($request->has('from_date')) {
+            $fromDate = $request->from_date . ' 00:00:00';
+            $query->where('created_at', '>=', $fromDate);
+        }
+        if ($request->has('to_date')) {
+            $toDate = $request->to_date . ' 23:59:59';
+            $query->where('created_at', '<=', $toDate);
+        }
+
+        // if ($request->has('from_date') && $request->has('to_date')) {
+        //     $query->whereBetween('created_at', [$request->from_date, $request->to_date]);
+        // }
+        if ($request->has('status')) {
+            if($request->status != "all"){
+                $query->where('status', $request->status);
+            }
+        }
+        $purchaseRequests = $query->get();
+        return view('service_pr.reports', compact('purchaseRequests'));
     }
 }

@@ -24,6 +24,6 @@ class ServicePurchaseOrderItem extends Model
 
     public function service()
     {
-        return $this->belongsTo(Service::class);
+        return $this->belongsTo(ProductService::class);
     }
 }

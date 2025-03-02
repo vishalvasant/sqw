@@ -31,4 +31,9 @@ class ServicePurchaseOrder extends Model
     {
         return $this->hasMany(ServicePurchaseOrderItem::class);
     }
+
+    public function service()
+    {
+        return $this->belongsTo(ProductService::class);
+    }
 }

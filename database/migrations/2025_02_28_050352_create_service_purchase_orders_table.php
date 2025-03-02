@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('vendor_id');
             $table->date('order_date');
             $table->enum('status', ['pending', 'approved', 'rejected', 'completed'])->default('pending');
+            $table->boolean('billed')->default(false); // Default unbilled
             $table->timestamps();
 
             $table->foreign('service_purchase_request_id')->references('id')->on('service_purchase_requests')->onDelete('cascade');

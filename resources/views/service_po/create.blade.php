@@ -10,14 +10,24 @@
     <form action="{{ route('service_po.store') }}" method="POST">
         @csrf
         <div class="card-body">
-            <div class="form-group">
-                <label for="service_pr_id">Select Purchase Request</label>
-                <select name="service_pr_id" class="form-control" required>
-                    <option value="">Select PR</option>
-                    @foreach($purchaseRequests as $pr)
-                        <option value="{{ $pr->id }}">PR# {{ $pr->request_number }} - {{ $pr->vendor->name }}</option>
-                    @endforeach
-                </select>
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="gr_number">GR Number</label>
+                    <input type="text" name="gr_number" id="gr_number" class="form-control" value="{{$gr_number}}" readonly>
+                </div>
+                <div class="col-md-8">
+                    <label for="service_pr_id">Select Purchase Request</label>
+                    <select name="service_pr_id" class="form-control" onchange="location.href='?request_id=' + this.value;" required>
+                            <option value="">Select Purchase Request</option>
+                            @foreach ($purchaseRequests as $pr)
+                            @if($pr->status == 'approved')
+                            <option value="{{ $pr->id }}" {{ request('request_id') == $pr->id ? 'selected' : '' }}>
+                                {{ $pr->request_number }}
+                            </option>
+                            @endif
+                            @endforeach
+                    </select>
+                </div>
             </div>
 
             <div class="form-group">
@@ -25,23 +35,49 @@
                 <input type="date" name="order_date" class="form-control" required>
             </div>
 
+            @if ($selectedRequest)
+            <!-- Select Supplier -->
             <div class="form-group">
-                <label>Services Ordered</label>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Service</th>
-                            <th>Quantity</th>
-                            <th>Unit Price</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody id="service-table">
-                        <!-- Services will be dynamically added here -->
-                    </tbody>
-                </table>
+                <label for="supplier_id">Vendor</label>
+                <input type="text" name="vendors" id="vendors" class="form-control" value="{{$vendors->name}}" readonly>
+                <input type="hidden" name="vendors_id" id="vendors_id" class="form-control" value="{{$vendors->id}}" readonly>
+
             </div>
-        </div>
+
+            <div class="form-group">
+                <label for="billed">Is Billed?</label>
+                <input type="checkbox" name="billed" id="billed" value="1" {{ old('billed') ? 'checked' : '' }}>
+            </div>
+            <h5>Services</h5>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Requested Quantity</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    @foreach ($selectedRequest->items as $item)
+                        <tr>
+                            <td>{{ $item->service->name }}</td>
+                            <td>{{ $item->quantity }}</td>
+                            <td>
+                                <input type="number" name="products[{{ $loop->index }}][quantity]" class="form-control" value="{{ $item->quantity }}" required>
+                                <input type="hidden" name="products[{{ $loop->index }}][service_purchase_request_id]" value="{{ $item->id }}">
+                                <input type="hidden" name="products[{{ $loop->index }}][service_id]" value="{{ $item->service_id }}">
+                            </td>
+                            <td>
+                                <input type="number" name="products[{{ $loop->index }}][description]"  value="{{ $item->description }}"  class="form-control" required>
+                            </td>
+                        </tr>
+                    @endforeach
+
+                </tbody>
+            </table>
+            @endif
 
         <div class="card-footer">
             <button type="submit" class="btn btn-primary">Submit PO</button>
@@ -55,9 +91,10 @@
         document.querySelector("[name='service_pr_id']").addEventListener("change", function () {
             let prId = this.value;
             if (prId) {
-                fetch(`/service_pr/${prId}/services`)
+                fetch(`http://localhost/sqw/public/service_pr/${prId}/edit`)
                     .then(response => response.json())
                     .then(data => {
+                        console.log(data);
                         let tableBody = document.querySelector("#service-table");
                         tableBody.innerHTML = "";
                         data.forEach((service, index) => {

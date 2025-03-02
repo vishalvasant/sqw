@@ -8,7 +8,7 @@
             <h3 class="card-title">Service Allocation</h3>
         </div>
         <div class="card-body">
-            <form method="GET" action="{{ route('purchase.orders.report') }}">
+            <form method="GET" action="{{ route('service_po.report') }}">
                 <div class="row">
                     <div class="col-md-3">
                         <label>From Date:</label>
@@ -52,10 +52,11 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>PO Number</th>
+                    <th>SO Number</th>
                     <th>Vendor</th>
-                    <th>PO Date</th>
+                    <th>SO Date</th>
                     <th>Status</th>
+                    <th>Billed</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -67,9 +68,33 @@
                     <td>{{ $po->vendor ? $po->vendor->name : 'N/A' }}</td>
                     <td>{{ $po->order_date   }}</td>
                     <td>
-                        <span class="badge badge-{{ $po->status == 'approved' ? 'success' : 'warning' }}">
-                            {{ ucfirst($po->status) }}
-                        </span>
+                        <form action="{{ route('service_po.updateStatus', $po->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('PATCH')
+                            <select 
+                                name="status" 
+                                class="form-control form-control-sm"
+                                onchange="this.form.submit()"
+                            >
+                                <option value="pending" {{ $po->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="completed" {{ $po->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                                <option value="cancelled" {{ $po->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                            </select>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="{{ route('service_po.updateBilled', $po->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('PATCH')
+                            <select 
+                                name="billed" 
+                                class="form-control form-control-sm"
+                                onchange="this.form.submit()"
+                            >
+                                <option value="0" {{ !$po->billed ? 'selected' : '' }}>Unbilled</option>
+                                <option value="1" {{ $po->billed ? 'selected' : '' }}>Billed</option>
+                            </select>
+                        </form>
                     </td>
                     <td>
                         <a href="{{ route('service_po.show', $po->id) }}" class="btn btn-info btn-sm">View</a>

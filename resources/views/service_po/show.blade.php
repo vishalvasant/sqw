@@ -8,8 +8,8 @@
         <h3 class="card-title">PO Details</h3>
     </div>
     <div class="card-body">
-        <p><strong>PO Number:</strong> {{ $servicePurchaseOrder->po_number }}</p>
-        <p><strong>Vendor:</strong> {{ $servicePurchaseOrder->vendor_id}}</p>
+        <p><strong>PO Number:</strong> {{ $servicePurchaseOrder->order_number }}</p>
+        <p><strong>Vendor:</strong> {{ $servicePurchaseOrder->vendor->name}}</p>
         <p><strong>PO Date:</strong> {{ $servicePurchaseOrder->order_date }}</p>
         <p><strong>Status:</strong> <span class="badge badge-{{ $servicePurchaseOrder->status == 'approved' ? 'success' : 'warning' }}">{{ ucfirst($servicePurchaseOrder->status) }}</span></p>
         
@@ -26,10 +26,10 @@
             <tbody>
                 @foreach($servicePurchaseOrder->items as $service)
                 <tr>
-                    <td>{{ $service->name }}</td>
-                    <td>{{ $service->pivot->quantity }}</td>
-                    <td>{{ number_format($service->pivot->unit_price, 2) }}</td>
-                    <td>{{ number_format($service->pivot->quantity * $service->pivot->unit_price, 2) }}</td>
+                    <td>{{ $service->service->name }}</td>
+                    <td>{{ $service->quantity }}</td>
+                    <td>{{ number_format($service->unit_price, 2) }}</td>
+                    <td>{{ number_format($service->quantity * $service->unit_price, 2) }}</td>
                 </tr>
                 @endforeach
             </tbody>

@@ -8,7 +8,7 @@
         <h3 class="card-title">Service PR-PO Report</h3>
     </div>
     <div class="card-body">
-        <form method="GET" action="{{ route('purchase.requests.report') }}">
+        <form method="GET" action="{{ route('service_pr.report') }}">
             <div class="row">
                 <div class="col-md-3">
                     <label for="from_date">From Date</label>
