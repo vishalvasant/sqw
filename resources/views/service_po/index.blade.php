@@ -44,8 +44,8 @@
     </div>
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Service Purchase Orders</h3>
-        <a href="{{ route('service_po.create') }}" class="btn btn-primary float-right">Create PO</a>
+        <h3 class="card-title">Service Orders</h3>
+        <a href="{{ route('service_po.create') }}" class="btn btn-primary float-right">Create SO</a>
     </div>
     <div class="card-body">
         <table class="table table-bordered">

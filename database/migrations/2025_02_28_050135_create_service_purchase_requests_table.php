@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('requested_by');
             $table->date('request_date');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->text('description')->nullable();
             $table->timestamps();
 
             $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('set null');

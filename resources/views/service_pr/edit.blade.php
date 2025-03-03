@@ -11,32 +11,39 @@
         @csrf
         @method('PUT')
         <div class="card-body">
-            <div class="form-group">
-                <label for="request_no">Request No</label>
-                <input type="text" name="request_no" class="form-control" value="{{ $servicePurchaseRequest->request_number }}" required>
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="request_no">Request No</label>
+                    <input type="text" name="request_no" class="form-control" value="{{ $servicePurchaseRequest->request_number }}" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="request_date">Request Date</label>
+                    <input type="date" name="request_date" class="form-control" value="{{ \Carbon\Carbon::parse($servicePurchaseRequest->request_date )->format('Y-m-d') }}" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="vendor_id">Select Vendor</label>
+                    <select name="vendor_id" class="form-control" required>
+                        @foreach($vendors as $vendor)
+                            <option value="{{ $vendor->id }}" {{ $servicePurchaseRequest->vendor_id == $vendor->id ? 'selected' : '' }}>
+                                {{ $vendor->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="status">Status</label>
+                    <select name="status" class="form-control" required>
+                        <option value="pending" {{ old('status', $servicePurchaseRequest->status) == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="approved" {{ old('status', $servicePurchaseRequest->status) == 'approved' ? 'selected' : '' }}>Approved</option>
+                        <option value="rejected" {{ old('status', $servicePurchaseRequest->status) == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                    </select>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="request_date">Request Date</label>
-                <input type="date" name="request_date" class="form-control" value="{{ \Carbon\Carbon::parse($servicePurchaseRequest->request_date )->format('Y-m-d') }}" required>
-            </div>
-            <div class="form-group">
-                <label for="vendor_id">Select Vendor</label>
-                <select name="vendor_id" class="form-control" required>
-                    @foreach($vendors as $vendor)
-                        <option value="{{ $vendor->id }}" {{ $servicePurchaseRequest->vendor_id == $vendor->id ? 'selected' : '' }}>
-                            {{ $vendor->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="status">Status</label>
-                <select name="status" class="form-control" required>
-                    <option value="pending" {{ old('status', $servicePurchaseRequest->status) == 'pending' ? 'selected' : '' }}>Pending</option>
-                    <option value="approved" {{ old('status', $servicePurchaseRequest->status) == 'approved' ? 'selected' : '' }}>Approved</option>
-                    <option value="rejected" {{ old('status', $servicePurchaseRequest->status) == 'rejected' ? 'selected' : '' }}>Rejected</option>
-                </select>
+            <div class="row">
+                <div class="col-md-12">
+                    <label for="description">Description</label>
+                    <textarea name="description" class="form-control">{{ $servicePurchaseRequest->description }}</textarea>
+                </div>
             </div>
             <div class="form-group">
                 <label>Services Requested</label>
@@ -69,8 +76,8 @@
                                 </select>
                             </td>
                             <td><input type="text" name="services[{{ $index }}][quantity]" class="form-control" value="{{ $service->quantity }}" required></td>
-                            <td><input type="text" name="services[{{ $index }}][description]" class="form-control" value="{{ $service->description }}" required></td>
-                            <td><button type="button" class="btn btn-danger btn-sm remove-row">Remove</button></td>
+                            <td><input type="text" name="services[{{ $index }}][price]" class="form-control" value="{{ $service->price }}" required></td>
+                            <td><button type="button" class="btn btn-danger btn-sm remove-row"><i class="fa fa-trash"></i></button></td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -80,7 +87,7 @@
         </div>
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-primary">Update PR</button>
+            <button type="submit" class="btn btn-primary">Update SR</button>
             <a href="{{ route('service_pr.index') }}" class="btn btn-secondary">Cancel</a>
         </div>
     </form>
@@ -91,9 +98,16 @@
         let index = document.querySelectorAll('#service-table tr').length;
         let row = `
             <tr>
-                <td><input type="text" name="services[${index}][name]" class="form-control" required></td>
+                <td>
+                    <select name="services[${index}][service_id]" class="form-control">
+                        <option value="">Select Service</option>
+                        @foreach($services as $service)
+                            <option value="{{ $service->id }}">{{ $service->name }}</option>
+                        @endforeach
+                    </select>
+                </td>
                 <td><input type="number" name="services[${index}][quantity]" class="form-control" required></td>
-                <td><input type="text" name="services[${index}][remarks]" class="form-control"></td>
+                <td><input type="text" name="services[${index}][price]" class="form-control"></td>
                 <td><button type="button" class="btn btn-danger btn-sm remove-row">Remove</button></td>
             </tr>`;
         document.getElementById('service-table').insertAdjacentHTML('beforeend', row);

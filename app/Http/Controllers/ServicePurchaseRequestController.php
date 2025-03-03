@@ -30,7 +30,7 @@ class ServicePurchaseRequestController extends Controller
             'request_date' => 'required|date',
             'services' => 'required|array',
             'services.*.service_id' => 'required|exists:product_services,id',
-            'services.*.quantity' => 'required|integer|min:1'
+            'services.*.price' => 'required|integer|min:1'
         ]);
 
         $pr = ServicePurchaseRequest::create([
@@ -38,6 +38,7 @@ class ServicePurchaseRequestController extends Controller
             'vendor_id' => $request->vendor_id,
             'requested_by' => auth()->id(),
             'request_date' => $request->request_date,
+            'description' => $request->description,
             'status' => 'pending'
         ]);
 
@@ -46,7 +47,7 @@ class ServicePurchaseRequestController extends Controller
                 'service_purchase_request_id' => $pr->id,
                 'service_id' => $service['service_id'],
                 'quantity' => $service['quantity'],
-                'description' => $service['description'] ?? null
+                'price' => $service['price'],
             ]);
         }
 
@@ -71,7 +72,7 @@ class ServicePurchaseRequestController extends Controller
 
     public function show($id)
     {
-        $servicePurchaseRequest = ServicePurchaseRequest::with('items','services')->findOrFail($id);
+        $servicePurchaseRequest = ServicePurchaseRequest::with('items','services','vendor')->findOrFail($id);
         return view('service_pr.show', compact('servicePurchaseRequest'));
     }
 
@@ -97,27 +98,29 @@ class ServicePurchaseRequestController extends Controller
             'vendor_id' => $request->vendor_id,
             'requested_by' => auth()->id(),
             'request_date' => $request->request_date,
+            'description' => $request->description,
             'status' => $request->status
         ]);
         
-        $existingItemIds = collect($validatedData['services'])->pluck('service_id')->filter();
+        $existingItemIds = collect($validatedData['services'])->pluck('id')->filter();
         $servicePurchaseRequest->items()->whereNotIn('id', $existingItemIds)->delete();
 
         foreach ($request->services as $service) {
             if (isset($service['id'])) {
                 // Update existing item
-                $servicePurchaseRequestItem = ServicePurchaseRequestItem::findOrFail($service['id']);
+                $servicePurchaseRequestItem = ServicePurchaseRequestItem::findOrFail($service['service_id']);
                 $servicePurchaseRequestItem->update([
                     'service_id' => $service['service_id'],
                     'quantity' => $service['quantity'],
-                    'description' => $service['description'] ?? null
+                    'price' => $service['price'] ?? null
                 ]);
             } else {
                 // Add new item
                 $servicePurchaseRequest->items()->create([
+                    'service_purchase_request_id' => $servicePurchaseRequest->id,
                     'service_id' => $service['service_id'],
                     'quantity' => $service['quantity'],
-                    'description' => $service['description'] ?? null
+                    'price' => $service['price'] ?? null
                 ]);
             }
         }

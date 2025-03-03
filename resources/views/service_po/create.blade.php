@@ -5,20 +5,20 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Create Service PO</h3>
+        <h3 class="card-title">Create Service Order</h3>
     </div>
     <form action="{{ route('service_po.store') }}" method="POST">
         @csrf
         <div class="card-body">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="gr_number">GR Number</label>
                     <input type="text" name="gr_number" id="gr_number" class="form-control" value="{{$gr_number}}" readonly>
                 </div>
-                <div class="col-md-8">
-                    <label for="service_pr_id">Select Purchase Request</label>
+                <div class="col-md-6">
+                    <label for="service_pr_id">Select Service Request</label>
                     <select name="service_pr_id" class="form-control" onchange="location.href='?request_id=' + this.value;" required>
-                            <option value="">Select Purchase Request</option>
+                            <option value="">Select Service Request</option>
                             @foreach ($purchaseRequests as $pr)
                             @if($pr->status == 'approved')
                             <option value="{{ $pr->id }}" {{ request('request_id') == $pr->id ? 'selected' : '' }}>
@@ -28,12 +28,12 @@
                             @endforeach
                     </select>
                 </div>
+                <div class="col-md-3">
+                    <label for="order_date">SO Date</label>
+                    <input type="date" name="order_date" class="form-control" required>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="order_date">PO Date</label>
-                <input type="date" name="order_date" class="form-control" required>
-            </div>
 
             @if ($selectedRequest)
             <!-- Select Supplier -->
@@ -70,7 +70,7 @@
                                 <input type="hidden" name="products[{{ $loop->index }}][service_id]" value="{{ $item->service_id }}">
                             </td>
                             <td>
-                                <input type="number" name="products[{{ $loop->index }}][description]"  value="{{ $item->description }}"  class="form-control" required>
+                                <input type="number" name="products[{{ $loop->index }}][price]"  value="{{ $item->price }}"  class="form-control" required>
                             </td>
                         </tr>
                     @endforeach
@@ -78,9 +78,9 @@
                 </tbody>
             </table>
             @endif
-
+        </div>
         <div class="card-footer">
-            <button type="submit" class="btn btn-primary">Submit PO</button>
+            <button type="submit" class="btn btn-primary">Submit SO</button>
             <a href="{{ route('service_po.index') }}" class="btn btn-secondary">Cancel</a>
         </div>
     </form>

@@ -5,7 +5,7 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Service PR-PO Report</h3>
+        <h3 class="card-title">SR-SO Report</h3>
     </div>
     <div class="card-body">
         <form method="GET" action="{{ route('service_pr.report') }}">
@@ -37,8 +37,8 @@
 </div>
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Service Purchase Requests</h3>
-        <a href="{{ route('service_pr.create') }}" class="btn btn-primary float-right">Create PR</a>
+        <h3 class="card-title">Service Requests</h3>
+        <a href="{{ route('service_pr.create') }}" class="btn btn-primary float-right">Create SR</a>
     </div>
     <div class="card-body">
         <table class="table table-bordered">

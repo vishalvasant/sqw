@@ -13,7 +13,7 @@ class ServicePurchaseRequestItem extends Model
         'service_purchase_request_id',
         'service_id',
         'quantity',
-        'description'
+        'price',
     ];
 
     public function purchaseRequest()

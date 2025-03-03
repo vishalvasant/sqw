@@ -9,7 +9,7 @@
     </div>
     <div class="card-body">
         <p><strong>PR Number:</strong> {{ $servicePurchaseRequest->request_number }}</p>
-        <p><strong>Vendor:</strong> {{ $servicePurchaseRequest->vendor_id }}</p>
+        <p><strong>Vendor:</strong> {{ $servicePurchaseRequest->vendor->name }}</p>
         <p><strong>Request Date:</strong> {{ $servicePurchaseRequest->request_date }}</p>
         <p><strong>Status:</strong> 
             <span class="badge badge-{{ $servicePurchaseRequest->status == 'approved' ? 'success' : 'warning' }}">
@@ -31,7 +31,7 @@
                 <tr>
                     <td>{{ $service->name }}</td>
                     <td>{{ $service->pivot->quantity }}</td>
-                    <td>{{ $service->pivot->description }}</td>
+                    <td>{{ $service->pivot->price }}</td>
                 </tr>
                 @endforeach
             </tbody>

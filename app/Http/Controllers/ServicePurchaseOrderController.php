@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ServicePurchaseOrder;
 use App\Models\ServicePurchaseOrderItem;
 use App\Models\ServicePurchaseRequest;
+use App\Models\ServicePurchaseRequestItem;
 use App\Models\Service;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
@@ -54,8 +55,10 @@ class ServicePurchaseOrderController extends Controller
             'service_pr_id' => 'required|exists:service_purchase_requests,id',
             'order_date' => 'required|date',
         ]);
-
+        
         $pr = ServicePurchaseRequest::find($request->service_pr_id);
+        // $servicePurchaseRequestItem = ServicePurchaseRequestItem::where('service_purchase_request_id', $request->service_pr_id)->first();
+        
 
         $po = ServicePurchaseOrder::create([
             'order_number' => $this->generateServiceOrderNumber(),
@@ -65,13 +68,16 @@ class ServicePurchaseOrderController extends Controller
             'status' => 'pending'
         ]);
 
-        foreach ($pr->items as $item) {
+        foreach ($request->products as $item) {
+            $servicePurchaseRequestItem = ServicePurchaseRequestItem::where('service_purchase_request_id', $item['service_purchase_request_id'])->first();
+            $servicePurchaseRequestItem->price -= $item['price'];
+            $servicePurchaseRequestItem->update();
             ServicePurchaseOrderItem::create([
                 'service_purchase_order_id' => $po->id,
-                'service_id' => $item->service_id,
-                'quantity' => $item->quantity,
-                'unit_price' => $item->description,
-                'total_price' => $item->quantity * $item->description
+                'service_id' => $item['service_id'],
+                'quantity' => $item['quantity'],
+                'unit_price' => $item['price'],
+                'total_price' => $item['quantity'] * $item['price']
             ]);
         }
 

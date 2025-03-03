@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('service_purchase_request_id');
             $table->unsignedBigInteger('service_id');
             $table->integer('quantity');
+            $table->decimal('price', 10, 2)->default(0);
             $table->text('description')->nullable();
             $table->timestamps();
 
