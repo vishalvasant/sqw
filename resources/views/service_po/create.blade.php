@@ -70,7 +70,7 @@
                                 <input type="hidden" name="products[{{ $loop->index }}][service_id]" value="{{ $item->service_id }}">
                             </td>
                             <td>
-                                <input type="number" name="products[{{ $loop->index }}][price]"  value="{{ $item->price }}"  class="form-control" required>
+                                <input type="number" name="products[{{ $loop->index }}][price]"  value="{{ $item->price }}"  class="form-control itemPrice"  required>
                             </td>
                         </tr>
                     @endforeach
@@ -88,28 +88,15 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        document.querySelector("[name='service_pr_id']").addEventListener("change", function () {
-            let prId = this.value;
-            if (prId) {
-                fetch(`http://localhost/sqw/public/service_pr/${prId}/edit`)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data);
-                        let tableBody = document.querySelector("#service-table");
-                        tableBody.innerHTML = "";
-                        data.forEach((service, index) => {
-                            let row = `<tr>
-                                <td>${service.name}</td>
-                                <td>${service.quantity}</td>
-                                <td><input type="number" name="services[${index}][unit_price]" class="form-control" required></td>
-                                <td><span class="total-price">0</span></td>
-                            </tr>`;
-                            tableBody.insertAdjacentHTML("beforeend", row);
-                        });
-                    });
+        document.querySelectorAll(".itemPrice").forEach(function (input) {
+            input.addEventListener("input", function () {
+            let maxPrice = parseFloat(input.getAttribute("value"));
+            if (parseFloat(input.value) > maxPrice) {
+                input.value = maxPrice;
+                alert("Price cannot be greater than " + maxPrice);
             }
+            });
         });
-
         document.addEventListener("input", function (event) {
             if (event.target.matches("[name^='services'][name$='[unit_price]']")) {
                 let row = event.target.closest("tr");

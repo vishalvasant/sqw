@@ -64,12 +64,12 @@
                             <td>{{ $item->product->name }}</td>
                             <td>{{ $item->quantity }}</td>
                             <td>
-                                <input type="number" name="products[{{ $loop->index }}][quantity]" class="form-control" value="{{ $item->quantity }}" required>
+                                <input type="number" name="products[{{ $loop->index }}][quantity]" class="form-control itemQty" value="{{ $item->quantity }}" required>
                                 <input type="hidden" name="products[{{ $loop->index }}][purchase_request_item_id]" value="{{ $item->id }}">
                                 <input type="hidden" name="products[{{ $loop->index }}][product_id]" value="{{ $item->product_id }}">
                             </td>
                             <td>
-                                <input type="number" name="products[{{ $loop->index }}][price]"  value="{{ $item->price }}"  class="form-control" required>
+                                <input type="number" name="products[{{ $loop->index }}][price]"  value="{{ $item->price }}"  class="form-control itemPrice" required>
                             </td>
                         </tr>
                     @endforeach
@@ -86,4 +86,29 @@
         </form>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("DOM loaded");
+        document.querySelectorAll(".itemPrice").forEach(function (input) {
+            input.addEventListener("input", function () {
+            let maxPrice = parseFloat(input.getAttribute("value"));
+            if (parseFloat(input.value) > maxPrice) {
+                input.value = maxPrice;
+                alert("Price cannot be greater than price:" + maxPrice);
+            }
+            });
+        });
+
+        document.querySelectorAll(".itemQty").forEach(function (input) {
+            input.addEventListener("input", function () {
+            let maxPrice = parseFloat(input.getAttribute("value"));
+            if (parseFloat(input.value) > maxPrice) {
+                input.value = maxPrice;
+                alert("Qty cannot be greater than requested qty :  " + maxPrice);
+            }
+            });
+        });
+        
+    });
+</script>
 @endsection

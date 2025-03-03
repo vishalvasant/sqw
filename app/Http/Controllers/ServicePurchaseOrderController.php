@@ -57,8 +57,6 @@ class ServicePurchaseOrderController extends Controller
         ]);
         
         $pr = ServicePurchaseRequest::find($request->service_pr_id);
-        // $servicePurchaseRequestItem = ServicePurchaseRequestItem::where('service_purchase_request_id', $request->service_pr_id)->first();
-        
 
         $po = ServicePurchaseOrder::create([
             'order_number' => $this->generateServiceOrderNumber(),
@@ -69,8 +67,8 @@ class ServicePurchaseOrderController extends Controller
         ]);
 
         foreach ($request->products as $item) {
-            $servicePurchaseRequestItem = ServicePurchaseRequestItem::where('service_purchase_request_id', $item['service_purchase_request_id'])->first();
-            $servicePurchaseRequestItem->price -= $item['price'];
+            $servicePurchaseRequestItem = ServicePurchaseRequestItem::where('service_purchase_request_id', $request->service_pr_id)->first();
+            $servicePurchaseRequestItem['price'] -= $item['price'];
             $servicePurchaseRequestItem->update();
             ServicePurchaseOrderItem::create([
                 'service_purchase_order_id' => $po->id,

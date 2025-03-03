@@ -11,6 +11,7 @@
         <p><strong>PR Number:</strong> {{ $servicePurchaseRequest->request_number }}</p>
         <p><strong>Vendor:</strong> {{ $servicePurchaseRequest->vendor->name }}</p>
         <p><strong>Request Date:</strong> {{ $servicePurchaseRequest->request_date }}</p>
+        <p><strong>Description:</strong> {{ $servicePurchaseRequest->description }}</p>
         <p><strong>Status:</strong> 
             <span class="badge badge-{{ $servicePurchaseRequest->status == 'approved' ? 'success' : 'warning' }}">
                 {{ ucfirst($servicePurchaseRequest->status) }}
