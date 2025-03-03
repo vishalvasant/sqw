@@ -50,7 +50,7 @@
                     <th>Requested By</th>
                     <th>Request Date</th>
                     <th>Status</th>
-                    <th>Actions</th>
+                    <th width="10%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -67,12 +67,12 @@
                         </span>
                     </td>
                     <td>
-                        <a href="{{ route('service_pr.show', $request->id) }}" class="btn btn-info btn-sm">View</a>
-                        <a href="{{ route('service_pr.edit', $request->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{{ route('service_pr.show', $request->id) }}" class="btn btn-info btn-sm"><i class="fa fa-eye"></i></a>
+                        <a href="{{ route('service_pr.edit', $request->id) }}" class="btn btn-warning btn-sm"><i class="fa fa-pencil-alt"></i></a>
                         <form action="{{ route('service_pr.destroy', $request->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                            <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><i class="fa fa-trash"></i></button>
                         </form>
                     </td>
                 </tr>

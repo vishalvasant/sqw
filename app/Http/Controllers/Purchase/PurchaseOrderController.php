@@ -91,9 +91,9 @@ class PurchaseOrderController extends Controller
                     $purchaseRequestItem->save();
 
                     // Check if quantity is 0 and mark as inactive (optional)
-                    if ($purchaseRequestItem->quantity <= 0) {
-                        $purchaseRequestItem->delete(); // or $purchaseRequestItem->update(['status' => 'inactive']);
-                    }
+                    // if ($purchaseRequestItem->quantity <= 0) {
+                        // $purchaseRequestItem->delete(); // or $purchaseRequestItem->update(['status' => 'inactive']);
+                    // }
                 }
             }
             return redirect()->route('purchase.orders.index')->with('success', 'Purchase Order created successfully.');
@@ -135,6 +135,26 @@ class PurchaseOrderController extends Controller
     public function destroy($id)
     {
         $purchaseOrder = PurchaseOrder::findOrFail($id);
+        // Update Purchase Request and Purchase Request Items quantities
+        foreach ($purchaseOrder->items as $item) {
+            $purchaseRequestItem = PurchaseRequestItem::where('purchase_request_id', $purchaseOrder->purchase_request_id)
+            ->where('product_id', $item->product_id)
+            ->first();
+            
+            if ($purchaseRequestItem) {
+                $purchaseRequestItem->quantity += $item->quantity;
+                $purchaseRequestItem->save();
+            }
+
+            // Optionally, update the product stock
+            $product = Product::find($item->product_id);
+            if ($product) {
+                $product->stock -= $item->quantity;
+                $product->save();
+            }
+        }
+        // Delete Purchase Order Items
+        $purchaseOrder->items()->delete();
         $purchaseOrder->delete();
         
 

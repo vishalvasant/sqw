@@ -47,6 +47,8 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('service_po/{id}/update-billed', [ServicePurchaseOrderController::class, 'updateBilled'])->name('service_po.updateBilled');
     Route::get('/service-reports', [ServicePurchaseOrderController::class, 'purchaseServiceOrdersReport'])->name('service_po.report');
     Route::resource('vendors', VendorController::class);
+    Route::get('/reports', [VendorController::class, 'report'])->name('vendors.report');
+
 
 
     Route::resource('tasks', TaskController::class);

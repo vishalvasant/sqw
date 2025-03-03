@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Vendor;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Models\ServicePurchaseOrder;
 
 class VendorController extends Controller
 {
@@ -57,5 +59,23 @@ class VendorController extends Controller
     {
         $vendor->delete();
         return redirect()->route('vendors.index')->with('success', 'Vendor deleted successfully.');
+    }
+
+    public function report(Request $request)
+    {
+        $vendors = Vendor::all();
+        $servicePOs = collect(); // Empty collection by default
+
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $startDate = Carbon::parse($request->start_date)->startOfDay();
+            $endDate = Carbon::parse($request->end_date)->endOfDay();
+
+            // Fetch Service Purchase Orders within date range
+            $servicePOs = ServicePurchaseOrder::with('vendor','items', 'items.service')
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->get();
+        }
+
+        return view('vendors.report', compact('vendors', 'servicePOs'));
     }
 }

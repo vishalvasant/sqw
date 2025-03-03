@@ -6,6 +6,7 @@ use App\Models\Asset;
 use App\Models\Part;
 use App\Models\Product;
 use App\Models\ProductService;
+use App\Models\ServicePurchaseOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -43,8 +44,14 @@ class AssetController extends Controller
     {
         $asset = Asset::findOrFail($asset->id);
         $availableParts = Product::all();
+        return view('assets.parts.index', compact('asset','availableParts'));
+    }
+
+    public function display(Asset $asset)
+    {
+        $asset = Asset::findOrFail($asset->id);
         $availableServices = ProductService::all();
-        return view('assets.parts.index', compact('asset','availableParts','availableServices'));
+        return view('assets.services.index', compact('asset','availableServices'));
     }
 
     public function assetParts()

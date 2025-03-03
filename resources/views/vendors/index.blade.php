@@ -5,6 +5,30 @@
 @section('content')
 <div class="card">
     <div class="card-header">
+        <h3 class="card-title">Vendor Report</h3>
+    </div>
+    <div class="card-body">
+        <!-- Date Range Filter Form -->
+        <form method="GET" action="{{ route('vendors.report') }}" class="mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Start Date</label>
+                    <input type="date" name="start_date" value="{{ request('start_date') }}" class="form-control" required>
+                </div>
+                <div class="col-md-4">
+                    <label>End Date</label>
+                    <input type="date" name="end_date" value="{{ request('end_date') }}" class="form-control" required>
+                </div>
+                <div class="col-md-2 ">
+                    <label>&nbsp;</label>
+                    <button type="submit" class="btn btn-primary btn-block float-right">Generate Report</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
         <h3 class="card-title">Vendor List</h3>
         <a href="{{ route('vendors.create') }}" class="btn btn-primary float-right">Add Vendor</a>
     </div>

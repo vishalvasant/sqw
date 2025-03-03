@@ -57,7 +57,7 @@
                     <th>SO Date</th>
                     <th>Status</th>
                     <th>Billed</th>
-                    <th>Actions</th>
+                    <th width="10%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -97,11 +97,11 @@
                         </form>
                     </td>
                     <td>
-                        <a href="{{ route('service_po.show', $po->id) }}" class="btn btn-info btn-sm">View</a>
+                        <a href="{{ route('service_po.show', $po->id) }}" class="btn btn-info btn-sm"><i class="fa fa-eye"></i></a>
                         <form action="{{ route('service_po.destroy', $po->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                            <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><i class="fa fa-trash"></i></button>
                         </form>
                     </td>
                 </tr>
