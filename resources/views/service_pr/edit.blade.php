@@ -7,7 +7,7 @@
     <div class="card-header">
         <h3 class="card-title">Edit Service PR</h3>
     </div>
-    <form action="{{ route('service_pr.update', 1) }}" method="POST">
+    <form action="{{ route('service_pr.update', $servicePurchaseRequest->id) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="card-body">

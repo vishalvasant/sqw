@@ -85,7 +85,7 @@ class ServicePurchaseRequestController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'vendor_id' => 'nullable|exists:vendors,id',
             'request_date' => 'required|date',
             'services' => 'required|array',
@@ -99,8 +99,8 @@ class ServicePurchaseRequestController extends Controller
             'request_date' => $request->request_date,
             'status' => $request->status
         ]);
-
-        $existingItemIds = collect($validatedData['services'])->pluck('id')->filter();
+        
+        $existingItemIds = collect($validatedData['services'])->pluck('service_id')->filter();
         $servicePurchaseRequest->items()->whereNotIn('id', $existingItemIds)->delete();
 
         foreach ($request->services as $service) {
