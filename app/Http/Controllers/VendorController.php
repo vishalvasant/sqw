@@ -61,7 +61,7 @@ class VendorController extends Controller
         return redirect()->route('vendors.index')->with('success', 'Vendor deleted successfully.');
     }
 
-    public function report(Request $request)
+    public function vendorReports(Request $request)
     {
         $vendors = Vendor::all();
         $servicePOs = collect(); // Empty collection by default

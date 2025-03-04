@@ -9,7 +9,7 @@
     </div>
     <div class="card-body">
         <!-- Date Range Filter Form -->
-        <form method="GET" action="{{ route('vendors.report') }}" class="mb-3">
+        <form method="GET" action="{{ route('vendors.vendorReports') }}" class="mb-3">
             <div class="row">
                 <div class="col-md-4">
                     <label>Start Date</label>
