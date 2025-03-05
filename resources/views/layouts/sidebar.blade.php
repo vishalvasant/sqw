@@ -199,7 +199,12 @@
                     </a>
                 </li>
 
-                
+                <li class="nav-item">
+                    <a href="{{ route('kitchen.index') }}" class="nav-link">
+                    <i class="nav-icon fas fa-utensils"></i>
+                        <p>Kitchen</p>
+                    </a>
+                </li>
                 @if ($usr->can('users.view') || $usr->can('roles.view') || $usr->can('permissions.view'))
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">

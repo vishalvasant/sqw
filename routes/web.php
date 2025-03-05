@@ -26,6 +26,8 @@ use App\Http\Controllers\ProductServiceController;
 use App\Http\Controllers\ServicePurchaseRequestController;
 use App\Http\Controllers\ServicePurchaseOrderController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\KitchenController;
+
 
 
 Route::get('/', function () {
@@ -48,6 +50,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/service-reports', [ServicePurchaseOrderController::class, 'purchaseServiceOrdersReport'])->name('service_po.report');
     Route::resource('vendors', VendorController::class);
     Route::get('/vendorReports', [VendorController::class, 'vendorReports'])->name('vendors.vendorReports');
+    Route::resource('kitchen', KitchenController::class);
+    Route::get('/kitchenReports', [KitchenController::class, 'kitchenReports'])->name('kitchen.vendorReports');
 
 
 
