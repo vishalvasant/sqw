@@ -12,7 +12,7 @@
                 <!-- Part Allocation Form -->
                 <div class="card">
                     <div class="card-header">
-                        <h5>Add New Part</h5>
+                        <h5>Allocate New Part</h5>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('assets.parts.allocate', $asset->id) }}" method="POST">

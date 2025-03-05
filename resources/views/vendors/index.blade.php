@@ -11,15 +11,23 @@
         <!-- Date Range Filter Form -->
         <form method="GET" action="{{ route('vendors.vendorReports') }}" class="mb-3">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label>Start Date</label>
                     <input type="date" name="start_date" value="{{ request('start_date') }}" class="form-control" required>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label>End Date</label>
                     <input type="date" name="end_date" value="{{ request('end_date') }}" class="form-control" required>
                 </div>
-                <div class="col-md-2 ">
+                <div class="col-md-3">
+                    <label>Vendor</label>
+                    <select name="vendor_id[]" class="basic-multiple form-control" multiple="multiple" placeholder="Select Vendor">
+                        @foreach ($vendors as $vendor)
+                            <option value="{{ $vendor->id }}" {{ request('vendor_id') == $vendor->id ? 'selected' : '' }}>{{ $vendor->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
                     <label>&nbsp;</label>
                     <button type="submit" class="btn btn-primary btn-block float-right">Generate Report</button>
                 </div>
@@ -45,7 +53,6 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone</th>
-                    <th>Address</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -56,7 +63,6 @@
                         <td>{{ $vendor->name }}</td>
                         <td>{{ $vendor->email }}</td>
                         <td>{{ $vendor->phone }}</td>
-                        <td>{{ $vendor->address }}</td>
                         <td>
                             <a href="{{ route('vendors.edit', $vendor->id) }}" class="btn btn-warning btn-sm">Edit</a>
                             <form action="{{ route('vendors.destroy', $vendor->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?');">

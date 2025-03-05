@@ -21,21 +21,25 @@
                 <tr>
                     <th>#</th>
                     <th>Asset Name</th>
-                    <th>Asset Status</th>
                     <th>Request By</th>
                     <th>Recived By</th>
                     <th>Product Name</th>
                     <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Total</th>
+                    @if($_REQUEST['type'] == 'parts')
+                        <th>Price</th>
+                        <th>Total</th>
+                    @else    
+                        <th>Order Number</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
                 @foreach($reportData as $index => $row)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $row->asset_name }}</td>
-                        <td>
+                        <td>{{ $row->asset_name }} 
                             @if ($row->asset_status == 'active')
                                 <span class="badge badge-success">{{ $row->asset_status }}</span>
                             @elseif ($row->asset_status == 'inactive')
@@ -48,8 +52,22 @@
                         <td>{{ $row->rec_by }}</td>
                         <td>{{ $row->product_name }}</td>
                         <td>{{ $row->product_quantity ?? 'N/A' }}</td>
-                        <td>{{ number_format($row->avg_product_price, 2) }}</td>
-                        <td>{{ number_format($row->avg_product_price * ($row->product_quantity ?? 1) , 2) }}</td>
+                        @if($_REQUEST['type'] == 'parts')
+                            <td>{{ number_format($row->avg_product_price, 2) }}</td>
+                            <td>{{ number_format($row->avg_product_price * ($row->product_quantity ?? 1) , 2) }}</td>
+                        @else
+                            <td>{{ $row->asset_order_number }}</td>
+                            <td>{{ number_format($row->asset_price, 2) }}</td>
+                            <td>
+                                <form action="{{ route('assets.services.remove') }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <input type="hidden" name="asset_id" value="{{ $row->asset_id }}">
+                                    <input type="hidden" name="asset_service_id" value="{{ $row->asset_service_id }}">
+                                    <input type="hidden" name="asset_order_number" value="{{ $row->asset_order_number }}">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this asset?')"><i class="fas fa-trash"></i> Delete</button>
+                                </form>
+                            </td>
+                        @endif
                     </tr>
                 @endforeach
             </tbody>

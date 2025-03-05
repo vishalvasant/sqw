@@ -255,7 +255,12 @@
                 });
             }
         });
-        
+        $(document).ready(function() {
+            $('.basic-multiple').select2({
+                placeholder: "Select Vendor",
+                allowClear: true,
+            });
+        });
     </script>
 </body>
 </html>

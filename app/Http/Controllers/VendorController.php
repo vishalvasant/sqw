@@ -73,6 +73,9 @@ class VendorController extends Controller
             // Fetch Service Purchase Orders within date range
             $servicePOs = ServicePurchaseOrder::with('vendor','items', 'items.service')
                 ->whereBetween('created_at', [$startDate, $endDate])
+                ->when($request->filled('vendor_id'), function ($query) use ($request) {
+                    $query->whereIn('vendor_id', $request->vendor_id);
+                })
                 ->get();
         }
 

@@ -62,7 +62,7 @@
             </thead>
             <tbody>
                 @foreach($orders as $key => $po)
-                <tr>
+                <tr class="{{ $po->status == 'completed' ? 'bg-secondary' : '' }}">
                     <td>{{ $key + 1 }}</td>
                     <td>{{ $po->order_number }}</td>
                     <td>{{ $po->vendor ? $po->vendor->name : 'N/A' }}</td>
@@ -77,6 +77,7 @@
                                 onchange="this.form.submit()"
                             >
                                 <option value="pending" {{ $po->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="approved" {{ $po->status == 'approved' ? 'selected' : '' }}>Approved</option>
                                 <option value="completed" {{ $po->status == 'completed' ? 'selected' : '' }}>Completed</option>
                                 <option value="cancelled" {{ $po->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                             </select>
@@ -98,11 +99,13 @@
                     </td>
                     <td>
                         <a href="{{ route('service_po.show', $po->id) }}" class="btn btn-info btn-sm"><i class="fa fa-eye"></i></a>
+                        @if($po->status != 'completed')
                         <form action="{{ route('service_po.destroy', $po->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><i class="fa fa-trash"></i></button>
                         </form>
+                        @endif
                     </td>
                 </tr>
                 @endforeach

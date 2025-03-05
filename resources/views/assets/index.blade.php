@@ -25,7 +25,6 @@
                 <div class="col-md-3">
                     <label>Type:</label>
                     <select name="type" class="form-control">
-                        <option value="">Select Type</option>
                         <option value="parts" >Parts</option>
                         <option value="service">Service</option>
                     </select>
@@ -51,9 +50,8 @@
                 <tr>
                     <th>Asset Name</th>
                     <th>Description</th>
-                    <th>Value</th>
                     <th>Status</th>
-                    <th width="20%">Actions</th>
+                    <th width="30%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -61,7 +59,6 @@
                     <tr>
                         <td>{{ $asset->asset_name }}</td>
                         <td>{{ $asset->description }}</td>
-                        <td>{{ $asset->value }}</td>
                         <td>
                             @if ($asset->status == 'active')
                                 <span class="badge badge-success">{{ $asset->status }}</span>
@@ -72,8 +69,9 @@
                             @endif
                         <td>
                             @if ($usr->can('parts.edit'))
-                            <a href="{{ route('assets.show', $asset->id) }}" class="btn btn-info"><i class="fas fa-recycle"></i> Allocate</a>
+                            <a href="{{ route('assets.show', $asset->id) }}" class="btn btn-info"><i class="fas fa-cog"></i> Part Allocate</a>
                             @endif
+                            <a href="{{ route('assets.serciceallocate', $asset->id) }}" class="btn btn-primary"><i class="fas fa-file-alt"></i> Service Allocate</a>
                             @if ($usr->can('parts.view'))
                             <a href="{{ route('assets.parts.report', $asset->id) }}" class="btn btn-success"><i class="fas fa-file-alt"></i> Report</a>
                             @endif

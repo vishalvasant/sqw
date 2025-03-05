@@ -47,6 +47,24 @@ class AssetController extends Controller
         return view('assets.parts.index', compact('asset','availableParts'));
     }
 
+    public function serciceAllocate(Request $request, Asset $asset)
+    {
+        $selectedSO = null;
+        if($request->request_id){
+            $selectedSO = ServicePurchaseOrder::with('items.service')
+            ->where('id', $request->request_id)
+            ->get();
+            // dd($selectedSO);
+        }
+        
+        $asset = Asset::findOrFail($asset->id);
+        $availableServices = ServicePurchaseOrder::with('items.service')
+            ->where('billed', 1)
+            ->where('status', '!=', 'completed')
+            ->get();
+        return view('assets.services.index', compact('asset','availableServices','selectedSO'));
+    }
+
     public function display(Asset $asset)
     {
         $asset = Asset::findOrFail($asset->id);
@@ -60,15 +78,23 @@ class AssetController extends Controller
         return view('assets.parts.index', compact('asset'));
     }
 
-
+    public function allocateService(Request $request)
+    {
+        $serviceOrder = ServicePurchaseOrder::with('items.service')->where('id',$request->service_id)->first();
+        $asset = Asset::findOrFail($request->asset_id);
+        $service = ProductService::findOrFail($serviceOrder->items[0]->service_id);
+        $serviceOrder->status = 'completed';
+        $serviceOrder->save();
+        $asset->services()->attach($service->id, ['price'=> $request->s_amount, 'order_number'=>$request->s_id, 'req_by' => $request->req_by, 'rec_by' => $request->rec_by]);
+        return redirect()->route('assets.index')->with('success', 'Service allocated successfully.');
+    }
 
     public function allocateParts(Request $request, $assetId)
     {
         $asset = Asset::findOrFail($assetId);
         if($request->part_id == null){
-            $service = ProductService::findOrFail($request->service_id);
-            $asset->services()->attach($service->id, ['req_by' => $request->req_by, 'rec_by' => $request->rec_by]);
-            return redirect()->route('assets.index')->with('success', 'Service allocated successfully.');
+            // $serviceOrder = ServicePurchaseOrder::findOrFail($request->service_order_id);
+            // $service = $serviceOrder->items()->where('service_id', $request->service_id)->firstOrFail()->service;
         }else{
 
             $product = Product::findOrFail($request->part_id);
@@ -99,6 +125,16 @@ class AssetController extends Controller
         DB::table('asset_part')->where('id', $request->asset_part_id)->delete();
 
         return redirect()->route('assets.index')->with('success', 'Parts deassociated successfully.');
+    }
+
+    public function allocateRemoveService(Request $request)
+    {
+        $servicePurchaseOrder = ServicePurchaseOrder::where('order_number',$request->asset_order_number)->get()->first();
+        $servicePurchaseOrder->status = 'approved';
+        $servicePurchaseOrder->update();
+        DB::table('asset_service')->where('id', $request->asset_service_id)->delete();
+
+        return redirect()->route('assets.index')->with('success', 'Service deassociated successfully.');
     }
 
     public function partsReport($id)
@@ -188,7 +224,10 @@ class AssetController extends Controller
                 (SELECT AVG(service_purchase_order_items.unit_price) 
                  FROM service_purchase_order_items 
                  WHERE service_purchase_order_items.service_id = product_services.id) AS avg_product_price,
+                asset_service.id AS asset_service_id,
                 asset_service.req_by AS req_by,
+                asset_service.order_number AS asset_order_number,
+                asset_service.price AS asset_price,
                 asset_service.rec_by AS rec_by
             FROM 
                 assets
