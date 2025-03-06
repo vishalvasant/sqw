@@ -38,7 +38,7 @@
             <p><strong>Order Total:</strong> ₹{{ number_format($order->items->sum(fn($item) => $item->quantity * $item->price), 2) }}</p>
 
             <div class="form-group text-right mt-4">
-                <a href="{{ route('purchase.orders.index') }}" class="btn btn-secondary">Back to List</a>
+                <a href="#" class="btn btn-primary" onclick="window.print()">Print</a>
             </div>
         </div>
     </div>

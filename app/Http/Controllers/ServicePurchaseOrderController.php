@@ -15,6 +15,7 @@ class ServicePurchaseOrderController extends Controller
     public function index()
     {
         $orders = ServicePurchaseOrder::with('vendor', 'purchaseRequest')->latest()->get();
+        
         return view('service_po.index', compact('orders'));
     }
 
@@ -39,6 +40,9 @@ class ServicePurchaseOrderController extends Controller
         $selectedRequestId = $request->get('request_id');
         $selectedRequest = $selectedRequestId ? ServicePurchaseRequest::with('items.service')->find($selectedRequestId) : null;
         $purchaseRequests = ServicePurchaseRequest::with(['items'])->get();
+        $purchaseRequests = $purchaseRequests->filter(function ($purchaseRequest) {
+            return $purchaseRequest->items->sum('price') > 0;
+        });
         if($selectedRequest != null) {
             $vendors = Vendor::findOrFail($selectedRequest->vendor_id);
         } else {

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Fleet;
 
 use App\Models\Driver;
+use App\Models\Vehicle;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class DriverController extends Controller
@@ -10,12 +12,13 @@ class DriverController extends Controller
     public function index()
     {
         $drivers = Driver::all();
-        return view('drivers.index', compact('drivers'));
+        return view('fleet.drivers.index', compact('drivers'));
     }
 
     public function create()
     {
-        return view('drivers.create');
+        $vehicles = Vehicle::all();
+        return view('fleet.drivers.create', compact('vehicles'));
     }
 
     public function store(Request $request)
@@ -33,7 +36,8 @@ class DriverController extends Controller
 
     public function edit(Driver $driver)
     {
-        return view('drivers.edit', compact('driver'));
+        $vehicles = Vehicle::all();
+        return view('fleet.drivers.edit', compact('driver', 'vehicles'));
     }
 
     public function update(Request $request, Driver $driver)

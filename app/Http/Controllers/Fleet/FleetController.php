@@ -45,7 +45,7 @@ class FleetController extends Controller
         );
 
         $vehicle = Vehicle::create($request->all());
-        return redirect()->route('fleet.vehicles.index')->with('success', 'Vehicle created successfully');
+        return redirect()->route('vehicles.index')->with('success', 'Vehicle created successfully');
     }
 
     public function edit(Vehicle $vehicle)
@@ -62,13 +62,13 @@ class FleetController extends Controller
         ]);
 
         $vehicle->update($request->all());
-        return redirect()->route('fleet.vehicles.index')->with('success', 'Vehicle updated successfully');
+        return redirect()->route('vehicles.index')->with('success', 'Vehicle updated successfully');
     }
 
     public function destroy(Vehicle $vehicle)
     {
         $vehicle->delete();
-        return redirect()->route('fleet.vehicles.index')->with('success', 'Vehicle deleted successfully');
+        return redirect()->route('vehicles.index')->with('success', 'Vehicle deleted successfully');
     }
 
     // Drivers
@@ -85,6 +85,19 @@ class FleetController extends Controller
     }
 
     public function storeDriver(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'license_number' => 'required|unique:drivers',
+            'contact_number' => 'required',
+            'vehicle_id' => 'nullable|exists:vehicles,id',
+        ]);
+
+        Driver::create($request->all());
+        return redirect()->route('fleet.drivers')->with('success', 'Driver added successfully');
+    }
+
+    public function updateDriver(Request $request)
     {
         $request->validate([
             'name' => 'required',

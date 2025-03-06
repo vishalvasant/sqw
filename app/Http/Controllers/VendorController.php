@@ -34,7 +34,10 @@ class VendorController extends Controller
 
     public function show(Vendor $vendor)
     {
-        return view('vendors.show', compact('vendor'));
+        $servicePOs = ServicePurchaseOrder::with('vendor','items', 'items.service')
+        ->where('vendor_id', $vendor->id)
+        ->get();
+        return view('vendors.show', compact('vendor', 'servicePOs'));
     }
 
     public function edit(Vendor $vendor)

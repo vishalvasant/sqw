@@ -113,7 +113,11 @@
                                 <form action="{{ route('purchase.orders.destroy', $order->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
+                                    @if ($order->status == 'completed')
+                                    <button type="submit" class="btn btn-danger btn-sm" disabled>Delete</button>
+                                    @else
                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                                    @endif
                                 </form>
                                 @endif
                             </td>

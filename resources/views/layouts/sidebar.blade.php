@@ -138,7 +138,7 @@
                     <ul class="nav nav-treeview">
                         @if ($usr->can('vehicles.view'))
                         <li class="nav-item">
-                            <a href="{{ route('fleet.vehicles.index') }}" class="nav-link">
+                            <a href="{{ route('vehicles.index') }}" class="nav-link">
                                 <i class="nav-icon fas fa-car"></i>
                                 <p>Vehicles</p>
                             </a>

@@ -36,7 +36,7 @@
     <div class="card-header">
         <h3 class="card-title">Fleet</h3>
         @if ($usr->can('vehicles.create'))
-        <a href="{{ route('fleet.vehicles.create') }}" class="btn btn-primary float-right"><i class="fas fa-plus-square"></i> Add New</a>
+        <a href="{{ route('vehicles.create') }}" class="btn btn-primary float-right"><i class="fas fa-plus-square"></i> Add New</a>
         @endif
     </div>
     <div class="card-body">
@@ -48,7 +48,7 @@
                     <th>Vehicle Number</th>
                     <th>Vehicle Type</th>
                     <th>Fixed Cost per Hour</th>
-                    <th>Actions</th>
+                    <th width="16%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -59,9 +59,21 @@
                         <td>{{ $vehicle->fixed_cost_per_hour }}</td>
                         <td>
                             @if ($usr->can('vehicles.edit'))
-                            <a href="{{ route('fleet.vehicles.utilization', $vehicle->id) }}" class="btn btn-info">
-                                Fuel Utilization Report
-                            </a>
+                            <a href="{{ route('vehicles.edit', $vehicle->id) }}" class="btn btn-warning"><i class="fa fa-pencil-alt"></i></a>
+                            @endif
+                            @if ($usr->can('vehicles.delete'))
+                            <form action="{{ route('vehicles.destroy', $vehicle->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                @if(sizeof($vehicle->fuelUsages) > 0)
+                                <button type="submit" class="btn btn-danger" disabled><i class="fa fa-trash"></i></button>
+                                @else
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class="fa fa-trash"></i></button>
+                                @endif
+                            </form>
+                            @endif
+                            @if ($usr->can('vehicles.edit'))
+                            <a href="{{ route('fleet.vehicles.utilization', $vehicle->id) }}" class="btn btn-info"><i class="fa fa-file"></i> Fule Log</a>
                             @endif
                         </td>
                     </tr>

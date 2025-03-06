@@ -37,7 +37,7 @@
             <p><strong>Service Total:</strong> ₹{{ number_format($servicePurchaseOrder->items->sum(fn($service) => $service->quantity * $service->unit_price), 2) }}</p>
 
             <div class="form-group text-right mt-4">
-                <a href="{{ route('service_po.index') }}" class="btn btn-secondary">Back to List</a>
+                <a href="#" class="btn btn-primary" onclick="window.print()">Print</a>
             </div>
         </div>
     </div>

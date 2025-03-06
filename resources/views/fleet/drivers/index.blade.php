@@ -10,7 +10,7 @@
     <div class="card-header">
         <h3 class="card-title">Drivers</h3>
         @if ($usr->can('drivers.create'))
-        <a href="{{ route('fleet.drivers.create') }}" class="btn btn-primary float-right"><i class="fas fa-plus-square"></i> Add New</a>
+        <a href="{{ route('drivers.create') }}" class="btn btn-primary float-right"><i class="fas fa-plus-square"></i> Add New</a>
         @endif
     </div>
     <div class="card-body">
@@ -21,7 +21,7 @@
                     <th>License Number</th>
                     <th>Contact Number</th>
                     <th>Assigned Vehicle</th>
-                    <th>Actions</th>
+                    <th width="10%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,13 +33,17 @@
                         <td>{{ $driver->vehicle ? $driver->vehicle->vehicle_number : 'Not Assigned' }}</td>
                         <td>
                             @if ($usr->can('drivers.edit'))
-                            <a href="{{ route('fleet.drivers.edit', $driver->id) }}" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a>
+                            <a href="{{ route('drivers.edit', $driver->id) }}" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a>
                             @endif
                             @if ($usr->can('drivers.delete'))
-                            <form action="{{ route('fleet.drivers.destroy', $driver->id) }}" method="POST" style="display:inline;">
+                            <form action="{{ route('drivers.destroy', $driver->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
+                                @if(isset($driver->vehicle->vehicle_number))
+                                <button type="submit" class="btn btn-danger" disabled><i class="fas fa-trash"></i></button>
+                                @else
                                 <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                                @endif
                             </form>
                             @endif
                         </td>

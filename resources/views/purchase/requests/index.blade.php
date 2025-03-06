@@ -76,7 +76,11 @@
                         <form action="{{ route('purchase.requests.destroy', $request->id) }}" method="POST" class="d-inline-block">
                             @csrf
                             @method('DELETE')
+                            @if ($request->status != 'approved')
                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i></button>
+                            @else
+                            <button type="submit" class="btn btn-sm btn-danger" disabled><i class="fas fa-trash"></i></button>
+                            @endif
                         </form>
                         @endif
                     </td>

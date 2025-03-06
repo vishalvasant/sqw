@@ -51,7 +51,7 @@
                     <th>Asset Name</th>
                     <th>Description</th>
                     <th>Status</th>
-                    <th width="30%">Actions</th>
+                    <th width="10%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -68,13 +68,16 @@
                                 <span class="badge badge-warning">{{ $asset->status }}</span>
                             @endif
                         <td>
-                            @if ($usr->can('parts.edit'))
-                            <a href="{{ route('assets.show', $asset->id) }}" class="btn btn-info"><i class="fas fa-cog"></i> Part Allocate</a>
-                            @endif
-                            <a href="{{ route('assets.serciceallocate', $asset->id) }}" class="btn btn-primary"><i class="fas fa-file-alt"></i> Service Allocate</a>
-                            @if ($usr->can('parts.view'))
-                            <a href="{{ route('assets.parts.report', $asset->id) }}" class="btn btn-success"><i class="fas fa-file-alt"></i> Report</a>
-                            @endif
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Actions
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a href="{{ route('assets.show', $asset->id) }}" class="dropdown-item"><i class="fas fa-cog"></i> Part Allocate</a>
+                                    <a href="{{ route('assets.serciceallocate', $asset->id) }}" class="dropdown-item"><i class="fas fa-recycle"></i> Service Allocate</a>
+                                    <a href="{{ route('assets.parts.report', $asset->id) }}" class="dropdown-item"><i class="fas fa-file-alt"></i> Part Report</a>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 @endforeach

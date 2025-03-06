@@ -9,7 +9,7 @@
         <h3 class="card-title">Add New Asset</h3>
     </div>
     <div class="card-body">
-        <form action="{{ route('fleet.vehicles.store') }}" method="POST">
+        <form action="{{ route('vehicles.store') }}" method="POST">
             @csrf
             <div class="form-group">
                 <label for="vehicle_number">Vehicle Number</label>
@@ -26,15 +26,6 @@
             <div class="form-group">
                 <label for="odometer">Odometer Reading</label>
                 <input type="text" name="odometer" id="odometer" class="form-control" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="value">Value</label>
-                <input type="number" class="form-control" name="value">
-            </div>
-            <div class="form-group">
-                <label for="purchase_date">Purchase Date</label>
-                <input type="date" class="form-control" name="purchase_date">
             </div>
             <div class="form-group">
                 <label for="fixed_cost_per_hour">Fixed Cost per Hour</label>

@@ -53,7 +53,7 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone</th>
-                    <th>Actions</th>
+                    <th width="10%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -64,12 +64,14 @@
                         <td>{{ $vendor->email }}</td>
                         <td>{{ $vendor->phone }}</td>
                         <td>
-                            <a href="{{ route('vendors.edit', $vendor->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{{ route('vendors.edit', $vendor->id) }}" class="btn btn-warning btn-sm"><i class="fa fa-pencil-alt"></i></a>
                             <form action="{{ route('vendors.destroy', $vendor->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
                             </form>
+                            <a href="{{ route('vendors.show', $vendor->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-file-alt"></i></a>
+
                         </td>
                     </tr>
                 @endforeach

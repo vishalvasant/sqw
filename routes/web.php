@@ -87,27 +87,15 @@ Route::middleware(['auth'])->group(function () {
         // Stock Import Routes
         Route::resource('stock-imports', StockImportController::class);
 
+        Route::resource('drivers', DriverController::class);
+        Route::resource('vehicles', FleetController::class);
         Route::prefix('fleet')->name('fleet.')->group(function () {
-            Route::resource('vehicles', FleetController::class);
-            Route::resource('drivers', FleetController::class);
             Route::get('drivers', [FleetController::class, 'showDrivers'])->name('drivers');
             Route::get('drivers.create', [FleetController::class, 'createDriver'])->name('drivers.create');
             Route::get('reports', [FleetController::class, 'generateReport'])->name('reports');
-            Route::post('drivers.store', [FleetController::class, 'storeDriver'])->name('drivers.store');
 
             // Fleet Routes
             Route::resource('fuel_usages', FuelUsageController::class);
-
-            // Route::resource('fleets', FleetController::class);
-
-            // // Driver Routes
-            // Route::resource('drivers', DriverController::class);
-
-            // // Fuel Log Routes
-            // Route::resource('fuel_logs', FuelLogController::class);
-
-            // // Trip Log Routes
-            // Route::resource('trip_logs', TripLogController::class);
 
         });
         
