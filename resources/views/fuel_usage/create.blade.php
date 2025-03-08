@@ -55,7 +55,7 @@
                     @elseif($selectedRequest->vehicle_type == 'FIXED')
                         <div class="form-group">
                             <label for="hours_used">Hours</label>
-                            <input type="number" name="hours_used" id="hours_used" class="form-control">
+                            <input type="number" name="hours_used" id="hours_used" step="0.01" class="form-control">
                         </div>
                     @endif
                         <div class="form-group">

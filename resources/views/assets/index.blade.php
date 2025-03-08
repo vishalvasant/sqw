@@ -76,6 +76,7 @@
                                     <a href="{{ route('assets.show', $asset->id) }}" class="dropdown-item"><i class="fas fa-cog"></i> Part Allocate</a>
                                     <a href="{{ route('assets.serciceallocate', $asset->id) }}" class="dropdown-item"><i class="fas fa-recycle"></i> Service Allocate</a>
                                     <a href="{{ route('assets.parts.report', $asset->id) }}" class="dropdown-item"><i class="fas fa-file-alt"></i> Part Report</a>
+                                    <a href="{{ route('assets.service.report', $asset->id) }}" class="dropdown-item"><i class="fas fa-file-alt"></i> Service Report</a>
                                 </div>
                             </div>
                         </td>

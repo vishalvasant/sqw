@@ -78,7 +78,7 @@
                             >
                                 <option value="pending" {{ $po->status == 'pending' ? 'selected' : '' }}>Pending</option>
                                 <option value="approved" {{ $po->status == 'approved' ? 'selected' : '' }}>Approved</option>
-                                <option value="completed" {{ $po->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                                <option value="completed" {{ $po->status == 'completed' ? 'selected' : '' }} disabled>Completed</option>
                                 <option value="cancelled" {{ $po->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                             </select>
                         </form>

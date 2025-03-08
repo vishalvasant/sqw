@@ -83,7 +83,7 @@
                                         onchange="this.form.submit()"
                                     >
                                         <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                        <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                                        <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }} disabled>Completed</option>
                                         <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                                     </select>
                                 </form>

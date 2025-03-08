@@ -172,6 +172,43 @@ class AssetController extends Controller
         return view('assets.parts_report', compact('asset','reportData'));
     }
 
+    public function serviceReport($id)
+    {
+        $asset = Asset::with(['parts' => function ($query) {
+            $query->with('product');
+        }])->findOrFail($id);
+        $reportData = DB::select("
+            SELECT 
+                assets.id AS asset_id,
+                assets.asset_name,
+                assets.description AS asset_description,
+                assets.value AS asset_value,
+                assets.status AS asset_status,
+                product_services.id AS product_id,
+                product_services.name AS product_name,
+                product_services.cost AS product_price,
+                (SELECT AVG(service_purchase_order_items.unit_price) 
+                 FROM service_purchase_order_items 
+                 WHERE service_purchase_order_items.service_id = product_services.id) AS avg_product_price,
+                asset_service.id AS asset_service_id,
+                asset_service.req_by AS req_by,
+                asset_service.order_number AS asset_order_number,
+                asset_service.price AS asset_price,
+                asset_service.rec_by AS rec_by
+            FROM 
+                assets
+            JOIN 
+                asset_service ON assets.id = asset_service.asset_id
+            JOIN 
+                product_services ON asset_service.product_service_id = product_services.id
+            WHERE
+                assets.id = $id
+            ORDER BY 
+                assets.asset_name, product_services.name
+        ");
+        return view('assets.service_report', compact('asset','reportData'));
+    }
+
     public function assetsReport(Request $request)
     {
         $fromDate = $request->from_date . ' 00:00:00';

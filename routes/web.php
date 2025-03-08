@@ -106,6 +106,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('assets.parts.remove', [AssetController::class, 'allocateRemove'])->name('assets.parts.remove');
         Route::post('assets.services.remove', [AssetController::class, 'allocateRemoveService'])->name('assets.services.remove');
         Route::get('assets/{id}/parts-report', [AssetController::class, 'partsReport'])->name('assets.parts.report');
+        Route::get('assets/{id}/service-report', [AssetController::class, 'serviceReport'])->name('assets.service.report');
         Route::resource('assets.parts', PartController::class)->except(['show']);
         Route::get('assets.parts.index', [AssetController::class, 'show'])->name('assets.parts.index');
         Route::get('assets.reports', [AssetController::class, 'assetsReport'])->name('assets.reports');
