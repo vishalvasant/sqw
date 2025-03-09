@@ -13,10 +13,10 @@
                 <tr>
                     <th>#</th>
                     <th>Asset Name</th>
+                    <th>SO Number</th>
                     <th>Request By</th>
                     <th>Recived By</th>
                     <th>Product Name</th>
-                    <th>Price</th>
                     <th>Total</th>
                     <th>Action</th>
                 </tr>
@@ -25,11 +25,21 @@
                 @foreach($reportData as $index => $row)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $row->asset_name }}</td>
+                        <td>
+                            {{ $row->asset_name }} 
+                            @if($row->asset_status == 'active')
+                                <span class="badge badge-success">Active</span>
+                            @elseif($row->asset_status == 'inactive')
+                                <span class="badge badge-secondary">Inactive</span>
+                            @else
+                                <span class="badge badge-warning">Maintenance</span>
+                            @endif
+
+                        </td>
+                        <td>{{ $row->asset_order_number }}</td>
                         <td>{{ $row->req_by }}</td>
                         <td>{{ $row->rec_by }}</td>
                         <td>{{ $row->product_name }}</td>
-                        <td>{{ $row->asset_order_number }}</td>
                         <td>{{ number_format($row->avg_product_price, 2) }}</td>
                         <td>
                             <form action="{{ route('assets.services.remove') }}" method="POST" class="d-inline">

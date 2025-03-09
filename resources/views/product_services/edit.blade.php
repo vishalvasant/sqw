@@ -20,7 +20,7 @@
             </div>
             <div class="form-group">
                 <label for="cost">Cost</label>
-                <input type="number" name="cost" class="form-control" value="{{ $productService->cost }}" required>
+                <input type="number" name="cost" class="form-control" value="{{ $productService->cost }}" step="0.01" required>
             </div>
             <div class="form-group">
                 <label for="type">Service Type</label>

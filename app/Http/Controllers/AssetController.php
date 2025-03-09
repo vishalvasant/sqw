@@ -26,6 +26,10 @@ class AssetController extends Controller
         return view('assets.create');
     }
 
+    public function edit(Asset $asset){
+        return view('assets.edit', compact('asset'));
+    }
+
     // Store a newly created asset in storage
     public function store(Request $request)
     {
@@ -36,6 +40,23 @@ class AssetController extends Controller
         ]);
 
         Asset::create($request->all());
+        return redirect()->route('assets.index');
+    }
+
+    public function update(Request $request){
+        $request->validate([
+            'asset_name' => 'required|string|max:255',
+            'value' => 'required|numeric',
+            'purchase_date' => 'required|date',
+        ]);
+
+        $asset = Asset::where('id', $request->id)->first();
+        $asset->asset_name = $request->asset_name;
+        $asset->value = $request->value;
+        $asset->purchase_date = $request->purchase_date;
+        $asset->description = $request->description;
+        $asset->status = $request->status;
+        $asset->update();
         return redirect()->route('assets.index');
     }
 
