@@ -1,7 +1,9 @@
 @extends('layouts.admin')
 
 @section('page-title', 'Kitchen Records')
-
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
 @section('content')
 
 <div class="card">
@@ -30,7 +32,9 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Kitchen Records</h3>
+            @if ($usr->can('kitchen.create'))
             <a href="{{ route('kitchen.create') }}" class="btn btn-primary float-right"><i class="fa fa-plus"></i> Add New</a>
+            @endif
         </div>
         <div class="card-body">
             <div class="row">
@@ -56,13 +60,17 @@
                                     <td>{{ $record->dinner_count }}</td>
                                     <td>{{ $record->description }}</td>
                                     <td>
+                                        @if ($usr->can('kitchen.edit'))
                                         <a href="{{ route('kitchen.edit', $record->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                        @endif
+                                        @if ($usr->can('kitchen.destroy'))
                                         <form action="{{ route('kitchen.destroy', $record->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <input type="hidden" name="id" value="{{ $record->id }}">
                                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
                                         </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

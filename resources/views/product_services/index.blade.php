@@ -1,7 +1,9 @@
 @extends('layouts.admin')
 
 @section('page-title', 'Product Services')
-
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
 @section('content')
 <div class="card">
     <div class="card-header">
@@ -28,7 +30,9 @@
 <div class="card">
     <div class="card-header">
         <h3 class="card-title"> Services</h3>
-        <a href="{{ route('product_services.create') }}" class="btn btn-primary float-right">Add Service</a>
+        @if($usr->can('services.create'))
+            <a href="{{ route('product_services.create') }}" class="btn btn-primary float-right">Add Service</a>
+        @endif
     </div>
     <div class="card-body">
         @if(session('success'))
@@ -53,11 +57,15 @@
                         <td>{{ $service->cost }}</td>
                         <td>{{ ucfirst(str_replace('_', ' ', $service->type)) }}</td>
                         <td>
-                            <a href="{{ route('product_services.edit', $service->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                            <form action="{{ route('product_services.destroy', $service->id) }}" method="POST" style="display:inline;">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                            </form>
+                            @if($usr->can('services.edit'))
+                                <a href="{{ route('product_services.edit', $service->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                            @endif
+                            @if($usr->can('services.delete'))
+                                <form action="{{ route('product_services.destroy', $service->id) }}" method="POST" style="display:inline;">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                </form>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

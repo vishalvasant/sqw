@@ -65,13 +65,17 @@
                         <td>{{ ucfirst($task->status) }}</td>
                         <td>{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('j F, Y') : 'N/A' }}</td>
                         <td>
+                            @if($usr->can('tasks.edit'))
                             <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a>
-                            @if($usr->id == 1)
-                            <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger"  onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i></button>
-                            </form>
+                            @endif
+                            @if($usr->can('tasks.delete'))
+                                @if($usr->id == 1)
+                                <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger"  onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i></button>
+                                </form>
+                                @endif
                             @endif
                         </td>
                     </tr>

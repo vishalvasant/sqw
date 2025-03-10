@@ -68,7 +68,9 @@
                                 <span class="badge badge-warning">{{ $asset->status }}</span>
                             @endif
                         <td class="d-flex">
+                            @if ($usr->can('assets.edit'))
                             <a href="{{ route('assets.edit', $asset->id) }}" class="btn btn-sm btn-warning mr-2"><i class="fas fa-edit"></i></a>
+                            @endif
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Actions

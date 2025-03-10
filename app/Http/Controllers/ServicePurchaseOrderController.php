@@ -15,8 +15,9 @@ class ServicePurchaseOrderController extends Controller
     public function index()
     {
         $orders = ServicePurchaseOrder::with('vendor', 'purchaseRequest')->latest()->get();
+        $vendors = Vendor::all();
         
-        return view('service_po.index', compact('orders'));
+        return view('service_po.index', compact('orders','vendors'));
     }
 
     protected function generateSNumber()
@@ -188,6 +189,10 @@ class ServicePurchaseOrderController extends Controller
             if($request->billed != ""){
                 $query->where('billed', $request->billed);
             }
+        }
+
+        if ($request->has('vendor_id')) {
+            $query->whereIn('vendor_id', $request->vendor_id);
         }
 
         $purchaseOrders = $query->get();
