@@ -104,7 +104,7 @@
                             </a>
                         </li>
                         @endif
-                        @if ($usr->can('service_request.view'))
+                        @if ($usr->can('services_request.view'))
                         <li class="nav-item">
                             <a href="{{ route('service_pr.index') }}" class="nav-link">
                                 <i class="fas fa-print nav-icon"></i>
@@ -112,7 +112,7 @@
                             </a>
                         </li>
                         @endif
-                        @if ($usr->can('service_order.view'))
+                        @if ($usr->can('services_order.view'))
                         <li class="nav-item">
                             <a href="{{ route('service_po.index') }}" class="nav-link">
                                 <i class="fas fa-file-invoice nav-icon"></i>

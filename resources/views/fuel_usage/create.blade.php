@@ -25,7 +25,7 @@
                     <select name="product_id" class="form-control" required>
                         <option value="" disabled selected>Select Fuel</option>
                         @foreach ($products as $product)
-                        <option value="{{ $product->id }}">{{ $product->name }}</option>
+                        <option value="{{ $product->id }}">{{ $product->name }} <small> - Current Stock: {{$product->stock}}</small></option>
                         @endforeach
                     </select>
                 </div>
