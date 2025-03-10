@@ -14,6 +14,7 @@
                     <th>#</th>
                     <th>Asset Name</th>
                     <th>SO Number</th>
+                    <th>Description</th>
                     <th>Request By</th>
                     <th>Recived By</th>
                     <th>Product Name</th>
@@ -37,6 +38,7 @@
 
                         </td>
                         <td>{{ $row->asset_order_number }}</td>
+                        <td>{{ $row->asset_service_description }}</td>
                         <td>{{ $row->req_by }}</td>
                         <td>{{ $row->rec_by }}</td>
                         <td>{{ $row->product_name }}</td>

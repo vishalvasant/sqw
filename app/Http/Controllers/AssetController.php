@@ -106,7 +106,7 @@ class AssetController extends Controller
         $service = ProductService::findOrFail($serviceOrder->items[0]->service_id);
         $serviceOrder->status = 'completed';
         $serviceOrder->save();
-        $asset->services()->attach($service->id, ['price'=> $request->s_amount, 'order_number'=>$request->s_id, 'req_by' => $request->req_by, 'rec_by' => $request->rec_by]);
+        $asset->services()->attach($service->id, ['price'=> $request->s_amount, 'order_number'=>$request->s_id, 'description'=>$request->description, 'req_by' => $request->req_by, 'rec_by' => $request->rec_by]);
         return redirect()->route('assets.index')->with('success', 'Service allocated successfully.');
     }
 
@@ -123,7 +123,7 @@ class AssetController extends Controller
             // Check stock availability
             if ($product->stock >= $request->quantity) {
                 // Allocate the product to the asset and deduct stock
-                $asset->products()->attach($product->id, ['quantity' => $request->quantity, 'req_by' => $request->req_by, 'rec_by' => $request->rec_by]);
+                $asset->products()->attach($product->id, ['quantity' => $request->quantity, 'description' => $request->description, 'req_by' => $request->req_by, 'rec_by' => $request->rec_by]);
                 $product->stock -= $request->quantity;
                 $product->save();
             } else {
@@ -177,6 +177,7 @@ class AssetController extends Controller
                  WHERE purchase_order_items.product_id = products.id) AS avg_product_price,
                 asset_part.id AS asset_part_id,
                 asset_part.quantity AS product_quantity,
+                asset_part.description AS asset_part_description,
                 asset_part.req_by AS req_by,
                 asset_part.rec_by AS rec_by
             FROM 
@@ -214,6 +215,7 @@ class AssetController extends Controller
                 asset_service.id AS asset_service_id,
                 asset_service.req_by AS req_by,
                 asset_service.order_number AS asset_order_number,
+                asset_service.description AS asset_service_description,
                 asset_service.price AS asset_price,
                 asset_service.rec_by AS rec_by
             FROM 
@@ -254,6 +256,7 @@ class AssetController extends Controller
                  FROM purchase_order_items 
                  WHERE purchase_order_items.product_id = products.id) AS avg_product_price,
                 asset_part.quantity AS product_quantity,
+                asset_part.description AS asset_part_description,
                 asset_part.req_by AS req_by,
                 asset_part.rec_by AS rec_by
             FROM 

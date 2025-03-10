@@ -15,6 +15,7 @@
                     <th>Asset Name</th>
                     <th>Request By</th>
                     <th>Recived By</th>
+                    <th>Description</th>
                     <th>Product Name</th>
                     <th>Quantity</th>
                     <th>Price</th>
@@ -29,6 +30,7 @@
                         <td>{{ $row->asset_name }}</td>
                         <td>{{ $row->req_by }}</td>
                         <td>{{ $row->rec_by }}</td>
+                        <td>{{ $row->asset_part_description }}</td>
                         <td>{{ $row->product_name }}</td>
                         <td>{{ $row->product_quantity }}</td>
                         <td>{{ number_format($row->avg_product_price, 2) }}</td>

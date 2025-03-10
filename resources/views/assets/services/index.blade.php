@@ -48,7 +48,13 @@
                                 </div>
                             </div>
                             @endif
-                            <div class="row">
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <label for="description">Description</label>
+                                    <textarea name="description" id="description" class="form-control" placeholder="Description"></textarea>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
                                 <div class="col-md-6">
                                     <label for="req_by">Request By</label>
                                     <input type="hidden" name="asset_id" value="{{ $asset->id }}">

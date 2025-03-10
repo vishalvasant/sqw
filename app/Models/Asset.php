@@ -9,7 +9,7 @@ class Asset extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['asset_name', 'description', 'value', 'purchase_date', 'status', 'asset_id', 'product_id', 'quantity'];
+    protected $fillable = ['asset_name', 'description', 'value', 'purchase_date', 'status', 'asset_id', 'product_id', 'quantity','description'];
 
     public function parts()
     {

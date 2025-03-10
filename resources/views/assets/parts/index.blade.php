@@ -23,7 +23,7 @@
                                     <select name="part_id" id="part_id" class="form-control">
                                         <option value="">Select a Part</option>
                                             @foreach($availableParts as $part)
-                                                <option value="{{ $part->id }}">{{ $part->name }}</option>
+                                                <option value="{{ $part->id }}">{{ $part->name }} <small> - Current Stock: {{$part->stock}}</small></option>
                                             @endforeach
                                     </select>
                                 </div>
@@ -31,6 +31,12 @@
                                 <div class="col-md-4">
                                     <label for="quantity">Quantity</label>
                                     <input type="number" name="quantity" id="quantity" class="form-control" required placeholder="Enter quantity">
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <label for="description">Description</label>
+                                    <textarea name="description" id="description" class="form-control" placeholder="Description"></textarea>
                                 </div>
                             </div>
                             <div class="row mt-2">
