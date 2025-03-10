@@ -89,44 +89,48 @@
                 </li>
                 @endif
 
-
+                @if ($usr->can('services.view') || $usr->can('service_request.view') || $usr->can('service_order.view') || $usr->can('vendors.view'))
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-recycle"></i>
                         <p>Services<i class="right fas fa-angle-left"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
-
+                        @if ($usr->can('services.view'))
                         <li class="nav-item">
                             <a href="{{ route('product_services.index') }}" class="nav-link">
                                 <i class="fas fa-parachute-box nav-icon"></i>
                                 <p>New Services</p>
                             </a>
                         </li>
-                        
+                        @endif
+                        @if ($usr->can('service_request.view'))
                         <li class="nav-item">
                             <a href="{{ route('service_pr.index') }}" class="nav-link">
                                 <i class="fas fa-print nav-icon"></i>
                                 <p>Service Requests-Orders</p>
                             </a>
                         </li>
-                        
+                        @endif
+                        @if ($usr->can('service_order.view'))
                         <li class="nav-item">
                             <a href="{{ route('service_po.index') }}" class="nav-link">
                                 <i class="fas fa-file-invoice nav-icon"></i>
                                 <p>Service Utilize</p>
                             </a>
                         </li>
-
+                        @endif
+                        @if ($usr->can('vendors.view'))
                         <li class="nav-item">
                             <a href="{{ route('vendors.index') }}" class="nav-link">
                                 <i class="fas fa-user nav-icon"></i>
                                 <p>Vendors</p>
                             </a>
                         </li>
-
+                        @endif
                     </ul>
                 </li>
+                @endif
 
                 
                 @if ($usr->can('fuel_usages.view') || $usr->can('vehicles.view') || $usr->can('drivers.view') || $usr->can('reports.view'))
@@ -171,7 +175,7 @@
                     </ul>
                 </li>
                 @endif
-
+                @if ($usr->can('assets.view'))
                 <!-- Asset Management Module -->
                 <li class="nav-item">
                     <a href="#" class="nav-link">
@@ -190,21 +194,24 @@
                         </li>
                     </ul>
                 </li>
+                @endif
                 
-
+                @if($usr->can('tasks.view'))
                 <li class="nav-item">
                     <a href="{{ route('tasks.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-tasks"></i>
                         <p>Task Management</p>
                     </a>
                 </li>
-
+                @endif
+                @if($usr->can('kitchen.view'))
                 <li class="nav-item">
                     <a href="{{ route('kitchen.index') }}" class="nav-link">
                     <i class="nav-icon fas fa-utensils"></i>
                         <p>Kitchen</p>
                     </a>
                 </li>
+                @endif
                 @if ($usr->can('users.view') || $usr->can('roles.view') || $usr->can('permissions.view'))
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
