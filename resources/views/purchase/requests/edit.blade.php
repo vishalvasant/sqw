@@ -111,6 +111,7 @@
                                 <input 
                                     type="number" 
                                     name="items[{{ $loop->index }}][price]" 
+                                    step="0.01"
                                     value="{{ old("products.{$loop->index}.price", $item->price) }}" 
                                     class="form-control" 
                                     required>
@@ -119,6 +120,7 @@
                                 <input 
                                     type="number" 
                                     name="items[{{ $loop->index }}][quantity]" 
+                                    step="0.01"
                                     value="{{ old("products.{$loop->index}.quantity", $item->quantity) }}" 
                                     class="form-control" 
                                     required>
@@ -158,10 +160,10 @@
                     </select>
                 </td>
                 <td>
-                    <input type="number" name="items[${rowCount}][price]" class="form-control" required>
+                    <input type="number" name="items[${rowCount}][price]" class="form-control" step="0.01" required>
                 </td>
                 <td>
-                    <input type="number" name="items[${rowCount}][quantity]" class="form-control" required>
+                    <input type="number" name="items[${rowCount}][quantity]" class="form-control" step="0.01" required>
                 </td>
                 <td>
                     <button type="button" class="btn btn-danger btn-sm remove-product">Remove</button>

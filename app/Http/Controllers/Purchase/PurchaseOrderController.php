@@ -256,6 +256,10 @@ class PurchaseOrderController extends Controller
             }
         }
 
+        if($request->has('supplier_id')){
+            $query->whereIn('supplier_id', $request->supplier_id);
+        }
+
         $purchaseOrders = $query->get();
 
         return view('purchase.orders.reports', compact('purchaseOrders'));

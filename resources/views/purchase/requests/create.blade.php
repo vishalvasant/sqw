@@ -48,10 +48,10 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <input type="number" name="items[0][price]" class="form-control price" placeholder="Price" required>
+                            <input type="number" name="items[0][price]" class="form-control price" placeholder="Price" step="0.01" required>
                         </div>
                         <div class="col-md-3">
-                            <input type="number" name="items[0][quantity]" class="form-control quantity" placeholder="Quantity" required>
+                            <input type="number" name="items[0][quantity]" class="form-control quantity" placeholder="Quantity" step="0.01" required>
                         </div>
                         <div class="col-md-3">
                             <button type="button" class="btn btn-success add-item">Add</button>
@@ -107,10 +107,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <input type="number" name="items[${counter}][price]" class="form-control price" placeholder="Price" required>
+                    <input type="number" name="items[${counter}][price]" class="form-control price" placeholder="Price" step="0.01" required>
                 </div>
                 <div class="col-md-3">
-                    <input type="number" name="items[${counter}][quantity]" class="form-control quantity" placeholder="Quantity" required>
+                    <input type="number" name="items[${counter}][quantity]" class="form-control quantity" placeholder="Quantity" step="0.01" required>
                 </div>
                 <div class="col-md-3">
                     <button type="button" class="btn btn-danger remove-item">Remove</button>

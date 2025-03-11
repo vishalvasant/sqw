@@ -14,15 +14,15 @@
         <div class="card-body">
             <form method="GET" action="{{ route('purchase.orders.report') }}">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label>From Date:</label>
                         <input type="date" name="from_date" class="form-control" value="">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label>To Date:</label>
                         <input type="date" name="to_date" class="form-control" value="">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                         <label>Status:</label>
                         <select name="status" class="form-control">
                             <option value="">All</option>
@@ -31,13 +31,21 @@
                             <option value="completed">Completed</option>
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <label>Billed / Unbilled:</label>
+                    <div class="col-md-1">
+                        <label>Billed:</label>
                         <select name="billed" class="form-control">
                             <option value="">All</option>
                             <option value="1">Billed</option>
                             <option value="0">Unbilled</option>
                         </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Supplier</label>
+                            <select name="supplier_id[]" class="basic-multiple form-control" multiple="multiple" placeholder="Select Suppliers">
+                                @foreach ($suppliers as $supplier)
+                                    <option value="{{ $supplier->id }}" {{ request('supplier_id') == $supplier->id ? 'selected' : '' }}>{{ $supplier->name }}</option>
+                                @endforeach
+                            </select>
                     </div>
                     <div class="col-md-2 d-flex align-items-end justify-content-end">
                         <button type="submit" class="btn btn-success"><i class="fas fa-file-alt"></i> Generate Report</button>

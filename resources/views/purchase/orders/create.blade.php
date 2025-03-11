@@ -64,12 +64,12 @@
                             <td>{{ $item->product->name }}</td>
                             <td>{{ $item->quantity }}</td>
                             <td>
-                                <input type="number" name="products[{{ $loop->index }}][quantity]" class="form-control itemQty" value="{{ $item->quantity }}" required>
+                                <input type="number" name="products[{{ $loop->index }}][quantity]" class="form-control itemQty" value="{{ $item->quantity }}" step="0.01" required>
                                 <input type="hidden" name="products[{{ $loop->index }}][purchase_request_item_id]" value="{{ $item->id }}">
                                 <input type="hidden" name="products[{{ $loop->index }}][product_id]" value="{{ $item->product_id }}">
                             </td>
                             <td>
-                                <input type="number" name="products[{{ $loop->index }}][price]"  value="{{ $item->price }}"  class="form-control itemPrice" required>
+                                <input type="number" name="products[{{ $loop->index }}][price]"  value="{{ $item->price }}"  class="form-control itemPrice" step="0.01" required>
                             </td>
                         </tr>
                     @endforeach

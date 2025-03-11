@@ -33,11 +33,11 @@
             </div>
             <div class="form-group">
                 <label for="price">Price</label>
-                <input type="number" class="form-control" id="price" name="price" value="{{ $product->price }}" required>
+                <input type="number" class="form-control" id="price" name="price" value="{{ $product->price }}" step="0.01" required>
             </div>
             <div class="form-group">
                 <label for="stock_quantity">Stock Quantity</label>
-                <input type="number" class="form-control" id="stock_quantity" name="stock_quantity" value="{{ $product->stock_quantity }}" required>
+                <input type="number" class="form-control" id="stock_quantity" name="stock_quantity" step="0.01" value="{{ $product->stock_quantity }}" required>
             </div>
             <button type="submit" class="btn btn-success">Update Product</button>
         </form>
