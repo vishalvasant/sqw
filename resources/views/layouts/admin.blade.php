@@ -261,6 +261,13 @@
                 allowClear: true,
             });
         });
-    </script>
+        $(document).ready(function() {
+            $('.basic-multiple-supplier').select2({
+                placeholder: "Select Supplier",
+                allowClear: true,
+            });
+        });
+
+</script>
 </body>
 </html>

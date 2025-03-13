@@ -14,15 +14,24 @@
     <div class="card-body">
         <form method="GET" action="{{ route('inventory.products.report') }}">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="from_date">From Date</label>
                     <input type="date" name="from_date" class="form-control" required>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="to_date">To Date</label>
                     <input type="date" name="to_date" class="form-control" required>
                 </div>
-                <div class="col-md-4 d-flex align-items-end justify-content-end">
+                <div class="col-md-3">
+                    <label for="product_id">Supplier</label>
+                    <select name="suppliers_id[]" class="basic-multiple-supplier form-control" multiple="multiple" placeholder="Select Supplier">
+                        <option value="">Select Supplier</option>
+                        @foreach($suppliers as $supplier)
+                            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end justify-content-end">
                     <button type="submit" class="btn btn-success"><i class="fas fa-file-alt"></i> Generate Report</button>
                 </div>
             </div>

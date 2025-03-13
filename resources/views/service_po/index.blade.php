@@ -58,7 +58,6 @@
         @if($usr->can('services_order.create'))
             <a href="{{ route('service_po.create') }}" class="btn btn-primary float-right">Create SO</a>
         @endif
-        <a href="{{ route('service_po.create') }}" class="btn btn-primary float-right">Create SO</a>
     </div>
     <div class="card-body">
         <table class="table table-bordered">
