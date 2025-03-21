@@ -80,9 +80,16 @@ class AssetController extends Controller
         
         $asset = Asset::findOrFail($asset->id);
         $availableServices = ServicePurchaseOrder::with('items.service')
+            ->whereHas('items.service', function($query) {
+                $query->where('type', 'asset_allocation');
+            })
             ->where('billed', 1)
             ->where('status', '!=', 'completed')
-            ->get();
+            ->get();                
+        // $availableServices = ServicePurchaseOrder::with('items.service')
+        //     ->where('billed', 1)
+        //     ->where('status', '!=', 'completed')
+        //     ->get();
         return view('assets.services.index', compact('asset','availableServices','selectedSO'));
     }
 

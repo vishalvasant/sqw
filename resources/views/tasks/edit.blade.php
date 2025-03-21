@@ -59,6 +59,12 @@
                     @endforeach
                 </select>
             </div>
+            @else
+            <div class="form-group">
+                <label for="approver_id">Approver</label>
+                <input type="hidden" name="approver_id" value="{{ $task->approver_id }}">
+                <input type="text" class="form-control" value="{{ $task->approver->name }}" readonly>
+            </div>
             @endif
             <div class="form-group">
                 <label for="status">Status</label>

@@ -63,9 +63,18 @@ class PurchaseRequestController extends Controller
         $month = date('m'); // Get current month (e.g., 02)
     
         // Count the number of PRs for the current month
-        $count = PurchaseRequest::whereYear('created_at', $year)
+        $lastRequest = PurchaseRequest::whereYear('created_at', $year)
             ->whereMonth('created_at', $month)
-            ->count() + 1; // Increment count to start from 001
+            ->orderBy('request_number', 'desc')
+            ->first();
+
+        if ($lastRequest) {
+            // Extract the numeric portion and increment
+            $lastNumber = intval(substr($lastRequest->request_number, -3));
+            $count = $lastNumber + 1;
+        } else {
+            $count = 1;
+        }
     
         // Format count as three-digit number (e.g., 001, 002, 010, 100)
         $prNumber = sprintf('%03d', $count);
