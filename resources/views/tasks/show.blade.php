@@ -52,7 +52,7 @@
         @if(auth()->user()->id == $task->approver_id)
             <form action="{{ route('tasks.approve', $task->id) }}" method="POST" class="d-inline">
                 @csrf
-                @method('PATCH')
+                @method('POST')
                 <button type="submit" class="btn btn-success">Approve Task</button>
             </form>
         @endif

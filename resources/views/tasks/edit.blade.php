@@ -36,65 +36,90 @@
                     <input type="file" name="file" class="form-control">
                 </div>
             @endif
-            <div class="form-group">
-                <label for="assigned_to">Assign To</label>
-                <select name="assigned_to" class="form-control" required>
-                    <option value="">Select User</option>
-                    @foreach($users as $user)
-                        <option value="{{ $user->id }}" {{ $task->assigned_to == $user->id ? 'selected' : '' }}>
-                            {{ $user->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            @if ($usr->id == 1 || $usr->id == $task->approver_id)
-            <div class="form-group">
-                <label for="approver_id">Approver</label>
-                <select name="approver_id" class="form-control" required>
-                    <option value="">Select User</option>
-                    @foreach($users as $user)
-                        <option value="{{ $user->id }}" {{ $task->approver_id == $user->id ? 'selected' : '' }}>
-                            {{ $user->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            @else
-            <div class="form-group">
-                <label for="approver_id">Approver</label>
-                <input type="hidden" name="approver_id" value="{{ $task->approver_id }}">
-                <input type="text" class="form-control" value="{{ $task->approver->name }}" readonly>
-            </div>
-            @endif
-            <div class="form-group">
-                <label for="status">Status</label>
-                <select name="status" class="form-control">
-                    <option value="pending" {{ $task->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                    <option value="in_progress" {{ $task->status == 'in_progress' ? 'selected' : '' }}>In Progress</option>
-                    <option value="completed" {{ $task->status == 'completed' ? 'selected' : '' }}>Completed</option>
-                    @if ($usr->id == 1 || $usr->id == $task->approver_id)
-                    <option value="approved" {{ $task->status == 'completed' ? 'selected' : '' }}>Completed</option>
+            <div class="row mt-2">
+                <div class="col-6">
+                    @if ($usr->id == 1)
+                    <div class="form-group">
+                        <label for="assigned_to">Assign To</label>
+                        <select name="assigned_to" class="form-control" required>
+                            <option value="">Select User</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}" {{ $task->assigned_to == $user->id ? 'selected' : '' }}>
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @else
+                    <div class="form-group">
+                        <label for="assigned_to">Assign To</label>
+                        <input type="hidden" name="assigned_to" value="{{ $task->assigned_to }}">
+                        <input type="text" class="form-control" value="{{ $task->assignee->name }}" readonly>
+                    </div>
                     @endif
-                </select>
+                </div>
+                <div class="col-6">
+                    @if ($usr->id == 1)
+                    <div class="form-group">
+                        <label for="approver_id">Approver</label>
+                        <select name="approver_id" class="form-control" required>
+                            <option value="">Select User</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}" {{ $task->approver_id == $user->id ? 'selected' : '' }}>
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @else
+                    <div class="form-group">
+                        <label for="approver_id">Approver</label>
+                        <input type="hidden" name="approver_id" value="{{ $task->approver_id }}">
+                        <input type="text" class="form-control" value="{{ $task->approver->name }}" readonly>
+                    </div>
+                    @endif
+                </div>
             </div>
-            <div class="form-group">
-                <label for="recurrence">Recurrence</label>
-                <select name="recurrence" class="form-control">
-                    <option value="none" {{ $task->recurrence == 'none' ? 'selected' : '' }}>None</option>
-                    <option value="daily" {{ $task->recurrence == 'daily' ? 'selected' : '' }}>Daily</option>
-                    <option value="weekly" {{ $task->recurrence == 'weekly' ? 'selected' : '' }}>Weekly</option>
-                    <option value="monthly" {{ $task->recurrence == 'monthly' ? 'selected' : '' }}>Monthly</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="deadline">Deadline</label>
-                <input type="date" name="due_date" class="form-control" value="{{ \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') }}" required>
+            
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="deadline">Deadline</label>
+                        <input type="date" name="due_date" class="form-control" value="{{ \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') }}" required>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select name="status" class="form-control">
+                            <option value="pending" {{ $task->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="in_progress" {{ $task->status == 'in_progress' ? 'selected' : '' }}>In Progress</option>
+                            <option value="completed" {{ $task->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                            @if ($usr->id == 1 || $usr->id == $task->approver_id)
+                            <option value="approved" {{ $task->status == 'approved' ? 'selected' : '' }}>Approve</option>
+                            @endif
+                        </select>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="recurrence">Recurrence</label>
+                        <select name="recurrence" class="form-control">
+                            <option value="none" {{ $task->recurrence == 'none' ? 'selected' : '' }}>None</option>
+                            <option value="daily" {{ $task->recurrence == 'daily' ? 'selected' : '' }}>Daily</option>
+                            <option value="weekly" {{ $task->recurrence == 'weekly' ? 'selected' : '' }}>Weekly</option>
+                            <option value="monthly" {{ $task->recurrence == 'monthly' ? 'selected' : '' }}>Monthly</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
         
         <div class="card-footer">
-            <button type="submit" class="btn btn-primary">Update Task</button>
-            <a href="{{ route('tasks.index') }}" class="btn btn-secondary">Cancel</a>
+            <div class="row float-right">
+                <button type="submit" class="btn btn-primary mr-2">Update Task</button>
+                <a href="{{ route('tasks.index') }}" class="btn btn-secondary">Cancel</a>
+            </div>
         </div>
     </form>
 </div>

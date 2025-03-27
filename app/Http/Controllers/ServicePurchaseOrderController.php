@@ -181,6 +181,12 @@ class ServicePurchaseOrderController extends Controller
     public function destroy($id)
     {
         $servicePurchaseOrder = ServicePurchaseOrder::findOrFail($id);
+        $servicePurchaseRequest = ServicePurchaseRequest::findOrFail($servicePurchaseOrder->service_purchase_request_id);
+        foreach ($servicePurchaseOrder->items as $item) {
+            $servicePurchaseRequestItem = ServicePurchaseRequestItem::where('service_purchase_request_id', $servicePurchaseOrder->service_purchase_request_id)->first();
+            $servicePurchaseRequestItem['price'] += $item->total_price;
+            $servicePurchaseRequestItem->update();
+        }
         $servicePurchaseOrder->delete();
         return redirect()->route('service_po.index')->with('success', 'Service PO deleted successfully.');
     }

@@ -62,7 +62,11 @@
                     <tr>
                         <td>{{ $task->title }}</td>
                         <td>{{ $task->assignee->name }}</td>
-                        <td>{{ ucfirst($task->status) }}</td>
+                        @if($task->status == 'in_progress')
+                            <td>In Progress</td>
+                        @else
+                            <td>{{ ucfirst($task->status) }}</td>
+                        @endif
                         <td>{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('j F, Y') : 'N/A' }}</td>
                         <td>
                             @if($usr->can('tasks.edit'))

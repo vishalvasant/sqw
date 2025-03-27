@@ -78,9 +78,9 @@ class TaskController extends Controller
     public function approveTask($id)
     {
         $task = Task::findOrFail($id);
-        if (auth()->user()->role !== 'admin') {
-            return redirect()->back()->with('error', 'Unauthorized access.');
-        }
+        // if (auth()->user()->role !== 'admin') {
+        //     return redirect()->back()->with('error', 'Unauthorized access.');
+        // }
         $task->status = 'approved';
         $task->save();
 
@@ -103,7 +103,7 @@ class TaskController extends Controller
             'assigned_to' => 'required|exists:users,id',
             'approver_id' => 'required|exists:users,id',
             'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
-            'status' => 'required|in:pending,in-progress,completed',
+            'status' => 'required|in:pending,in_progress,completed,approved',
         ]);
 
         // Handle File Upload (If New File is Uploaded)
