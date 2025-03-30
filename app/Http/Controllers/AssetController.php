@@ -216,9 +216,6 @@ class AssetController extends Controller
                 product_services.id AS product_id,
                 product_services.name AS product_name,
                 product_services.cost AS product_price,
-                (SELECT AVG(service_purchase_order_items.unit_price) 
-                 FROM service_purchase_order_items 
-                 WHERE service_purchase_order_items.service_id = product_services.id) AS avg_product_price,
                 asset_service.id AS asset_service_id,
                 asset_service.req_by AS req_by,
                 asset_service.order_number AS asset_order_number,

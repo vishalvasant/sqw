@@ -42,7 +42,7 @@
                         <td>{{ $row->req_by }}</td>
                         <td>{{ $row->rec_by }}</td>
                         <td>{{ $row->product_name }}</td>
-                        <td>{{ number_format($row->avg_product_price, 2) }}</td>
+                        <td>{{ number_format($row->asset_price, 2) }}</td>
                         <td>
                             <form action="{{ route('assets.services.remove') }}" method="POST" class="d-inline">
                                 @csrf
