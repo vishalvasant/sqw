@@ -7,6 +7,7 @@ use App\Models\Part;
 use App\Models\Product;
 use App\Models\ProductService;
 use App\Models\ServicePurchaseOrder;
+use App\Models\AssetMaintenance;   
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -91,6 +92,31 @@ class AssetController extends Controller
         //     ->where('status', '!=', 'completed')
         //     ->get();
         return view('assets.services.index', compact('asset','availableServices','selectedSO'));
+    }
+
+    public function maintenance(Request $request, Asset $asset)
+    {
+        $assetmaintenance = AssetMaintenance::with('asset')
+            ->where('asset_id', $asset->id)
+            ->get();
+        $asset = Asset::findOrFail($asset->id);
+        
+        return view('assets.maintenance.index', compact('assetmaintenance','asset'));
+    }
+
+    public function maintananceLog(Request $request, Asset $asset)
+    {
+        $request->validate([
+            'asset_id' => 'required|exists:assets,id',
+            'req_date' => 'required|date',
+            'description' => 'required|string|max:255',
+            'req_by' => 'required|string|max:255',
+            'rec_by' => 'required|string|max:255',
+            'file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+        ]);
+
+        AssetMaintenance::create($request->all());
+        return redirect()->route('assets.index')->with('success', 'Maintenance log created successfully.');
     }
 
     public function display(Asset $asset)

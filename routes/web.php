@@ -111,6 +111,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('assets.parts.index', [AssetController::class, 'show'])->name('assets.parts.index');
         Route::get('assets.reports', [AssetController::class, 'assetsReport'])->name('assets.reports');
         Route::get('assets/serciceallocate/{asset}', [AssetController::class, 'serciceAllocate'])->name('assets.serciceallocate');
+        Route::get('assets/maintenance/{asset}', [AssetController::class, 'maintenance'])->name('assets.maintenance');
+        Route::post('assets.maintananceLog', [AssetController::class, 'maintananceLog'])->name('assets.maintananceLog');
 
         
 

@@ -104,6 +104,54 @@
             All rights reserved.
         </footer>
     </div>
+    <div class="modal fade" id="modal-xl">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Add Maintanence To Asset</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="req_by">Request By</label>
+                    <input type="email" class="form-control" name="req_by" placeholder="Request By">
+                </div>
+                <div class="form-group">
+                    <label for="rec_by">Maintanence By</label>
+                    <input type="password" class="form-control" name="rec_by" placeholder="Maintanence By">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="textarea" class="form-control" name="description" placeholder="Description">
+                </div>
+                <div class="form-group">
+                    <label for="req_date">Request Date</label>
+                    <input type="date" class="form-control" name="req_date" placeholder="Request Date">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputFile">Attach Log File</label>
+                    <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="exampleInputFile">
+                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                    </div>
+                    <div class="input-group-append">
+                        <span class="input-group-text">Upload</span>
+                    </div>
+                    </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
 
     <!-- Scripts -->
     <script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
