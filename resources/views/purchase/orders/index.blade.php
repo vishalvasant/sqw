@@ -124,7 +124,7 @@
                                     @if ($order->status == 'completed')
                                     <button type="submit" class="btn btn-danger btn-sm" disabled>Delete</button>
                                     @else
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="if(confirm('Are you sure you want to delete this?')) { this.form.submit(); }">Delete</button>
                                     @endif
                                 </form>
                                 @endif

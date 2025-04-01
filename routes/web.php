@@ -113,6 +113,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('assets/serciceallocate/{asset}', [AssetController::class, 'serciceAllocate'])->name('assets.serciceallocate');
         Route::get('assets/maintenance/{asset}', [AssetController::class, 'maintenance'])->name('assets.maintenance');
         Route::post('assets.maintananceLog', [AssetController::class, 'maintananceLog'])->name('assets.maintananceLog');
+        Route::post('assets.createMaintenance/{id}', [AssetController::class, 'createMaintenance'])->name('assets.createMaintenance');
+        Route::delete('assets.destroyMaintenance/{id}', [AssetController::class, 'destroyMaintenance'])->name('assets.destroyMaintenance');
+        
 
         
 

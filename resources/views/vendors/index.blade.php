@@ -75,7 +75,7 @@
                             <form action="{{ route('vendors.destroy', $vendor->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="if(confirm('Are you sure you want to delete this?')) { this.form.submit(); }"><i class="fa fa-trash"></i></button>
                             </form>
                             @endif
                             <a href="{{ route('vendors.show', $vendor->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-file-alt"></i></a>

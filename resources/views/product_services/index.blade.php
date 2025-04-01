@@ -63,7 +63,7 @@
                             @if($usr->can('services.delete'))
                                 <form action="{{ route('product_services.destroy', $service->id) }}" method="POST" style="display:inline;">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="if(confirm('Are you sure you want to delete this?')) { this.form.submit(); }">Delete</button>
                                 </form>
                             @endif
                         </td>

@@ -19,4 +19,9 @@ class AssetMaintenance extends Model
         'req_date',
         'file_path',
     ];
+
+    public function asset()
+    {
+        return $this->belongsTo(Asset::class);
+    }
 }

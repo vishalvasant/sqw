@@ -104,6 +104,44 @@ class AssetController extends Controller
         return view('assets.maintenance.index', compact('assetmaintenance','asset'));
     }
 
+    public function createMaintenance(Request $request, Asset $asset)
+    {
+        $request->validate([
+            'asset_id' => 'required|exists:assets,id',
+            'req_date' => 'required|date',
+            'description' => 'required|string|max:255',
+            'req_by' => 'required|string|max:255',
+            'rec_by' => 'required|string|max:255',
+        ]);
+        $filePath = null;
+        if ($request->hasFile('file')) {
+            $filePath = $request->file('file')->store('log_files', 'public'); // Store file
+        }
+
+        AssetMaintenance::create(
+            [
+                'asset_id' => $request->asset_id,
+                'req_date' => $request->req_date,
+                'description' => $request->description,
+                'req_by' => $request->req_by,
+                'rec_by' => $request->rec_by,
+                'file_path' => $filePath,
+            ]
+        );
+
+         return redirect()->back()->with('success', 'Maintenance log created successfully.');
+    }
+  
+    public function destroyMaintenance(Asset $asset, Request $request)
+    {
+        $assetmaintenance = AssetMaintenance::findOrFail($request->maintance_id);
+        if ($assetmaintenance->file) {
+            Storage::disk('public')->delete($assetmaintenance->file);
+        }
+        $assetmaintenance->delete();
+        return redirect()->back()->with('success', 'Maintenance log deleted successfully.');
+    }
+
     public function maintananceLog(Request $request, Asset $asset)
     {
         $request->validate([

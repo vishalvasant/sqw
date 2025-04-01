@@ -22,7 +22,7 @@
                         <form action="{{ route('machines.destroy', $machine->id) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                            <button type="submit" class="btn btn-danger" onclick="if(confirm('Are you sure you want to delete this?')) { this.form.submit(); }"><i class="fas fa-trash"></i></button>
                         </form>
                     </td>
                 </tr>

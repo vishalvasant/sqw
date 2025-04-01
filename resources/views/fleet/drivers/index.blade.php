@@ -42,7 +42,7 @@
                                 @if(isset($driver->vehicle->vehicle_number))
                                 <button type="submit" class="btn btn-danger" disabled><i class="fas fa-trash"></i></button>
                                 @else
-                                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                                <button type="submit" class="btn btn-danger" onclick="if(confirm('Are you sure you want to delete this?')) { this.form.submit(); }"><i class="fas fa-trash"></i></button>
                                 @endif
                             </form>
                             @endif

@@ -15,8 +15,9 @@
                         <h5>Allocate New Maintance</h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('assets.maintananceLog') }}" method="POST">
+                        <form action="{{ route('assets.createMaintenance', $asset->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
+                            <input type="text" name="asset_id" value="{{ $asset->id }}" hidden>
                             <div class="row mt-2">
 
                                     <label for="req_date">Request Date</label>
@@ -39,15 +40,7 @@
                             </div>
                             <div class="row mt-2 float-right">
                                     <label for="exampleInputFile">Attach Log File</label>
-                                    <div class="input-group">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="exampleInputFile">
-                                            <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                                        </div>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">Upload</span>
-                                        </div>
-                                    </div>
+                                    <input type="file" name="file" class="form-control">
                             </div>
                             <div class="row mt-4 float-right">
                                 <button type="submit" class="btn btn-success">Allocate Maintance</button>
@@ -81,7 +74,21 @@
                                         <td>{{ $maintance->description }}</td>
                                         <td>{{ $maintance->req_by }}</td>
                                         <td>{{ $maintance->rec_by }}</td>
-                                        <td>{{ $maintance->file_path }}</td>
+                                        <td>
+                                            @if ($maintance->file_path)
+                                                <a href="{{ asset('storage/' .  $maintance->file_path) }}" target="_blank" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>
+                                                <a href="{{ asset('storage/' . $maintance->file_path) }}" download class="btn btn-success btn-sm"><i class="fa fa-download"></i></a>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <form action="{{ route('assets.destroyMaintenance', $asset->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input type="hidden" name="asset_id" value="{{ $asset->id }}">
+                                                <input type="hidden" name="maintance_id" value="{{ $maintance->id }}">
+                                                <button type="button" class="btn btn-danger" onclick="if(confirm('Are you sure you want to delete this?')) { this.form.submit(); }"><i class="fa fa-trash"></i></button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
