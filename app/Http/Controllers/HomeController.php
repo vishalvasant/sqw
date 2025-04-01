@@ -37,19 +37,24 @@ class HomeController extends Controller
         $latestPOs = PurchaseOrder::latest()->limit(5)->get();
 
         // Monthly PO & PR Report
+
         $months = collect(range(1, 12))->map(function ($month) {
             return date('F', mktime(0, 0, 0, $month, 1));
         });
-
         $poCounts = PurchaseOrder::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
             ->groupBy('month')
             ->pluck('count', 'month')->toArray();
-
+            // Fill in missing months with 0 counts
+        
         $prCounts = PurchaseRequest::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
             ->groupBy('month')
             ->pluck('count', 'month')->toArray();
         
-
+        $poCounts = array_replace(array_fill(1, 12, 0), $poCounts);
+        $prCounts = array_replace(array_fill(1, 12, 0), $prCounts);
+        $poCounts = array_values($poCounts);
+        $prCounts = array_values($prCounts);
+            
         return view('home', compact(
             'totalAssets', 'totalUsers', 'pendingPRs', 'completedPOs',
             'latestPRs', 'latestPOs', 'months', 'poCounts', 'prCounts'

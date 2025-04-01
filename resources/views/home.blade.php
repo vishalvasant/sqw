@@ -142,3 +142,45 @@
     </div>
 @endif
 @endsection
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var poChartElement = document.getElementById('poChart');
+            var prChartElement = document.getElementById('prChart');
+
+            if (poChartElement) {
+                var ctx1 = poChartElement.getContext('2d');
+                var poChart = new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: @json($months),
+                        datasets: [{
+                            label: 'Purchase Orders',
+                            data: @json($poCounts),
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    }
+                });
+            }
+
+            if (prChartElement) {
+                var ctx2 = prChartElement.getContext('2d');
+                var prChart = new Chart(ctx2, {
+                    type: 'bar',
+                    data: {
+                        labels: @json($months),
+                        datasets: [{
+                            label: 'Purchase Requests',
+                            data: @json($prCounts),
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }]
+                    }
+                });
+            }
+        });
+    </script>
