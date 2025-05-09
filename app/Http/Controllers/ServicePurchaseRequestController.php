@@ -57,7 +57,7 @@ class ServicePurchaseRequestController extends Controller
         return redirect()->route('service_pr.index')->with('success', 'Service PR created successfully.');
     }
 
-    protected function generateServiceRequestNumber()
+    protected function generateServiceRequestNumber($date)
     {
         $year = \Carbon\Carbon::parse($date)->format('Y');
         $month = \Carbon\Carbon::parse($date)->format('m');

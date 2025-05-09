@@ -52,8 +52,9 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Request Number</th>
                     <th>Date</th>
+                    <th>Request Number</th>
+                    <th>Supplier</th>
                     <th>Title</th>
                     <th>Status</th>
                     <th>Created By</th>
@@ -64,8 +65,15 @@
                 @foreach ($purchaseRequests as $request)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $request->request_number }}</td>
                     <td>{{ \Carbon\Carbon::parse($request->created_at)->format('d-m-Y') }}</td>
+                    <td>{{ $request->request_number }}</td>
+                    <td>
+                        @if ($request->supplier)
+                        {{ $request->supplier->name }}
+                        @else
+                        <span class="text-danger">No Supplier</span>
+                        @endif
+                    </td>
                     <td>{{ $request->title }}</td>
                     <td>{{ ucfirst($request->status) }}</td>
                     <td>{{ $request->user->name }}</td>

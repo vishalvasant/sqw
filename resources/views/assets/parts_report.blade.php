@@ -12,11 +12,11 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Asset Name</th>
+                    <th>Date</th>
+                    <th>Product Name</th>
                     <th>Request By</th>
                     <th>Recived By</th>
                     <th>Description</th>
-                    <th>Product Name</th>
                     <th>Quantity</th>
                     <th>Price</th>
                     <th>Total</th>
@@ -24,14 +24,22 @@
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $total = 0;
+                    $total_qty = 0;
+                @endphp
                 @foreach($reportData as $index => $row)
+                    @php
+                        $total += $row->avg_product_price * $row->product_quantity;
+                        $total_qty += $row->product_quantity;
+                    @endphp
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $row->asset_name }}</td>
+                        <td>{{ \Carbon\Carbon::parse($row->asset_part_created_at)->format('d-m-Y') }}</td>
+                        <td>{{ $row->product_name }}</td>
                         <td>{{ $row->req_by }}</td>
                         <td>{{ $row->rec_by }}</td>
                         <td>{{ $row->asset_part_description }}</td>
-                        <td>{{ $row->product_name }}</td>
                         <td>{{ $row->product_quantity }}</td>
                         <td>{{ number_format($row->avg_product_price, 2) }}</td>
                         <td>{{ number_format($row->avg_product_price * $row->product_quantity, 2) }}</td>
@@ -48,6 +56,15 @@
                     </tr>
                 @endforeach
             </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="6" class="text-right">Total:</th>
+                    <th>{{ $total_qty }}</th>
+                    <th></th>
+                    <th>{{ number_format($total, 2) }}</th>
+                    <th></th>
+                </tr>
+            </tfoot>
         </table>
         <a href="{{ route('assets.index') }}" class="btn btn-secondary mt-3">Back to Asset List</a>
     </div>

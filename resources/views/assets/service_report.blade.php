@@ -12,36 +12,30 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Asset Name</th>
-                    <th>SO Number</th>
+                    <th>Date</th>
+                    <th>Product Name</th>
                     <th>Description</th>
                     <th>Request By</th>
                     <th>Recived By</th>
-                    <th>Product Name</th>
                     <th>Total</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $total = 0;
+                @endphp
                 @foreach($reportData as $index => $row)
+                    @php
+                        $total += $row->asset_price;
+                    @endphp
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>
-                            {{ $row->asset_name }} 
-                            @if($row->asset_status == 'active')
-                                <span class="badge badge-success">Active</span>
-                            @elseif($row->asset_status == 'inactive')
-                                <span class="badge badge-secondary">Inactive</span>
-                            @else
-                                <span class="badge badge-warning">Maintenance</span>
-                            @endif
-
-                        </td>
-                        <td>{{ $row->asset_order_number }}</td>
+                        <td>{{ \Carbon\Carbon::parse($row->asset_service_created_at)->format('d-m-Y') }}</td>
+                        <td>{{ $row->product_name }}</td>
                         <td>{{ $row->asset_service_description }}</td>
                         <td>{{ $row->req_by }}</td>
                         <td>{{ $row->rec_by }}</td>
-                        <td>{{ $row->product_name }}</td>
                         <td>{{ number_format($row->asset_price, 2) }}</td>
                         <td>
                             <form action="{{ route('assets.services.remove') }}" method="POST" class="d-inline">
@@ -56,6 +50,14 @@
                     </tr>
                 @endforeach
             </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="5" class="text-right">Total:</th>
+                    <th></th>
+                    <th>{{ number_format($total, 2) }}</th>
+                    <th></th>
+                </tr>
+            </tfoot>
         </table>
         <a href="{{ route('assets.index') }}" class="btn btn-secondary mt-3">Back to Asset List</a>
     </div>

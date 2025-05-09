@@ -20,7 +20,15 @@
                     <input type="date" name="created_at" class="form-control">
                 </div>
             </div>
-            
+            <div class="form-group">
+                <label for="supplier_id">Supplier</label>
+                <select name="supplier_id" id="supplier_id" class="form-control" required>
+                    <option value="">Select Supplier</option>
+                    @foreach ($suppliers as $supplier)
+                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                    @endforeach
+                </select>
+            </div>
             <div class="form-group">
                 <label for="description">Description</label>
                 <textarea name="description" class="form-control" rows="3" placeholder="Enter request description"></textarea>
@@ -33,15 +41,7 @@
                     <option value="high">High</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label for="supplier_id">Supplier</label>
-                <select name="supplier_id" id="supplier_id" class="form-control" required>
-                    <option value="">Select Supplier</option>
-                    @foreach ($suppliers as $supplier)
-                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+            
             <div class="form-group">
                 <label for="items">Request Items</label>
                 <div id="items-container">

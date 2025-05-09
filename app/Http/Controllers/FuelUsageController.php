@@ -12,8 +12,30 @@ class FuelUsageController extends Controller
     public function index()
     {
         $fuelUsages = FuelUsage::with('vehicle','product')->orderBy('date', 'desc')->get();
-        return view('fuel_usage.index', compact('fuelUsages'));
+        $fulePrice = $this->getProductAveragePriceTillToday(38); // Assuming 1 is the product ID for fuel
+        return view('fuel_usage.index', compact('fuelUsages', 'fulePrice'));
     }
+
+    public function getProductAveragePriceTillToday($productId)
+    {
+        return \DB::table('purchase_request_items')
+            ->where('product_id', $productId)
+            ->selectRaw('SUM(price * quantity) / SUM(quantity) as avg_price')
+            ->value('avg_price') ?? 0;
+    }
+
+
+    public function getProductAveragePriceByDateRange($productId, $fromDate, $toDate)
+    {
+        return \DB::table('purchase_request_items')
+            ->join('purchase_requests', 'purchase_request_items.purchase_request_id', '=', 'purchase_requests.id')
+            ->where('purchase_request_items.product_id', $productId)
+            ->whereBetween('purchase_requests.created_at', [$fromDate, $toDate])
+            ->selectRaw('SUM(purchase_request_items.price * purchase_request_items.quantity) / SUM(purchase_request_items.quantity) as avg_price')
+            ->value('avg_price') ?? 0;
+    }
+
+
 
     public function create(Request $request)
     {

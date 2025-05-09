@@ -16,7 +16,7 @@
     <!-- Report Table -->
     <div class="card-body">
         @if(isset($purchaseOrders) && count($purchaseOrders) > 0)
-            <table class="table table-bordered">
+            <table class="table table-bordered" id="example1">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -24,7 +24,9 @@
                         <th>GR Number</th>
                         <th>PO ID</th>
                         <th>Supplier</th>
-                        <th>Status</th>
+                        <th>QTY</th>
+                        <th>Amount</th>
+                        <th>Total</th>
                         <th>Billed</th>
                     </tr>
                 </thead>
@@ -36,7 +38,9 @@
                             <td>{{ $order->gr_number }}</td>
                             <td>{{ $order->order_number }}</td>
                             <td>{{ $order->supplier->name }}</td>
-                            <td><span class="badge badge-info">{{ $order->status }}</span></td>
+                            <td>{{ $order->items[0]->quantity }}</td>
+                            <td>{{ number_format(($order->items[0]->price), 2) }}</td>
+                            <td>{{ number_format(($order->items[0]->quantity * $order->items[0]->price), 2) }}</td>
                             <td>
                                 @if($order->billed)
                                     <span class="badge badge-success">Billed</span>

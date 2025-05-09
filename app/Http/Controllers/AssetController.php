@@ -250,7 +250,8 @@ class AssetController extends Controller
                 asset_part.quantity AS product_quantity,
                 asset_part.description AS asset_part_description,
                 asset_part.req_by AS req_by,
-                asset_part.rec_by AS rec_by
+                asset_part.rec_by AS rec_by,
+                asset_part.created_at AS asset_part_created_at
             FROM 
                 assets
             JOIN 
@@ -260,7 +261,7 @@ class AssetController extends Controller
             WHERE 
                 assets.id = $id
             ORDER BY 
-                assets.asset_name, products.name
+                asset_part_created_at,assets.asset_name, products.name
         ");
         return view('assets.parts_report', compact('asset','reportData'));
     }
@@ -285,7 +286,8 @@ class AssetController extends Controller
                 asset_service.order_number AS asset_order_number,
                 asset_service.description AS asset_service_description,
                 asset_service.price AS asset_price,
-                asset_service.rec_by AS rec_by
+                asset_service.rec_by AS rec_by,
+                asset_service.created_at AS asset_service_created_at
             FROM 
                 assets
             JOIN 
@@ -295,7 +297,7 @@ class AssetController extends Controller
             WHERE
                 assets.id = $id
             ORDER BY 
-                assets.asset_name, product_services.name
+                asset_service_created_at,assets.asset_name, product_services.name
         ");
         return view('assets.service_report', compact('asset','reportData'));
     }

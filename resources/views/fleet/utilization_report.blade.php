@@ -19,35 +19,44 @@
             <div class="col-md-4">
                 <div class="alert alert-warning">
                     <h5>Total Cost:</h5>
-                    <strong>₹{{ number_format($totalCost, 2) }}</strong>
+                    <strong>₹{{ number_format(($totalFuel * $fulePrice), 2) }}</strong>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="alert alert-success">
                     <h5>Average Cost per Liter:</h5>
-                    <strong>₹{{ number_format($avgCostPerLiter, 2) }}</strong>
+                    <strong>₹{{ number_format($totalFuel/$fulePrice, 2) }}</strong>
                 </div>
             </div>
         </div>
 
         <!-- Detailed Report Table -->
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="example2">
             <thead>
                 <tr>
                     <th>Vehicle Number</th>
                     <th>Vehicle Type</th>
-                    <th>Total Fuel Used (Liters)</th>
-                    <th>Utilization</th>
+                    <th>Fuel Used (Liters)</th>
+                    <th>Fuel Rate</th>
                     <th>Total Cost</th>
-                    <th>Average Cost per Liter</th>
+                    <th>Utilization</th>
+                    <th>Average Cost</th>
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $totalCost = 0;
+                @endphp
                 @forelse($fuelUsages as $usage)
+                    @php
+                        $totalCost += ($usage->total_fuel * $fulePrice);
+                    @endphp
                     <tr>
                         <td>{{ $usage->vehicle_number }}</td>
                         <td>{{ $usage->vehicle_type }}</td>
                         <td>{{ number_format($usage->total_fuel, 2) }}</td>
+                        <td> {{number_format($fulePrice,2)}}</th>
+                        <td>₹{{ number_format($usage->total_fuel * $fulePrice, 2) }}</td>
                         @if($usage->vehicle_type == 'FIXED')
                         <td>{{ number_format($usage->total_hours, 2) }} Hrs</td>
                         @elseif($usage->vehicle_type == 'TRIP')
@@ -55,8 +64,7 @@
                         @else
                         <td>{{ number_format($usage->total_distance, 2) }} Kms</td>
                         @endif
-                        <td>₹{{ number_format($usage->total_cost, 2) }}</td>
-                        <td>₹{{ number_format($usage->avg_cost_per_liter, 2) }}</td>
+                        <td>{{ number_format($usage->avg_cost_per_liter, 2) }}</td>
                     </tr>
                 @empty
                     <tr>
@@ -64,6 +72,13 @@
                     </tr>
                 @endforelse
             </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="4" class="text-right">Total Cost:</th>
+                    <th>₹{{ number_format($totalCost, 2) }}</th>
+                    <th colspan="2" class="text-right"></th>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>

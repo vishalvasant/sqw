@@ -6,7 +6,7 @@ use App\Models\ServicePurchaseOrder;
 use App\Models\ServicePurchaseOrderItem;
 use App\Models\ServicePurchaseRequest;
 use App\Models\ServicePurchaseRequestItem;
-use App\Models\Service;
+use App\Models\ProductService;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 
@@ -14,10 +14,10 @@ class ServicePurchaseOrderController extends Controller
 {
     public function index()
     {
-        $orders = ServicePurchaseOrder::with('vendor', 'purchaseRequest')->latest()->get();
+        $orders = ServicePurchaseOrder::with('vendor', 'purchaseRequest','items.service')->latest()->get();
         $vendors = Vendor::all();
-        
-        return view('service_po.index', compact('orders','vendors'));
+        $productServices = ProductService::all();
+        return view('service_po.index', compact('orders','vendors', 'productServices'));
     }
 
     protected function generateSNumber()
@@ -174,41 +174,46 @@ class ServicePurchaseOrderController extends Controller
 
     public function purchaseServiceOrdersReport(Request $request)
     {
-        $query = ServicePurchaseOrder::with('vendor');
+        $query = ServicePurchaseOrder::with('service_purchase_order_items.service') // eager load relations
+            ->join('service_purchase_order_items as items', 'items.service_purchase_order_id', '=', 'service_purchase_orders.id')
+            ->join('product_services as services', 'services.id', '=', 'items.service_id')
+            ->select('service_purchase_orders.*')
+            ->distinct(); // avoid duplicates due to joins
 
         // Filter by date range
-        // if ($request->has('from_date') && $request->has('to_date')) {
-        //     $query->whereBetween('created_at', [$request->from_date, $request->to_date]);
-        // }
-        if ($request->has('from_date')) {
+        if ($request->filled('from_date')) {
             $fromDate = $request->from_date . ' 00:00:00';
-            $query->where('created_at', '>=', $fromDate);
+            $query->where('service_purchase_orders.created_at', '>=', $fromDate);
         }
-        if ($request->has('to_date')) {
+
+        if ($request->filled('to_date')) {
             $toDate = $request->to_date . ' 23:59:59';
-            $query->where('created_at', '<=', $toDate);
+            $query->where('service_purchase_orders.created_at', '<=', $toDate);
         }
 
         // Filter by status
-        if ($request->has('status')) {
-            if($request->status != ""){
-                $query->where('status', $request->status);
-            }
+        if ($request->filled('status')) {
+            $query->where('service_purchase_orders.status', $request->status);
         }
 
-        // // Filter by billed/unbilled
-        if ($request->has('billed')) {
-            if($request->billed != ""){
-                $query->where('billed', $request->billed);
-            }
+        // Filter by billed/unbilled
+        if ($request->filled('billed')) {
+            $query->where('service_purchase_orders.billed', $request->billed);
         }
 
-        if ($request->has('vendor_id')) {
-            $query->whereIn('vendor_id', $request->vendor_id);
+        // Filter by vendor(s)
+        if ($request->filled('vendor_id')) {
+            $query->whereIn('service_purchase_orders.vendor_id', $request->vendor_id);
         }
 
-        $purchaseOrders = $query->get();
+        // Filter by service(s)
+        if ($request->filled('productServices_id')) {
+            $query->whereIn('services.id', $request->productServices_id);
+        }
+
+        $purchaseOrders = $query->orderByDesc('service_purchase_orders.created_at')->get();
 
         return view('service_po.reports', compact('purchaseOrders'));
     }
+
 }

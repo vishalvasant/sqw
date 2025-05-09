@@ -124,7 +124,17 @@ class FleetController extends Controller
     {
         // Example of generating fuel usage report
         $fuelUsageReport = FuelUsage::all();
-        return view('fleet.reports.index', compact('fuelUsageReport'));
+        $fulePrice = $this->getProductAveragePriceTillToday(38);
+        return view('fleet.reports.index', compact('fuelUsageReport', 'fulePrice'));
+    }
+
+
+    public function getProductAveragePriceTillToday($productId)
+    {
+        return \DB::table('purchase_request_items')
+            ->where('product_id', $productId)
+            ->selectRaw('SUM(price * quantity) / SUM(quantity) as avg_price')
+            ->value('avg_price') ?? 0;
     }
 
     public function indexMachines()
@@ -183,15 +193,17 @@ class FleetController extends Controller
 
         $fuelUsages = DB::table('fuel_usages')
             ->where('vehicle_id', $id)
-            ->select('fuel_amount', 'cost_per_liter', 'date', DB::raw('fuel_amount * cost_per_liter as total_cost'))
+            ->select('fuel_amount','cost_per_liter', 'distance_covered','hours_used','cost_per_liter', 'date', DB::raw('fuel_amount * cost_per_liter as total_cost'))
             ->get();
+        
+        $fulePrice = $this->getProductAveragePriceTillToday(38);
 
         // Calculate Total Fuel, Total Fuel Cost, and Average Cost Per Liter
         $totalFuel = $fuelUsages->sum('fuel_amount');
         $totalFuelCost = $fuelUsages->sum('total_cost');
-        $avgCostPerLiter = $totalFuel > 0 ? $totalFuelCost / $totalFuel : 0;
+        $avgCostPerLiter = $totalFuel > 0 ? $totalFuelCost / $fulePrice : 0;
 
-        return view('fleet.utilization', compact('vehicle', 'fuelUsages', 'totalFuel', 'totalFuelCost', 'avgCostPerLiter'));
+        return view('fleet.utilization', compact('vehicle', 'fuelUsages', 'totalFuel', 'totalFuelCost', 'avgCostPerLiter', 'fulePrice'));
     }
 
     public function generateUtilizationReport(Request $request)
@@ -215,11 +227,12 @@ class FleetController extends Controller
             ->get();
 
         // Calculate summary totals
+        $fulePrice = $this->getProductAveragePriceTillToday(38);
         $totalFuel = $fuelUsages->sum('total_fuel');
         $totalCost = $fuelUsages->sum('total_cost');
-        $avgCostPerLiter = ($totalFuel > 0) ? ($totalCost / $totalFuel) : 0;
+        $avgCostPerLiter = ($totalFuel > 0) ? ($totalCost / $fulePrice) : 0;
 
-        return view('fleet.utilization_report', compact('fuelUsages', 'fromDate', 'toDate', 'totalFuel', 'totalCost', 'avgCostPerLiter'));
+        return view('fleet.utilization_report', compact('fuelUsages', 'fromDate', 'toDate', 'totalFuel', 'totalCost', 'avgCostPerLiter', 'fulePrice'));
     }
 
 

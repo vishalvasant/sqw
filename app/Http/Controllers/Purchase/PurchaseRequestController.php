@@ -16,7 +16,7 @@ class PurchaseRequestController extends Controller
 {
     public function index()
     {
-        $purchaseRequests = PurchaseRequest::with(['items', 'user'])->get();
+        $purchaseRequests = PurchaseRequest::with(['items', 'user', 'supplier'])->get();
         return view('purchase.requests.index', compact('purchaseRequests'));
     }
 

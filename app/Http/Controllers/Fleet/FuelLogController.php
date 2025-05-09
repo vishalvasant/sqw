@@ -12,7 +12,16 @@ class FuelLogController extends Controller
     public function index()
     {
         $fuelLogs = FuelUsage::with('vehicle')->get();
-        return view('fleet.fuel_usages.index', compact('fuelLogs'));
+        $fulePrice = $this->getProductAveragePriceTillToday(38);
+        return view('fleet.fuel_usages.index', compact('fuelLogs', 'fulePrice'));
+    }
+
+    public function getProductAveragePriceTillToday($productId)
+    {
+        return \DB::table('purchase_request_items')
+            ->where('product_id', $productId)
+            ->selectRaw('SUM(price * quantity) / SUM(quantity) as avg_price')
+            ->value('avg_price') ?? 0;
     }
 
     public function create()

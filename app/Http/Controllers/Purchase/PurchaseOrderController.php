@@ -235,7 +235,7 @@ class PurchaseOrderController extends Controller
 
     public function purchaseOrdersReport(Request $request)
     {
-        $query = PurchaseOrder::with('supplier');
+        $query = PurchaseOrder::with('supplier','items.product');
 
         // Filter by date range
         // if ($request->has('from_date') && $request->has('to_date')) {

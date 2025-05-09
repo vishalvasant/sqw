@@ -16,35 +16,41 @@
     <!-- Report Table -->
     <div class="card-body">
         @if(isset($purchaseOrders) && count($purchaseOrders) > 0)
-            <table class="table table-bordered">
+            <table class="table table-bordered" id="example1">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Date</th>
                         <th>SO ID</th>
+                        <th>Service</th>
                         <th>Vendor</th>
-                        <th>Status</th>
-                        <th>Billed</th>
+                        <th>Cost</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $totalCost = 0;
+                    @endphp
                     @foreach ($purchaseOrders as $index => $order)
+                        @php
+                            $totalCost += $order->service_purchase_order_items[0]->service->cost;
+                        @endphp
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $order->created_at->format('d-m-Y') }}</td>
                             <td>{{ $order->order_number }}</td>
+                            <td>{{ $order->service_purchase_order_items[0]->service->name }}<br>
                             <td>{{ $order->vendor->name }}</td>
-                            <td><span class="badge badge-info">{{ $order->status }}</span></td>
-                            <td>
-                                @if($order->billed)
-                                    <span class="badge badge-success">Billed</span>
-                                @else
-                                    <span class="badge badge-warning">Unbilled</span>
-                                @endif
-                            </td>
+                            <td>{{ $order->service_purchase_order_items[0]->unit_price }}<br>
                         </tr>
                     @endforeach
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="5" class="text-right">Total Cost:</th>
+                        <th>{{ number_format($totalCost,2) }}</th>
+                    </tr>
+                </tfoot>
             </table>
         @else
             <p class="text-center text-muted">No purchase orders found for the selected filters.</p>
