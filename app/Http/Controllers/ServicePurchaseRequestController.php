@@ -27,14 +27,17 @@ class ServicePurchaseRequestController extends Controller
     {
         $request->validate([
             'vendor_id' => 'nullable|exists:vendors,id',
+            'created_at' => 'nullable|date', // made nullable
             'request_date' => 'required|date',
             'services' => 'required|array',
             'services.*.service_id' => 'required|exists:product_services,id',
             'services.*.price' => 'required|numeric|min:1'
         ]);
 
+        $createdAt = $validatedData['created_at'] ?? now();
+
         $pr = ServicePurchaseRequest::create([
-            'request_number' => $this->generateServiceRequestNumber(),
+            'request_number' => $this->generateServiceRequestNumber($createdAt),
             'vendor_id' => $request->vendor_id,
             'requested_by' => auth()->id(),
             'request_date' => $request->request_date,
@@ -56,27 +59,22 @@ class ServicePurchaseRequestController extends Controller
 
     protected function generateServiceRequestNumber()
     {
-        $year = date('Y'); // Get current year (e.g., 2025)
-        $month = date('m'); // Get current month (e.g., 02)
+        $year = \Carbon\Carbon::parse($date)->format('Y');
+        $month = \Carbon\Carbon::parse($date)->format('m');
     
         // Count the number of PRs for the current month
-        $lastRequest = ServicePurchaseRequest::whereYear('created_at', $year)
-        ->whereMonth('created_at', $month)
-        ->orderBy('request_number', 'desc')
-        ->first();
-
-        if ($lastRequest) {
-            // Extract the numeric portion and increment
-            $lastNumber = intval(substr($lastRequest->request_number, -3));
-            $count = $lastNumber + 1;
-        } else {
-            $count = 1;
-        }
+        // Match PR numbers like PR-202505001, PR-202505045, etc.
+        $prefix = "SR-{$year}{$month}";
     
-        // Format count as three-digit number (e.g., 001, 002, 010, 100)
-        $prNumber = sprintf('%03d', $count);
+        // Get the max numeric part from PR numbers with the given prefix
+        $lastNumber = ServicePurchaseRequest::where('request_number', 'like', $prefix . '%')
+            ->selectRaw("MAX(CAST(SUBSTRING(request_number, -3) AS UNSIGNED)) as max_number")
+            ->value('max_number');
     
-        return "SR-{$year}{$month}{$prNumber}";
+        $nextNumber = $lastNumber ? $lastNumber + 1 : 1;
+    
+        $formattedNumber = sprintf('%03d', $nextNumber);
+        return "{$prefix}{$formattedNumber}";
     }
 
     public function show($id)

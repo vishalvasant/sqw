@@ -31,6 +31,7 @@ class FuelUsageController extends Controller
             'fuel_amount' => 'required|numeric|min:0',
             'cost_per_liter' => 'required|numeric|min:0',
             'date' => 'required|date',
+            'description' => 'nullable',
         ]);
 
         $product = Product::findOrFail($request->product_id);
@@ -53,6 +54,7 @@ class FuelUsageController extends Controller
             'total_cost' => $request->fuel_amount * $request->cost_per_liter,
             'hours_used' => $request->hours_used ?? 0,
             'date' => $request->date,
+            'description' => $request->description,
         ]);
 
         $vehicle = Vehicle::findOrFail($request->vehicle_id);
@@ -82,6 +84,7 @@ class FuelUsageController extends Controller
             'fuel_amount' => 'required|numeric|min:0',
             'cost_per_liter' => 'required|numeric|min:0',
             'date' => 'required|date',
+            'description' => 'nullable',
         ]);
 
         $fuelUsage->update([
@@ -90,6 +93,7 @@ class FuelUsageController extends Controller
             'cost_per_liter' => $request->cost_per_liter,
             'total_cost' => $request->fuel_amount * $request->cost_per_liter,
             'date' => $request->date,
+            'description' => $request->description,
         ]);
 
         return redirect()->route('fleet.fuel_usages.index')->with('success', 'Fuel usage record updated successfully.');

@@ -29,8 +29,10 @@ class PurchaseRequestController extends Controller
 
     public function store(Request $request)
     {
+        
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
+            'created_at' => 'nullable|date', // made nullable
             'description' => 'required|string',
             'priority' => 'required|in:low,medium,high',
             'supplier_id' => 'required|exists:suppliers,id',
@@ -39,16 +41,20 @@ class PurchaseRequestController extends Controller
             'items.*.quantity' => 'required|numeric|min:1',
             'items.*.price' => 'required|numeric|min:0',
         ]);
-        
+
+        $createdAt = $validatedData['created_at'] ?? now();
+
         $purchaseRequest = PurchaseRequest::create([
             'title' => $validatedData['title'],
+            'created_at' => $createdAt,
             'description' => $validatedData['description'],
             'priority' => $validatedData['priority'],
             'supplier_id' => $validatedData['supplier_id'],
             'created_by' => auth()->user()->id,
             'status' => 'pending',
-            'request_number' => $this->generateRequestNumber(),
+            'request_number' => $this->generateRequestNumber($createdAt),
         ]);
+        
 
         foreach ($validatedData['items'] as $item) {
             $purchaseRequest->items()->create($item);
@@ -57,29 +63,24 @@ class PurchaseRequestController extends Controller
         return redirect()->route('purchase.requests.index')->with('success', 'Purchase request created successfully.');
     }
 
-    protected function generateRequestNumber()
-    {
-        $year = date('Y'); // Get current year (e.g., 2025)
-        $month = date('m'); // Get current month (e.g., 02)
-    
-        // Count the number of PRs for the current month
-        $lastRequest = PurchaseRequest::whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->orderBy('request_number', 'desc')
-            ->first();
 
-        if ($lastRequest) {
-            // Extract the numeric portion and increment
-            $lastNumber = intval(substr($lastRequest->request_number, -3));
-            $count = $lastNumber + 1;
-        } else {
-            $count = 1;
-        }
+    protected function generateRequestNumber($date)
+    {
+        $year = \Carbon\Carbon::parse($date)->format('Y');
+        $month = \Carbon\Carbon::parse($date)->format('m');
     
-        // Format count as three-digit number (e.g., 001, 002, 010, 100)
-        $prNumber = sprintf('%03d', $count);
+        // Match PR numbers like PR-202505001, PR-202505045, etc.
+        $prefix = "PR-{$year}{$month}";
     
-        return "PR-{$year}{$month}{$prNumber}";
+        // Get the max numeric part from PR numbers with the given prefix
+        $lastNumber = PurchaseRequest::where('request_number', 'like', $prefix . '%')
+            ->selectRaw("MAX(CAST(SUBSTRING(request_number, -3) AS UNSIGNED)) as max_number")
+            ->value('max_number');
+    
+        $nextNumber = $lastNumber ? $lastNumber + 1 : 1;
+    
+        $formattedNumber = sprintf('%03d', $nextNumber);
+        return "{$prefix}{$formattedNumber}";
     }
 
 

@@ -37,7 +37,15 @@
                             <option value="0">Unbilled</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-2">
+                    <label>Vendor</label>
+                        <select name="vendor_id[]" class="basic-multiple form-control" multiple="multiple" placeholder="Select Vendor">
+                            @foreach ($vendors as $vendor)
+                                <option value="{{ $vendor->id }}" {{ request('vendor_id') == $vendor->id ? 'selected' : '' }}>{{ $vendor->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-2">
                     <label>Vendor</label>
                         <select name="vendor_id[]" class="basic-multiple form-control" multiple="multiple" placeholder="Select Vendor">
                             @foreach ($vendors as $vendor)

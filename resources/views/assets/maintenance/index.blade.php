@@ -56,7 +56,7 @@
                         <h5>Allocated Maintance</h5>
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered" id="example1">
                             <thead>
                                 <tr>
                                     <th>Date</th>

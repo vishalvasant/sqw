@@ -68,6 +68,7 @@
                     <tr>
                         <th>#</th>
                         <th>Order Number</th>
+                        <th>Date</th>
                         <th>Supplier</th>
                         <th>Status</th>
                         <th>Billed</th>
@@ -79,6 +80,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $order->order_number }}</td>
+                            <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d-m-Y') }}</td>
                             <td>{{ $order->supplier->name ?? 'N/A'  }}</td>
                             <td>
                                 @if ($usr->can('orders.edit'))

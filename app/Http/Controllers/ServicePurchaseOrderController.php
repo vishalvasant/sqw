@@ -63,8 +63,10 @@ class ServicePurchaseOrderController extends Controller
         
         $pr = ServicePurchaseRequest::find($request->service_pr_id);
 
+        $createdAt = $request->created_at ?? now();
+
         $po = ServicePurchaseOrder::create([
-            'order_number' => $this->generateServiceOrderNumber(),
+            'order_number' => $this->generateServiceOrderNumber($createdAt),
             'service_purchase_request_id' => $pr->id,
             'vendor_id' => $pr->vendor_id,
             'order_date' => $request->order_date,
@@ -87,46 +89,25 @@ class ServicePurchaseOrderController extends Controller
         return redirect()->route('service_po.index')->with('success', 'Service PO created successfully.');
     }
 
-    private function generateServiceOrderNumber()
+    private function generateServiceOrderNumber($date)
     {
-        $year = date('Y');
-        $month = date('m');
+        $year = \Carbon\Carbon::parse($date)->format('Y');
+        $month = \Carbon\Carbon::parse($date)->format('m');
 
         // Get the last order number for current month/year
-        $lastOrder = ServicePurchaseOrder::whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->orderBy('order_number', 'desc')
-            ->first();
+        $prefix = "SO-{$year}{$month}";
 
-        if ($lastOrder) {
-            // Extract the numeric portion and increment
-            $lastNumber = intval(substr($lastOrder->order_number, -3));
-            $count = $lastNumber + 1;
-        } else {
-            $count = 1;
-        }
+        // Count the number of PRs for the current month
+        $count = ServicePurchaseOrder::where('order_number', 'like', $prefix . '%')
+            ->selectRaw("MAX(CAST(SUBSTRING(order_number, -3) AS UNSIGNED)) as max_number")
+            ->value('max_number'); // Increment count to start from 001
 
-        // Format count as three-digit number
-        $prNumber = sprintf('%03d', $count);
+        // Format count as three-digit number (e.g., 001, 002, 010, 100)
+        $nextNumber = $count ? $count + 1 : 1;
+        $prNumber = sprintf('%03d', $nextNumber);
 
         return "SO-{$year}{$month}{$prNumber}";
     }  
-
-    // private function generateServiceOrderNumber()
-    // {
-    //     $year = date('Y'); // Get current year (e.g., 2025)
-    //     $month = date('m'); // Get current month (e.g., 02)
-    
-    //     // Count the number of PRs for the current month
-    //                   $count = ServicePurchaseOrder::whereYear('created_at', $year)
-    //         ->whereMonth('created_at', $month)
-    //         ->count() + 1; // Increment count to start from 001
-    
-    //     // Format count as three-digit number (e.g., 001, 002, 010, 100)
-    //     $prNumber = sprintf('%03d', $count);
-    
-    //     return "SO-{$year}{$month}{$prNumber}";
-    // }
 
     public function show($id)
     {

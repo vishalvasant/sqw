@@ -18,7 +18,8 @@ class FuelUsage extends Model
         'distance_covered',
         'hours_used',
         'date',
-        'total_cost'
+        'total_cost',
+        'description'
     ];
 
     // Define relationship with Vehicle

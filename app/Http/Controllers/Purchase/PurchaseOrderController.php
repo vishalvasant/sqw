@@ -22,18 +22,21 @@ class PurchaseOrderController extends Controller
         return view('purchase.orders.index', compact('purchaseOrders','suppliers'));
     }
 
-    protected function generateGNumber()
+    protected function generateGNumber($date)
     {
-        $year = date('Y'); // Get current year (e.g., 2025)
-        $month = date('m'); // Get current month (e.g., 02)
+        $year = \Carbon\Carbon::parse($date)->format('Y');
+        $month = \Carbon\Carbon::parse($date)->format('m');
+
+        $prefix = "GR-{$year}{$month}";
     
         // Count the number of PRs for the current month
-        $count = PurchaseOrder::whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->count() + 1; // Increment count to start from 001
+        $count = PurchaseOrder::where('gr_number', 'like', $prefix . '%')
+            ->selectRaw("MAX(CAST(SUBSTRING(gr_number, -3) AS UNSIGNED)) as max_number")
+            ->value('max_number'); // Increment count to start from 001
     
         // Format count as three-digit number (e.g., 001, 002, 010, 100)
-        $prNumber = sprintf('%03d', $count);
+        $nextNumber = $count ? $count + 1 : 1;
+        $prNumber = sprintf('%03d', $nextNumber);
     
         return "GR-{$year}{$month}{$prNumber}";
     }
@@ -53,21 +56,23 @@ class PurchaseOrderController extends Controller
         }else{
             $suppliers = Supplier::all();
         }
-        $gr_number = $this->generateGNumber();
+        $gr_number = $this->generateGNumber(now());
         return view('purchase.orders.create', compact('suppliers', 'purchaseRequests', 'selectedRequest','gr_number'));
     }
 
 
     public function store(Request $request)
     {
+        $createdAt = $request->created_at ?? now();
         try {
             // Create Purchase Order
             $purchaseOrder = new PurchaseOrder();
-            $purchaseOrder->order_number = $this->generateOrderNumber();
+            $purchaseOrder->order_number = $this->generateOrderNumber($createdAt);
+            $purchaseOrder->created_at = $request->created_at?$request->created_at:now();
             $purchaseOrder->supplier_id = $request->supplier_id;
             $purchaseOrder->status = 'pending';
             $purchaseOrder->billed = 0; // Default
-            $purchaseOrder->gr_number = $request->gr_number ?? 0;
+            $purchaseOrder->gr_number = $this->generateGNumber($createdAt);
             $purchaseOrder->purchase_request_id = $request->request_id; // Default
             $purchaseOrder->save();
 
@@ -173,31 +178,25 @@ class PurchaseOrderController extends Controller
         return redirect()->route('purchase.orders.index')->with('success', 'Purchase Order marked as billed.');
     }
 
-    private function generateOrderNumber()
+    private function generateOrderNumber($date)
     {
-        $year = date('Y'); // Get current year (e.g., 2025)
-        $month = date('m'); // Get current month (e.g., 02)
-    
+        $year = \Carbon\Carbon::parse($date)->format('Y');
+        $month = \Carbon\Carbon::parse($date)->format('m');
+
+        $prefix = "PO-{$year}{$month}";
+
         // Count the number of PRs for the current month
-        $lastOrder = PurchaseOrder::whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->orderBy('order_number', 'desc')
-            ->first();
-        
-        if ($lastOrder) {
-            // Extract the numeric portion and increment
-            $lastNumber = intval(substr($lastOrder->order_number, -3));
-            $count = $lastNumber + 1;
-        } else {
-            $count = 1;
-        }
-    
+        $count = PurchaseOrder::where('order_number', 'like', $prefix . '%')
+            ->selectRaw("MAX(CAST(SUBSTRING(order_number, -3) AS UNSIGNED)) as max_number")
+            ->value('max_number'); // Increment count to start from 001
+
         // Format count as three-digit number (e.g., 001, 002, 010, 100)
-        $prNumber = sprintf('%03d', $count);
-    
+        $nextNumber = $count ? $count + 1 : 1;
+        $prNumber = sprintf('%03d', $nextNumber);
+
         return "PO-{$year}{$month}{$prNumber}";
     }
-
+    
     public function receiveDocket($id)
     {
         $purchaseOrder = PurchaseOrder::findOrFail($id);

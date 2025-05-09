@@ -10,10 +10,17 @@
     <form action="{{ route('purchase.requests.store') }}" method="POST">
         @csrf
         <div class="card-body">
-            <div class="form-group">
-                <label for="title">Title</label>
-                <input type="text" name="title" class="form-control" placeholder="Enter request title" required>
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="title">Title</label>
+                    <input type="text" name="title" class="form-control" placeholder="Enter request title" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="title">Date</label>
+                    <input type="date" name="created_at" class="form-control">
+                </div>
             </div>
+            
             <div class="form-group">
                 <label for="description">Description</label>
                 <textarea name="description" class="form-control" rows="3" placeholder="Enter request description"></textarea>

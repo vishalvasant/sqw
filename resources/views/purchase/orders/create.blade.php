@@ -35,12 +35,17 @@
 
             <!-- Products from Purchase Request -->
             @if ($selectedRequest)
-            <!-- Select Supplier -->
-            <div class="form-group">
-                <label for="supplier_id">Supplier</label>
-                <input type="text" name="supplier" id="supplier" class="form-control" value="{{$suppliers->name}}" readonly>
-                <input type="hidden" name="supplier_id" id="supplier_id" class="form-control" value="{{$suppliers->id}}" readonly>
-
+            <div class="row">
+                <div class="col-md-8">
+                    <!-- Select Supplier -->
+                    <label for="supplier_id">Supplier</label>
+                    <input type="text" name="supplier" id="supplier" class="form-control" value="{{$suppliers->name}}" readonly>
+                    <input type="hidden" name="supplier_id" id="supplier_id" class="form-control" value="{{$suppliers->id}}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label for="created_at">Date</label>
+                    <input type="date" name="created_at" id="created_at" class="form-control" value="{{ old('created_at',\Carbon\Carbon::parse($selectedRequest->created_at)->format('Y-m-d')) }}">
+                </div>
             </div>
 
             <div class="form-group">

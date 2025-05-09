@@ -53,6 +53,7 @@
                 <tr>
                     <th>#</th>
                     <th>Request Number</th>
+                    <th>Date</th>
                     <th>Title</th>
                     <th>Status</th>
                     <th>Created By</th>
@@ -64,6 +65,7 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $request->request_number }}</td>
+                    <td>{{ \Carbon\Carbon::parse($request->created_at)->format('d-m-Y') }}</td>
                     <td>{{ $request->title }}</td>
                     <td>{{ ucfirst($request->status) }}</td>
                     <td>{{ $request->user->name }}</td>
