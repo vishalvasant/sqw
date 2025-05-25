@@ -56,6 +56,7 @@
                     <th>Unit</th>
                     <th>Price</th>
                     <th>Stock Quantity</th>
+                    <th>Minimum Stock</th>
                     <th>Total Received</th>
                     <th width="15%">Actions</th>
                 </tr>
@@ -72,7 +73,8 @@
                         <td>{{ $product->category->category_name }}</td>
                         <td>{{ $product->unit->unit_name }}</td>
                         <td>{{ $product->price }}</td>
-                        <td>{{ $product->stock }}</td>
+                        <td>{{ $product->stock }} - {{ $product->unit->unit_name }}</td>
+                        <td>{{ $product->min_qty ?? 0 }} - {{ $product->unit->unit_name }}</td>
                         <td>
                             @php
                                 $totalReceived = \DB::table('purchase_order_items')

@@ -73,7 +73,7 @@
                 <tr>
                     <th>#</th>
                     <th>Date</th>
-                    <th>SO Number</th>
+                    <th>SU Number</th>
                     <th>Services</th>
                     <th>Vendor</th>
                     <th>Amount</th>
@@ -90,7 +90,8 @@
                     <td>{{ $po->order_number }}</td>
                     <td>{{ $po->items[0]->service->name }}</td>
                     <td>{{ $po->vendor ? $po->vendor->name : 'N/A' }}</td>
-                    <td>{{ $po->items[0]->service->cost }}</td>
+                    <!-- <td>{{ $po->items[0]->service->cost }}</td> -->
+                    <td>₹{{ number_format($po->items->sum(fn($item) => $item->quantity * $item->unit_price), 2) }}</td>
                     <td>
                         <form action="{{ route('service_po.updateStatus', $po->id) }}" method="POST" class="d-inline">
                             @csrf

@@ -17,7 +17,7 @@
                 <table class="table table-bordered" id="example2">
                     <thead>
                         <tr>
-                            <th>SO Number</th>
+                            <th>SU Number</th>
                             <th>Vendor</th>
                             <th>Service</th>
                             <th>Type</th>

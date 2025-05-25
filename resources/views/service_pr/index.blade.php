@@ -7,7 +7,7 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">SR-SO Report</h3>
+        <h3 class="card-title">SR-SU Report</h3>
     </div>
     <div class="card-body">
         <form method="GET" action="{{ route('service_pr.report') }}">

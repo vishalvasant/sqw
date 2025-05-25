@@ -31,19 +31,19 @@
                             @if(isset($selectedSO))
                             <div class="row mb-2">
                                 <div class="col-md-3">
-                                    <label for="service_date">SO Date</label>
+                                    <label for="service_date">SU Date</label>
                                     <input type="text" name="s_date" id="service_date" class="form-control" value="{{ \Carbon\Carbon::parse($selectedSO[0]->created_at)->format('d-m-Y') }}" readonly>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="service_id">SO ID</label>
+                                    <label for="service_id">SU ID</label>
                                     <input type="text" name="s_id" id="service_id" class="form-control" value="{{ $selectedSO[0]->order_number }}" readonly>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="service_name">SO Item Name</label>
+                                    <label for="service_name">SU Item Name</label>
                                     <input type="text" name="s_name" id="service_name" class="form-control" value="{{ $selectedSO[0]->items[0]->service->name }}" readonly>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="service_amount">SO Amount</label>
+                                    <label for="service_amount">SU Amount</label>
                                     <input type="text" name="s_amount" id="service_amount" class="form-control" value="{{ $selectedSO[0]->items[0]->total_price }}" readonly>
                                 </div>
                             </div>

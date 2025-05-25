@@ -10,7 +10,7 @@
         </div>
         <div class="card-body">
             <p><strong>Vendor:</strong> {{ $servicePurchaseOrder->vendor->name}}</p>
-            <p><strong>SO Date:</strong> {{ $servicePurchaseOrder->order_date }}</p>
+            <p><strong>SU Date:</strong> {{ $servicePurchaseOrder->order_date }}</p>
             <p><strong>Status:</strong> <span class="badge badge-{{ $servicePurchaseOrder->status == 'approved' ? 'success' : 'warning' }}">{{ ucfirst($servicePurchaseOrder->status) }}</span></p>
             
             <h5>Services Order</h5>

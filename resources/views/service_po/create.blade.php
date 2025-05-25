@@ -29,7 +29,7 @@
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <label for="order_date">SO Date</label>
+                    <label for="order_date">SU Date</label>
                     <input type="date" name="order_date" class="form-control" required>
                 </div>
                 <div class="col-md-2">

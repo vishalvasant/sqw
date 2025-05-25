@@ -21,7 +21,7 @@
                     <tr>
                         <th>#</th>
                         <th>Date</th>
-                        <th>SO ID</th>
+                        <th>SU ID</th>
                         <th>Service</th>
                         <th>Vendor</th>
                         <th>Amount</th>

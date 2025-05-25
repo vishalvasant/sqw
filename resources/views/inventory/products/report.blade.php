@@ -15,13 +15,14 @@
     
     <!-- Report Table -->
     <div class="card-body">
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="example1">
             <thead>
                 <tr>
                     <th>Product Name</th>
                     <th>Received Quantity</th>
                     <th>Average Price</th>
                     <th>Current Stock</th>
+                    <th>Minimum Stock</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,6 +40,7 @@
                         <td>{{ $data->total_received }}</td>
                         <td>{{ number_format($data->avg_price, 2) }}</td>
                         <td>{{ $data->stock }}</td>
+                        <td>{{ $data->min_qty ?? 0 }}</td>
                     </tr>
                 @endforeach
                 <!-- <tr>
