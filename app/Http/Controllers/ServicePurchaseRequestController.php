@@ -12,7 +12,7 @@ class ServicePurchaseRequestController extends Controller
 {
     public function index()
     {
-        $requests = ServicePurchaseRequest::with('vendor', 'requester')->latest()->get();
+        $requests = ServicePurchaseRequest::with('vendor', 'requester','services')->latest()->get();
         return view('service_pr.index', compact('requests'));
     }
 

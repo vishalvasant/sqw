@@ -62,7 +62,11 @@
             </thead>
             <tbody>
                 @foreach($products as $product)
+                @if($product->stock <= $product->min_qty)
+                    <tr class="table-danger">
+                @else
                     <tr>
+                @endif
                         <td>{{ $product->id }}</td>
                         <td>{{ $product->name }}</td>
                         <td>{{ $product->category->category_name }}</td>

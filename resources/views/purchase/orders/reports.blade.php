@@ -22,8 +22,8 @@
                         <th>#</th>
                         <th>Date</th>
                         <th>GR Number</th>
-                        <th>PO ID</th>
                         <th>Supplier</th>
+                        <th>Product</th>
                         <th>QTY</th>
                         <th>Amount</th>
                         <th>Total</th>
@@ -36,8 +36,8 @@
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $order->created_at->format('d-m-Y') }}</td>
                             <td>{{ $order->gr_number }}</td>
-                            <td>{{ $order->order_number }}</td>
                             <td>{{ $order->supplier->name }}</td>
+                            <td>{{ $order->items[0]->product->name }}</td>
                             <td>{{ $order->items[0]->quantity }}</td>
                             <td>{{ number_format(($order->items[0]->price), 2) }}</td>
                             <td>{{ number_format(($order->items[0]->quantity * $order->items[0]->price), 2) }}</td>

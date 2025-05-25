@@ -35,6 +35,7 @@ class ProductController extends Controller
             'unit_id' => 'required|exists:units,id',
             'price' => 'required|numeric',
             'stock' => 'required|numeric',
+            'min_qty' => 'required|numeric',
         ]);
 
         Product::create($validated);
@@ -61,6 +62,7 @@ class ProductController extends Controller
             'unit_id' => 'required|exists:units,id',
             'price' => 'required|numeric',
             'stock' => 'required|numeric',
+            'min_qty' => 'required|numeric',
         ]);
         
         $product->update($validated);

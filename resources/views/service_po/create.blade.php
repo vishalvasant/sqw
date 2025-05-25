@@ -11,8 +11,8 @@
         @csrf
         <div class="card-body">
             <div class="row">
-                <div class="col-md-3">
-                    <label for="gr_number">GR Number</label>
+                <div class="col-md-2">
+                    <label for="gr_number">SR Number</label>
                     <input type="text" name="gr_number" id="gr_number" class="form-control" value="{{$gr_number}}" readonly>
                 </div>
                 <div class="col-md-6">
@@ -28,9 +28,13 @@
                             @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="order_date">SO Date</label>
                     <input type="date" name="order_date" class="form-control" required>
+                </div>
+                <div class="col-md-2">
+                    <label for="bill_no">Bill Number</label>
+                    <input type="text" name="bill_no" id="bill_no" class="form-control" value="{{ old('bill_no') }}">
                 </div>
             </div>
 

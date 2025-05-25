@@ -70,6 +70,7 @@ class ServicePurchaseOrderController extends Controller
             'service_purchase_request_id' => $pr->id,
             'vendor_id' => $pr->vendor_id,
             'order_date' => $request->order_date,
+            'bill_no' => $request->bill_no,
             'status' => 'pending'
         ]);
 
@@ -95,7 +96,7 @@ class ServicePurchaseOrderController extends Controller
         $month = \Carbon\Carbon::parse($date)->format('m');
 
         // Get the last order number for current month/year
-        $prefix = "SO-{$year}{$month}";
+        $prefix = "SU-{$year}{$month}";
 
         // Count the number of PRs for the current month
         $count = ServicePurchaseOrder::where('order_number', 'like', $prefix . '%')
@@ -106,7 +107,7 @@ class ServicePurchaseOrderController extends Controller
         $nextNumber = $count ? $count + 1 : 1;
         $prNumber = sprintf('%03d', $nextNumber);
 
-        return "SO-{$year}{$month}{$prNumber}";
+        return "SU-{$year}{$month}{$prNumber}";
     }  
 
     public function show($id)

@@ -18,7 +18,7 @@
                         <form action="{{ route('assets.parts.allocate', $asset->id) }}" method="POST">
                             @csrf
                             <div class="row">
-                                <div class="col-md-8">
+                                <div class="col-md-6">
                                     <label for="part_id">Part Name</label>
                                     <select name="part_id" id="part_id" class="form-control">
                                         <option value="">Select a Part</option>
@@ -28,9 +28,13 @@
                                     </select>
                                 </div>
                                 
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="quantity">Quantity</label>
                                     <input type="number" name="quantity" id="quantity" class="form-control" required placeholder="Enter quantity">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="date">Date</label>
+                                    <input type="date" name="created_at" id="date" class="form-control" required placeholder="Enter quantity">
                                 </div>
                             </div>
                             <div class="row mt-2">

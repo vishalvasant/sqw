@@ -39,6 +39,10 @@
                 <label for="stock_quantity">Stock Quantity</label>
                 <input type="number" class="form-control" id="stock_quantity" name="stock" value="{{ $product->stock }}" required>
             </div>
+            <div class="form-group">
+                <label for="minimum_quantity">Minimum Quantity</label>
+                <input type="number" class="form-control" id="minimum_quantity" name="min_qty" value="{{ $product->min_qty }}" required>
+            </div>
             <button type="submit" class="btn btn-success">Update Product</button>
         </form>
     </div>

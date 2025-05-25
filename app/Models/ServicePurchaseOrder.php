@@ -14,6 +14,7 @@ class ServicePurchaseOrder extends Model
         'service_purchase_request_id',
         'vendor_id',
         'order_date',
+        'bill_no',
         'status'
     ];
 

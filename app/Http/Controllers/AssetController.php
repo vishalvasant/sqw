@@ -194,7 +194,7 @@ class AssetController extends Controller
             // Check stock availability
             if ($product->stock >= $request->quantity) {
                 // Allocate the product to the asset and deduct stock
-                $asset->products()->attach($product->id, ['quantity' => $request->quantity, 'description' => $request->description, 'req_by' => $request->req_by, 'rec_by' => $request->rec_by]);
+                $asset->products()->attach($product->id, ['quantity' => $request->quantity, 'description' => $request->description, 'req_by' => $request->req_by, 'rec_by' => $request->rec_by,'created_at'=>$request->created_at]);
                 $product->stock -= $request->quantity;
                 $product->save();
             } else {

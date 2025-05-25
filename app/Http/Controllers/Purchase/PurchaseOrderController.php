@@ -74,6 +74,7 @@ class PurchaseOrderController extends Controller
             $purchaseOrder->billed = 0; // Default
             $purchaseOrder->gr_number = $this->generateGNumber($createdAt);
             $purchaseOrder->purchase_request_id = $request->request_id; // Default
+            $purchaseOrder->bill_no = $request->bill_no; // Default
             $purchaseOrder->save();
 
             foreach ($request->products as $product) {

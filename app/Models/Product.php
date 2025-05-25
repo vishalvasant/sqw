@@ -10,7 +10,7 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'category_id', 'unit_id', 'price', 'stock'
+        'name', 'category_id', 'unit_id', 'price', 'stock','min_qty'
     ];
 
     // Define relationship with Category

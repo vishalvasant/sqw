@@ -24,7 +24,7 @@
                         <th>SO ID</th>
                         <th>Service</th>
                         <th>Vendor</th>
-                        <th>Cost</th>
+                        <th>Amount</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,9 +39,10 @@
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $order->created_at->format('d-m-Y') }}</td>
                             <td>{{ $order->order_number }}</td>
-                            <td>{{ $order->service_purchase_order_items[0]->service->name }}<br>
+                            <td>{{ $order->service_purchase_order_items[0]->service->name }}</td>
                             <td>{{ $order->vendor->name }}</td>
-                            <td>{{ $order->service_purchase_order_items[0]->unit_price }}<br>
+                            <!-- <td>{{ $order->service_purchase_order_items[0]->unit_price }}<br> -->
+                            <td>₹{{ number_format($order->service_purchase_order_items->sum(fn($item) => $item->quantity * $item->unit_price), 2) }}</td>
                         </tr>
                     @endforeach
                 </tbody>

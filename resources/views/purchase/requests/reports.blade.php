@@ -7,7 +7,7 @@
 
 <!-- Summary Section -->
     <div class="card-body">
-        <h5>Report Summary ({{ request('from_date') }} to {{ request('to_date') }})</h5>
+        <h5>Purchase Request Summary ({{ request('from_date') }} to {{ request('to_date') }})</h5>
         <ul>
             
         </ul>
@@ -16,12 +16,13 @@
     <!-- Report Table -->
     <div class="card-body">
         @if(isset($purchaseRequests) && count($purchaseRequests) > 0)
-            <table class="table table-bordered">
+            <table class="table table-bordered" id="example2">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Date</th>
                         <th>PR-Number</th>
+                        <th>Title</th>
                         <th>Requested By</th>
                         <th>Supplier</th>
                         <th>Status</th>
@@ -33,6 +34,7 @@
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $request->created_at->format('d-m-Y') }}</td>
                             <td>{{ $request->request_number }}</td>
+                            <td>{{ $request->title }}</td>
                             <td>{{ $request->user->name }}</td>
                             <td>{{ $request->supplier->name }}</td>
                             @if($request->status == 'pending')
