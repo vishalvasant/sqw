@@ -210,7 +210,7 @@
                             </a>
                         </li>
                         @endif
-                        @if ($usr->can('view_reports'))
+                        @if ($usr->can('reports.view'))
                         <li class="nav-item">
                             <a href="{{ route('fleet.reports') }}" class="nav-link {{ $currentRoute === 'fleet.reports' ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-chart-line"></i>

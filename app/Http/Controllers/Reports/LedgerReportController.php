@@ -120,7 +120,7 @@ class LedgerReportController extends Controller
         $purchasesBefore = DB::table('purchase_order_items')
             ->join('purchase_orders', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
             ->where('purchase_order_items.product_id', $productId)
-            ->where('purchase_orders.order_date', '<', $date)
+            ->where('purchase_orders.created_at', '<=', $date)
             ->sum('purchase_order_items.quantity');
             
         return $openingStock + $allocationsBefore - $purchasesBefore;
@@ -143,7 +143,7 @@ class LedgerReportController extends Controller
         $purchasesAfter = DB::table('purchase_order_items')
             ->join('purchase_orders', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
             ->where('purchase_order_items.product_id', $productId)
-            ->where('purchase_orders.order_date', '>', $date)
+            ->where('purchase_orders.created_at', '>=', $date)
             ->sum('purchase_order_items.quantity');
             
         return $closingStock + $allocationsAfter - $purchasesAfter;
