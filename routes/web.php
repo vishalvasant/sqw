@@ -27,6 +27,7 @@ use App\Http\Controllers\ServicePurchaseRequestController;
 use App\Http\Controllers\ServicePurchaseOrderController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\KitchenController;
+use App\Http\Controllers\Reports\LedgerReportController;
 
 
 
@@ -150,6 +151,12 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('suppliers', SupplierController::class);
         });
         Route::get('/products/utilization/{id}', [ProductController::class, 'productUtilization'])->name('products.utilization.report');
+        // Ledger Report Routes
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('ledger', [LedgerReportController::class, 'index'])->name('ledger.index');
+            Route::post('ledger/generate', [LedgerReportController::class, 'generateReport'])->name('ledger.generate');
+        });
+
         Route::get('/products/report', [ProductController::class, 'generateReport'])->name('inventory.products.report');
 
         Route::patch('purchase-orders/{id}/mark-as-billed', [PurchaseOrderController::class, 'markAsBilled'])->name('purchase.orders.markAsBilled');
