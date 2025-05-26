@@ -260,7 +260,7 @@
                 </li>
                 @endif
 
-                @if ($usr->can('view_reports'))
+                @if ($usr->can('reports.view'))
                 <li class="nav-item has-treeview {{ $isMenuOpen('reports') }}">
                     <a href="#" class="nav-link {{ $isMainMenuActive('reports') }}">
                         <i class="nav-icon fas fa-chart-bar"></i>

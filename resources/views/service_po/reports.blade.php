@@ -22,6 +22,7 @@
                         <th>#</th>
                         <th>Date</th>
                         <th>SU ID</th>
+                        <th>Bill Number</th>
                         <th>Service</th>
                         <th>Vendor</th>
                         <th>Amount</th>
@@ -39,6 +40,7 @@
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $order->created_at->format('d-m-Y') }}</td>
                             <td>{{ $order->order_number }}</td>
+                            <td>{{ $order->bill_no }}</td>
                             <td>{{ $order->service_purchase_order_items[0]->service->name }}</td>
                             <td>{{ $order->vendor->name }}</td>
                             <!-- <td>{{ $order->service_purchase_order_items[0]->unit_price }}<br> -->

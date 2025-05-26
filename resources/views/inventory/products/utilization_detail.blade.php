@@ -20,7 +20,6 @@
                     <th>Supplier Name</th>
                     <th>Date Received</th>
                     <th>Quantity Received</th>
-                    <th>Minimum Stock</th>
                     <th>Price</th>
                 </tr>
             </thead>
@@ -32,12 +31,11 @@
                         <td>{{ $data->name }}</td>
                         <td>{{ \Carbon\Carbon::parse($data->received_date)->format('d-m-Y') }}</td>
                         <td>{{ $data->quantity }}</td>
-                        <td>{{ $data->min_qty }}</td>
                         <td>{{ number_format($data->price, 2) }}</td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center">No records found</td>
+                        <td colspan="6" class="text-center">No records found</td>
                     </tr>
                 @endforelse
             </tbody>

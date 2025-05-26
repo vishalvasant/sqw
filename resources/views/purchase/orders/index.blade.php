@@ -82,7 +82,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $order->gr_number }}</td>
-                            <td>{{ $order->bill_number ?? 'N/A' }}</td>
+                            <td>{{ $order->bill_no ?? 'N/A' }}</td>
                             <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d-m-Y') }}</td>
                             <td>{{ $order->supplier->name ?? 'N/A'  }}</td>
                             <td>₹{{ number_format($order->items->sum(fn($item) => $item->quantity * $item->price), 2) }}</td>

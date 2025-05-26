@@ -11,6 +11,7 @@
         <div class="card-body">
             <p><strong>Vendor:</strong> {{ $servicePurchaseOrder->vendor->name}}</p>
             <p><strong>SU Date:</strong> {{ $servicePurchaseOrder->order_date }}</p>
+            <p><strong>Bill Number:</strong> {{ $servicePurchaseOrder->bill_no }}</p>
             <p><strong>Status:</strong> <span class="badge badge-{{ $servicePurchaseOrder->status == 'approved' ? 'success' : 'warning' }}">{{ ucfirst($servicePurchaseOrder->status) }}</span></p>
             
             <h5>Services Order</h5>

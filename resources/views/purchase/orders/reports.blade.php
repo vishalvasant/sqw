@@ -37,7 +37,7 @@
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $order->created_at->format('d-m-Y') }}</td>
                             <td>{{ $order->gr_number }}</td>
-                            <td>{{ $order->bill_number ?? 'N/A' }}</td>
+                            <td>{{ $order->bill_no ?? 'N/A' }}</td>
                             <td>{{ $order->supplier->name }}</td>
                             <td>{{ $order->items[0]->product->name }}</td>
                             <td>{{ $order->items[0]->quantity }}</td>

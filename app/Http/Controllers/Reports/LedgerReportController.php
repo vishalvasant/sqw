@@ -107,45 +107,43 @@ class LedgerReportController extends Controller
     {
         if (!$productId) return 0;
         
-        // Get stock before start date
-        $openingStock = Product::find($productId)->stock;
-        
-        // Add back allocations made before start date
+        // Get all purchases before the start date
+        $purchasesBefore = DB::table('purchase_order_items')
+            ->join('purchase_orders', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
+            ->where('purchase_order_items.product_id', $productId)
+            ->where('purchase_orders.status', '!=', 'cancelled')
+            ->where('purchase_orders.created_at', '<', $date)
+            ->sum('purchase_order_items.quantity');
+            
+        // Get all allocations before the start date
         $allocationsBefore = DB::table('asset_part')
             ->where('product_id', $productId)
             ->where('created_at', '<', $date)
             ->sum('quantity');
             
-        // Subtract purchases made before start date
-        $purchasesBefore = DB::table('purchase_order_items')
-            ->join('purchase_orders', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
-            ->where('purchase_order_items.product_id', $productId)
-            ->where('purchase_orders.created_at', '<=', $date)
-            ->sum('purchase_order_items.quantity');
-            
-        return $openingStock + $allocationsBefore - $purchasesBefore;
+        // Opening stock = (Purchases - Allocations) before start date
+        return $purchasesBefore - $allocationsBefore;
     }
     
     private function calculateClosingStock($productId, $date)
     {
         if (!$productId) return 0;
         
-        // Get stock after end date
-        $closingStock = Product::find($productId)->stock;
-        
-        // Add back allocations made after end date
-        $allocationsAfter = DB::table('asset_part')
-            ->where('product_id', $productId)
-            ->where('created_at', '>', $date)
-            ->sum('quantity');
-            
-        // Subtract purchases made after end date
-        $purchasesAfter = DB::table('purchase_order_items')
+        // Get all purchases up to the end date
+        $purchases = DB::table('purchase_order_items')
             ->join('purchase_orders', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
             ->where('purchase_order_items.product_id', $productId)
-            ->where('purchase_orders.created_at', '>=', $date)
+            ->where('purchase_orders.status', '!=', 'cancelled')
+            ->where('purchase_orders.created_at', '<=', $date . ' 23:59:59')
             ->sum('purchase_order_items.quantity');
             
-        return $closingStock + $allocationsAfter - $purchasesAfter;
+        // Get all allocations up to the end date
+        $allocations = DB::table('asset_part')
+            ->where('product_id', $productId)
+            ->where('created_at', '<=', $date . ' 23:59:59')
+            ->sum('quantity');
+            
+        // Closing stock = Total purchases - Total allocations
+        return $purchases - $allocations;
     }
 }

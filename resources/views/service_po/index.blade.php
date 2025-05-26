@@ -74,6 +74,7 @@
                     <th>#</th>
                     <th>Date</th>
                     <th>SU Number</th>
+                    <th>Bill Number</th>
                     <th>Services</th>
                     <th>Vendor</th>
                     <th>Amount</th>
@@ -88,6 +89,7 @@
                     <td>{{ $key + 1 }}</td>
                     <td>{{ $po->order_date }}</td>
                     <td>{{ $po->order_number }}</td>
+                    <td>{{ $po->bill_no }}</td>
                     <td>{{ $po->items[0]->service->name }}</td>
                     <td>{{ $po->vendor ? $po->vendor->name : 'N/A' }}</td>
                     <!-- <td>{{ $po->items[0]->service->cost }}</td> -->
