@@ -107,43 +107,71 @@ class LedgerReportController extends Controller
     {
         if (!$productId) return 0;
         
-        // Get all purchases before the start date
-        $purchasesBefore = DB::table('purchase_order_items')
+        // Get the current stock from the products table
+        $currentStock = DB::table('products')
+            ->where('id', $productId)
+            ->value('stock') ?? 0;
+            
+        // Get all purchases after the start date
+        $purchasesAfter = DB::table('purchase_order_items')
             ->join('purchase_orders', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
             ->where('purchase_order_items.product_id', $productId)
             ->where('purchase_orders.status', '!=', 'cancelled')
-            ->where('purchase_orders.created_at', '<', $date)
+            ->where('purchase_orders.created_at', '>=', $date . ' 00:00:00')
             ->sum('purchase_order_items.quantity');
             
-        // Get all allocations before the start date
-        $allocationsBefore = DB::table('asset_part')
+        // Get all allocations after the start date
+        $allocationsAfter = DB::table('asset_part')
             ->where('product_id', $productId)
-            ->where('created_at', '<', $date)
+            ->where('created_at', '>=', $date . ' 00:00:00')
             ->sum('quantity');
             
-        // Opening stock = (Purchases - Allocations) before start date
-        return $purchasesBefore - $allocationsBefore;
+        // Calculate opening stock: current stock - (purchases after - allocations after)
+        $openingStock = $currentStock - $purchasesAfter + $allocationsAfter;
+            
+        // Debug information
+        \Log::info('Stock Calculation Debug - Product ID: ' . $productId, [
+            'date' => $date,
+            'current_stock' => $currentStock,
+            'purchases_after' => $purchasesAfter,
+            'allocations_after' => $allocationsAfter,
+            'calculated_opening_stock' => $openingStock
+        ]);
+            
+        return max(0, $openingStock); // Ensure we don't return negative stock
     }
     
     private function calculateClosingStock($productId, $date)
     {
         if (!$productId) return 0;
         
-        // Get all purchases up to the end date
-        $purchases = DB::table('purchase_order_items')
+        // Use the opening stock as base
+        $openingStock = $this->calculateOpeningStock($productId, $date);
+        
+        // Get all purchases on the end date
+        $purchasesOnDate = DB::table('purchase_order_items')
             ->join('purchase_orders', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
             ->where('purchase_order_items.product_id', $productId)
             ->where('purchase_orders.status', '!=', 'cancelled')
-            ->where('purchase_orders.created_at', '<=', $date . ' 23:59:59')
+            ->whereBetween('purchase_orders.created_at', [$date . ' 00:00:00', $date . ' 23:59:59'])
             ->sum('purchase_order_items.quantity');
             
-        // Get all allocations up to the end date
-        $allocations = DB::table('asset_part')
+        // Get all allocations on the end date
+        $allocationsOnDate = DB::table('asset_part')
             ->where('product_id', $productId)
-            ->where('created_at', '<=', $date . ' 23:59:59')
+            ->whereBetween('created_at', [$date . ' 00:00:00', $date . ' 23:59:59'])
             ->sum('quantity');
             
-        // Closing stock = Total purchases - Total allocations
-        return $purchases - $allocations;
+        // Debug information
+        \Log::info('Closing Stock Calculation - Product ID: ' . $productId, [
+            'date' => $date,
+            'opening_stock' => $openingStock,
+            'purchases_on_date' => $purchasesOnDate,
+            'allocations_on_date' => $allocationsOnDate,
+            'calculated_closing_stock' => $openingStock + $purchasesOnDate - $allocationsOnDate
+        ]);
+            
+        // Closing stock = Opening stock + (Purchases on date - Allocations on date)
+        return $openingStock + $purchasesOnDate - $allocationsOnDate;
     }
 }

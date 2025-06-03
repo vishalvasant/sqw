@@ -101,7 +101,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="text-center">No stock movements found</td>
+                                        <td colspan="5" class="text-center">No stock movements found</td>
                                     </tr>
                                 @endforelse
                             </tbody>
